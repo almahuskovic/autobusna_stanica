@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 
 namespace WebApplication1
 {
-    public class Alma1
+    public class ObavijestKategorija
     {
+
     }
 }
