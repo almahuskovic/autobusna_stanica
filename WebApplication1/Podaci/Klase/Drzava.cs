@@ -5,7 +5,10 @@ using System.Threading.Tasks;
 
 namespace WebApplication1
 {
-    public class Amra
+    public class Drzava
     {
+        public int DrzavaID { get; set; }
+        public string Naziv { get; set; }
+
     }
 }
