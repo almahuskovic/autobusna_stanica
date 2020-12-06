@@ -5,7 +5,7 @@
     <UserSecretsId>aspnet-WebApplication1-D80E3A7B-DFD0-45C4-8C9A-8953FEC09CF2</UserSecretsId>
   </PropertyGroup>
 
-
+  <Reference Include="netstandard" />
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.2" />
