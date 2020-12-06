@@ -12,7 +12,7 @@ namespace Podaci
         public DbSet<ObavijestKategorija> ObavijestKategorija { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Server=localhost; Database=BUS_STANICA;
+            optionsBuilder.UseSqlServer(@"Server=localhost; Database=ttttt;
                         Trusted_Connection=true; MultipleActiveResultSets=true;");
         }
     }

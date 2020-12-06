@@ -1,7 +1,33 @@
 ﻿
 @{
     ViewData["Title"] = "Prikaz";
+    //Layout = null;
 }
 
+@Model ObavijestKategorijaPrikazVM
 <h1>Prikaz</h1>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <td>Naziv</td>
+            <td>Akcija</td>
+            <td>Akcija</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var k in Model)
+        {
+            <tr>
+                <td>@k.Naziv</td>
+                <td>
+                    <button onclick="">Uredi</button>
+                </td>
+                <td>
+                    <button onclick="">Obrisi</button>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>
 
