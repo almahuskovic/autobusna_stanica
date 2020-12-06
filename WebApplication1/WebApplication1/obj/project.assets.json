@@ -33,11 +33,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\PC\\Source\\Repos\\webapp\\WebApplication1\\WebApplication1\\WebApplication1.csproj",
+      "projectUniqueName": "C:\\Users\\PC\\source\\repos\\webapp\\WebApplication1\\WebApplication1\\WebApplication1.csproj",
       "projectName": "WebApplication1",
-      "projectPath": "C:\\Users\\PC\\Source\\Repos\\webapp\\WebApplication1\\WebApplication1\\WebApplication1.csproj",
+      "projectPath": "C:\\Users\\PC\\source\\repos\\webapp\\WebApplication1\\WebApplication1\\WebApplication1.csproj",
       "packagesPath": "C:\\Users\\PC\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\PC\\Source\\Repos\\webapp\\WebApplication1\\WebApplication1\\obj\\",
+      "outputPath": "C:\\Users\\PC\\source\\repos\\webapp\\WebApplication1\\WebApplication1\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -56,8 +56,8 @@
       "frameworks": {
         "netcoreapp3.1": {
           "projectReferences": {
-            "C:\\Users\\PC\\Source\\Repos\\webapp\\WebApplication1\\Podaci\\Podaci.csproj": {
-              "projectPath": "C:\\Users\\PC\\Source\\Repos\\webapp\\WebApplication1\\Podaci\\Podaci.csproj"
+            "C:\\Users\\PC\\source\\repos\\webapp\\WebApplication1\\Podaci\\Podaci.csproj": {
+              "projectPath": "C:\\Users\\PC\\source\\repos\\webapp\\WebApplication1\\Podaci\\Podaci.csproj"
             }
           }
         }
@@ -71,10 +71,16 @@
     "frameworks": {
       "netcoreapp3.1": {
         "imports": [
-          "net461"
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48"
         ],
         "assetTargetFallback": true,
-        "warn": true
+        "warn": true,
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.0.100\\RuntimeIdentifierGraph.json"
       }
     }
   }
