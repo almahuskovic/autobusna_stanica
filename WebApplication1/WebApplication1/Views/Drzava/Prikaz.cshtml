@@ -1,0 +1,24 @@
+﻿
+@Model DrzavaPrikazVM 
+<td><button>Dodaj novu</button></td>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Naziv</th>
+            <th><button>Uredi</button></th>
+            <th><button>Obrisi</button></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var d in Model)
+        {
+            <tr>
+                <td>@d.Naziv</td>
+                <td></td>
+                <td></td>
+            </tr>
+        }
+    </tbody>
+
+</table>

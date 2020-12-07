@@ -10,14 +10,10 @@ namespace WebApplication1.Controllers
     public class ObavijestKategorijaController : Controller
     {
         MojDbContext db = new MojDbContext();
-        public IActionResult Index()
-        {
-            return View();
-        }
-        public IActionResult Prikaz(int ObavijestID)
+        public IActionResult Prikaz()
         {
             var m = db.ObavijestKategorija.ToList();
-            return View();
+            return View(m);
         }
     }
 }
