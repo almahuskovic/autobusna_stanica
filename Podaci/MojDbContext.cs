@@ -13,7 +13,7 @@ namespace Podaci
         public DbSet<Drzava> Drzava { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Server=localhost; Database=ttttt;
+            optionsBuilder.UseSqlServer(@"Server=AMRA\MSSQLSERVER_OLAP; Database=BUS_STANICA;
                         Trusted_Connection=true; MultipleActiveResultSets=true;");
         }
     }
