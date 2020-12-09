@@ -1,24 +1,48 @@
-﻿
-@Model DrzavaPrikazVM 
-<td><button>Dodaj novu</button></td>
+﻿@model DrzavaPrikazVM 
+
+<button type="button" onclick="PrikazDodaj()" class="btn btn-primary" style="margin-bottom:10px">Dodaj</button>
+
+<div id="ajaxPrikaz" ></div>
 <table class="table table-bordered">
     <thead>
         <tr>
             <th>Naziv</th>
             <th>Akcija</th>
-            <th>Akcija</th>
+            
         </tr>
     </thead>
 
     <tbody>
-        @foreach (var d in Model)
+        @foreach (var d in Model.Drzave)
         {
             <tr>
                 <td>@d.Naziv</td>
-                <td><button>Uredi</button></td>
-                <td><button>Obrisi</button></td>
+                <td>
+                <a href="#" onclick="PrikazUredi(@d.DrzavaID)">Uredi</a>
+                <a href="/Drzava/Obrisi?DrzavaID=@d.DrzavaID">Obrisi</a></td>
             </tr>
         }
     </tbody>
 
 </table>
+
+<script>
+    function PrikazUredi(DrzavaID) {
+        var url = "/Drzava/Uredi?DrzavaID=" + DrzavaID;
+        $.get(url, function (data) {
+            $("#ajaxPrikaz").html(data);
+        })
+        document.getElementById("ajaxPrikaz").style.margin = "10px";
+        
+    }
+    function PrikazDodaj() {
+        var url = "/Drzava/Uredi";
+        $.get(url, function (data) {
+            $("#ajaxPrikaz").html(data);
+        })
+        document.getElementById("ajaxPrikaz").style.margin = "10px";
+       
+
+    }
+
+</script>

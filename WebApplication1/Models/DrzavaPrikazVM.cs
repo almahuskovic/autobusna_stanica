@@ -7,7 +7,11 @@ namespace WebApplication1.Models
 {
     public class DrzavaPrikazVM
     {
-        public int DrzavaID { get; set; }
-        public string Naziv { get; set; }
+        public class Row
+        {
+            public int DrzavaID { get; set; }
+            public string Naziv { get; set; }
+        }
+        public List<Row> Drzave;
     }
 }
