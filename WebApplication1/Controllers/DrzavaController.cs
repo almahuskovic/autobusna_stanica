@@ -11,19 +11,21 @@ namespace WebApplication1.Controllers
     public class DrzavaController : Controller
     {
 
-        public IActionResult Prikaz()
+        public IActionResult Prikaz(string pretraga)
         {
             MojDbContext db = new MojDbContext();
 
             
-            List<DrzavaPrikazVM.Row> Drzave = db.Drzava.Select(x => new DrzavaPrikazVM.Row
+            List<DrzavaPrikazVM.Row> Drzave = db.Drzava
+                .Where(d=> pretraga==null || d.Naziv.StartsWith(pretraga))
+                .Select(x => new DrzavaPrikazVM.Row
             {
                 DrzavaID = x.DrzavaID,
                 Naziv = x.Naziv
             }).ToList();
             DrzavaPrikazVM d = new DrzavaPrikazVM();
             d.Drzave=Drzave;
-
+            d.pretraga = pretraga;
            
             return View(d);
         }
@@ -66,12 +68,10 @@ namespace WebApplication1.Controllers
             {
                 drzava = new Drzava();
                 db.Add(drzava);
-                //TempData["PorukaInfo"] = "Uspjesno ste dodali novu drzavu -> " + drzava.Naziv;
             }
             else
             {
                 drzava = db.Drzava.Find(x.DrzavaID);
-                //TempData["PorukaInfo"] = "Uspjesno ste izvrsili update drzave -> " + x.Naziv;
 
             }
             drzava.Naziv = x.Naziv;

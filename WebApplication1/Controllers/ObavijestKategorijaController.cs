@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Podaci;
-using WebApplication1.Models;
+//using WebApplication1.Models;
 using WebApplication1.Models.ObavijestKategorija;
 
 namespace WebApplication1.Controllers

@@ -13,5 +13,6 @@ namespace WebApplication1.Models
             public string Naziv { get; set; }
         }
         public List<Row> Drzave;
+        public string pretraga;
     }
 }

@@ -1,7 +1,10 @@
 ﻿@model DrzavaPrikazVM 
 
 <button type="button" onclick="PrikazDodaj()" class="btn btn-primary" style="margin-bottom:10px">Dodaj</button>
-
+<form>
+    <input name="pretraga" value="@Model.pretraga"/>
+    <input type="submit" value="Trazi" />
+</form>
 <div id="ajaxPrikaz" ></div>
 <table class="table table-bordered">
     <thead>
