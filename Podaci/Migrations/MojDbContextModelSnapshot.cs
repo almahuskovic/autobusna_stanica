@@ -18,6 +18,24 @@ namespace Podaci.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("Podaci.Klase.Grad", b =>
+                {
+                    b.Property<int>("GradID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("DrzavaID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Naziv")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("GradID");
+
+                    b.ToTable("Grad");
+                });
+
             modelBuilder.Entity("WebApplication1.Drzava", b =>
                 {
                     b.Property<int>("DrzavaID")

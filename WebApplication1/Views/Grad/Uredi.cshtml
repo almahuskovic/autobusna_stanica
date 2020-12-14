@@ -1,22 +1,11 @@
-﻿@model DrzavaDodajVM
+﻿@model WebApplication1.Models.Grad.GradDodajVM
+
 @{ Layout = null;}
-@*<style>
-    form div,input,label{
-        display:inline;
-    }
-</style>*@
 
 
-<form asp-action="Snimi" asp-controller="Drzava">
-    @*<div style="display:none">
-            <label>DrzavaID</label>
-            <input readonly asp-for="DrzavaID"/>
-        </div>
-        <div>
-            <label>Naziv</label>
-            <input asp-for="Naziv"/>
-        </div>
-        <input type="submit" value="Snimi"/>*@
+
+<form asp-action="Snimi" asp-controller="Grad">
+
 
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -25,10 +14,14 @@
             </div>
             <div class="modal-body">
                 <div>
-                    <input hidden readonly asp-for="DrzavaID" />
+                    <input hidden readonly asp-for="GradID" />
                 </div>
                 <div>
-                    <label>Naziv</label>
+                    <label>Drzava</label>
+                    <select asp-for="DrzavaID" asp-items="Model.drzave"></select>
+                </div>
+                <div>
+                    <label>Grad</label>
                     <input asp-for="Naziv" />
                 </div>
             </div>
