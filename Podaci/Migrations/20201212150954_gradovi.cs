@@ -2,28 +2,29 @@
 
 namespace Podaci.Migrations
 {
-    public partial class prva : Migration
+    public partial class gradovi : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "ObavijestKategorija",
+                name: "Grad",
                 columns: table => new
                 {
-                    ObavijestID = table.Column<int>(nullable: false)
+                    GradID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Naziv = table.Column<string>(nullable: true)
+                    Naziv = table.Column<string>(nullable: true),
+                    DrzavaID = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ObavijestKategorija", x => x.ObavijestID);
+                    table.PrimaryKey("PK_Grad", x => x.GradID);
                 });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ObavijestKategorija");
+                name: "Grad");
         }
     }
 }

@@ -9,8 +9,8 @@ using Podaci;
 namespace Podaci.Migrations
 {
     [DbContext(typeof(MojDbContext))]
-    [Migration("20201206182538_prva")]
-    partial class prva
+    [Migration("20201212150954_gradovi")]
+    partial class gradovi
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -19,6 +19,39 @@ namespace Podaci.Migrations
                 .HasAnnotation("ProductVersion", "3.1.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("Podaci.Klase.Grad", b =>
+                {
+                    b.Property<int>("GradID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("DrzavaID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Naziv")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("GradID");
+
+                    b.ToTable("Grad");
+                });
+
+            modelBuilder.Entity("WebApplication1.Drzava", b =>
+                {
+                    b.Property<int>("DrzavaID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Naziv")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("DrzavaID");
+
+                    b.ToTable("Drzava");
+                });
 
             modelBuilder.Entity("WebApplication1.ObavijestKategorija", b =>
                 {

@@ -13,6 +13,8 @@ namespace Podaci
         public DbSet<ObavijestKategorija> ObavijestKategorija { get; set; }
         public DbSet<Obavijest> Obavijest { get; set; }
         public DbSet<Drzava> Drzava { get; set; }
+        public DbSet<Grad> Grad { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(@"Server=localhost; Database=BUS_STANICA;
