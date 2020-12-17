@@ -17,7 +17,7 @@ namespace WebApplication1.Controllers
             var m = db.ObavijestKategorija.
                 Select(ob => new ObavijestKategorijaPrikazVM
                 {
-                    ObavijestID = ob.ObavijestID,
+                    ObavijestID = ob.ObavijestKategorijaID,
                     Naziv = ob.Naziv
                 })
                 .ToList();
@@ -32,7 +32,7 @@ namespace WebApplication1.Controllers
             }
             else
             {
-                m = db.ObavijestKategorija.Where(o => o.ObavijestID == ObavijestID)
+                m = db.ObavijestKategorija.Where(o => o.ObavijestKategorijaID == ObavijestID)
                .Select(ob => new ObavijestKategorijaUrediVM
                {
                    Naziv = ob.Naziv
@@ -51,7 +51,7 @@ namespace WebApplication1.Controllers
             }
             else
             {
-                m = db.ObavijestKategorija.Where(o => o.ObavijestID == x.ObavijestID).SingleOrDefault();
+                m = db.ObavijestKategorija.Where(o => o.ObavijestKategorijaID == x.ObavijestID).SingleOrDefault();
             }
             m.Naziv = x.Naziv;
             db.SaveChanges();
