@@ -16,8 +16,13 @@ namespace Podaci
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Server=AMRA\MSSQLSERVER_OLAP; Database=BUS_STANICA;
-                        Trusted_Connection=true; MultipleActiveResultSets=true;");
+            optionsBuilder.UseSqlServer(@"Server=app.fit.ba,1431; 
+                                            Database=db_AutobusnaStanica;
+                                            Trusted_Connection=false; 
+                                            User ID=db_AutobusnaStanica;
+                                            Password=SisterStres2020;
+                                            MultipleActiveResultSets=true;");
+                                            
         }
     }
 }
