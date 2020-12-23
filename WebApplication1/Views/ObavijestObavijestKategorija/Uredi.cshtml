@@ -1,0 +1,26 @@
+﻿
+@{
+    ViewData["Title"] = "Uredi";
+}
+
+<h1>Uredi</h1>
+@model WebApplication1.Models.Obavijest.ObavijestDodajVM
+
+<form asp-action="Snimi" asp-controller="ObavijestObavijestKategorija">
+    <input hidden readonly asp-for="ObavijestID" /><br />
+    Naslov:
+    <input asp-for="Naslov" /><br />
+    Podnaslov:
+    <input asp-for="Podnaslov" /><br />
+    Opis:
+    <input asp-for="Opis" /><br />
+    Slika:
+    <input asp-for="Slika" />
+
+    <br />
+    Datum:
+    <input readonly asp-for="DatumObjave" /><br />
+    ObavijestKategorija:
+    <select asp-for="KategorijaID" asp-items="Model.Kategorije"></select><br />
+    <input type="submit" value="Snimi" />
+</form>

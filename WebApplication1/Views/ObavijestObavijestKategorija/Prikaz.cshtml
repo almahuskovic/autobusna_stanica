@@ -1,0 +1,44 @@
+﻿
+@{
+    ViewData["Title"] = "Prikaz";
+}
+
+<h1>Prikaz</h1>
+
+@model WebApplication1.Models.Obavijest.ObavijestPrikazVM
+<table class="table-bordered">
+    <thead>
+        <tr>
+            @*<th>ID</th>*@
+            <th>Naslov</th>
+            <th>Podnaslov</th>
+            <th>Kategorija obavijesti</th>
+            <th>Opis</th>
+            <th>Datum Objave</th>
+            <th>Slika</th>
+            <th>Akcija</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(WebApplication1.Models.Obavijest.ObavijestPrikazVM.Row o in Model.obavijesti)
+        {
+            <tr>
+                @*<td>@o.ObavijestID</td>*@
+                <td>@o.Naslov</td>
+                <td>@o.Podnaslov</td>
+                <td>@o.ObavijestKategorija</td>
+                <td>@o.Opis</td>
+                <td>@o.DatumObjave</td>
+                <td>
+                    <img src="~/images/@o.Slika" height="40" width="40" />
+                </td>
+                <td>
+                    <a href="/ObavijestObavijestKategorija/Obrisi?ObavijestID=@o.ObavijestID" class="btn btn-danger">Obrisi</a>
+                    <a href="/ObavijestObavijestKategorija/Uredi?ObavijestID=@o.ObavijestID" class="btn btn-danger">Uredi</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<a class="btn btn-info" href="/ObavijestObavijestKategorija/Uredi">Dodaj</a>
+

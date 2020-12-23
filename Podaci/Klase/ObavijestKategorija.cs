@@ -9,7 +9,7 @@ namespace WebApplication1
     public class ObavijestKategorija
     {
         [Key]
-        public int ObavijestID { get; set; }
+        public int ObavijestKategorijaID { get; set; }
         public string Naziv { get; set; }
     }
 }
