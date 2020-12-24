@@ -1,44 +1,38 @@
 ﻿
 @{
+    int brojac=0;
     ViewData["Title"] = "Prikaz";
 }
 
-<h1>Prikaz</h1>
-
 @model WebApplication1.Models.Obavijest.ObavijestPrikazVM
-<table class="table-bordered">
-    <thead>
-        <tr>
-            @*<th>ID</th>*@
-            <th>Naslov</th>
-            <th>Podnaslov</th>
-            <th>Kategorija obavijesti</th>
-            <th>Opis</th>
-            <th>Datum Objave</th>
-            <th>Slika</th>
-            <th>Akcija</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach(WebApplication1.Models.Obavijest.ObavijestPrikazVM.Row o in Model.obavijesti)
-        {
-            <tr>
-                @*<td>@o.ObavijestID</td>*@
-                <td>@o.Naslov</td>
-                <td>@o.Podnaslov</td>
-                <td>@o.ObavijestKategorija</td>
-                <td>@o.Opis</td>
-                <td>@o.DatumObjave</td>
-                <td>
-                    <img src="~/images/@o.Slika" height="40" width="40" />
-                </td>
-                <td>
-                    <a href="/ObavijestObavijestKategorija/Obrisi?ObavijestID=@o.ObavijestID" class="btn btn-danger">Obrisi</a>
-                    <a href="/ObavijestObavijestKategorija/Uredi?ObavijestID=@o.ObavijestID" class="btn btn-danger">Uredi</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
 <a class="btn btn-info" href="/ObavijestObavijestKategorija/Uredi">Dodaj</a>
+<div class="container">
+    <div class="row">
+        @foreach (WebApplication1.Models.Obavijest.ObavijestPrikazVM.Row o in Model.obavijesti)
+        {
+            @if (brojac == 3)
+            {
+                <div class="w-100"></div>
+                brojac = 0;
+            }
+            else
+            {
+                brojac++;
+            }
+            <div class="card col" style="width: 18rem; margin:10px;">
+                <img src="@o.Slika" class="card-img-top" style="height:300px; width:auto;" alt="...">
+                <div class="card-body">
+                    <h3 class="card-title">@o.Naslov</h3>
+                    <h4 class="card-title">@o.Podnaslov</h4>
+                    <h5 class="card-title">@o.ObavijestKategorija</h5>
+                    <p class="card-text">@o.Opis</p>
+                    <a href="/ObavijestObavijestKategorija/Obrisi?ObavijestID=@o.ObavijestID" class="btn btn-primary">Obrisi</a>
+                    <a href="/ObavijestObavijestKategorija/Uredi?ObavijestID=@o.ObavijestID" class="btn btn-primary">Uredi</a>
+                    <h5 class="card-title">@o.DatumObjave</h5>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
 

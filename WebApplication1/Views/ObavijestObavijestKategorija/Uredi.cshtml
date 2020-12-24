@@ -6,21 +6,36 @@
 <h1>Uredi</h1>
 @model WebApplication1.Models.Obavijest.ObavijestDodajVM
 
-<form asp-action="Snimi" asp-controller="ObavijestObavijestKategorija">
+<form method="post" enctype="multipart/form-data" asp-action="Snimi" asp-controller="ObavijestObavijestKategorija">
     <input hidden readonly asp-for="ObavijestID" /><br />
-    Naslov:
-    <input asp-for="Naslov" /><br />
-    Podnaslov:
-    <input asp-for="Podnaslov" /><br />
-    Opis:
-    <input asp-for="Opis" /><br />
-    Slika:
-    <input asp-for="Slika" />
-
+    <div class="form-group">
+        <label asp-for="Naslov" class="control-label"></label>
+        <input asp-for="Naslov" /><br />
+    </div>
+    <div class="form-group">
+        <label asp-for="Podnaslov" class="control-label"></label>
+        <input asp-for="Podnaslov" /><br />
+    </div>
+    <div class="form-group">
+        <label asp-for="Opis" class="control-label"></label>
+        <input asp-for="Opis" /><br />
+    </div>
+    <div class="form-group">
+        <label class="control-label"></label>
+        @if (!string.IsNullOrEmpty(Model.Slika))
+        {
+            <img src="@Model.Slika" style="max-width:100px; max-height:100px" />
+        }
+        <input type="file" name="file" id="file" />
+    </div>
     <br />
-    Datum:
-    <input readonly asp-for="DatumObjave" /><br />
-    ObavijestKategorija:
-    <select asp-for="KategorijaID" asp-items="Model.Kategorije"></select><br />
+    <div class="form-group">
+        <label asp-for="DatumObjave" class="control-label"></label>
+        <input readonly asp-for="DatumObjave" /><br />
+    </div>
+    <div class="form-group">
+        <label asp-for="ObavijestKategorija" class="control-label"></label>
+        <select asp-for="KategorijaID" asp-items="Model.Kategorije"></select><br />
+    </div>
     <input type="submit" value="Snimi" />
 </form>
