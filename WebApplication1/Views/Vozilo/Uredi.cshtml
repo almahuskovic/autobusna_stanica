@@ -1,0 +1,36 @@
+﻿@model VoziloUrediVM;
+@{
+    Layout = null;
+}
+
+<form asp-action="Snimi" asp-controller="Vozilo">
+
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1>Uredi</h1>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <label>Vozilo ID</label>
+                    <input style="background-color:lightgray" readonly asp-for="VoziloID" />
+                </div>
+                <div>
+                    <label>Registracijski broj</label>
+                    <input asp-for="RegistracijskiBroj" />
+                </div>
+                <div>
+                    <label>Max broj sjedista</label>
+                    <input asp-for="MaxBrojSjedista" />
+                </div>
+                <div>
+                    <label>Datum zadnjeg servisa</label>
+                    <input asp-for="@Model.DatumZadnjegServisa" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="submit" name="Snimi" value="Sačuvaj" />
+            </div>
+        </div>
+    </div>
+</form>
