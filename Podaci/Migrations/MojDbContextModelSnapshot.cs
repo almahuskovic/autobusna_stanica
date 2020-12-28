@@ -39,36 +39,72 @@ namespace Podaci.Migrations
                     b.ToTable("Grad");
                 });
 
-            modelBuilder.Entity("Podaci.Klase.Obavijest", b =>
+            //modelBuilder.Entity("Podaci.Klase.Obavijest", b =>
+            //    {
+            //        b.Property<int>("ObavijestID")
+            //            .ValueGeneratedOnAdd()
+            //            .HasColumnType("int")
+            //            .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            //        b.Property<DateTime>("DatumObjave")
+            //            .HasColumnType("datetime2");
+
+            //        b.Property<string>("Naslov")
+            //            .HasColumnType("nvarchar(max)");
+
+            //        b.Property<int>("ObavijestKategorijaID")
+            //            .HasColumnType("int");
+
+            //        b.Property<string>("Opis")
+            //            .HasColumnType("nvarchar(max)");
+
+            //        b.Property<string>("Podnaslov")
+            //            .HasColumnType("nvarchar(max)");
+
+            //        b.Property<byte[]>("Slika")
+            //            .HasColumnType("varbinary(max)");
+
+            //        b.HasKey("ObavijestID");
+
+            //        b.HasIndex("ObavijestKategorijaID");
+
+            //        b.ToTable("Obavijest");
+            //    });
+
+            modelBuilder.Entity("Podaci.Klase.TipUposlenika", b =>
                 {
-                    b.Property<int>("ObavijestID")
+                    b.Property<int>("TipUposlenikaID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("DatumObjave")
+                    b.Property<string>("Naziv")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("TipUposlenikaID");
+
+                    b.ToTable("TipUposlenika");
+                });
+
+            modelBuilder.Entity("Podaci.Klase.Vozilo", b =>
+                {
+                    b.Property<int>("VoziloID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("DatumZadnjegServisa")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Naslov")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ObavijestKategorijaID")
+                    b.Property<int>("MaxBrojSjedista")
                         .HasColumnType("int");
 
-                    b.Property<string>("Opis")
+                    b.Property<string>("RegistracijskiBroj")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Podnaslov")
-                        .HasColumnType("nvarchar(max)");
+                    b.HasKey("VoziloID");
 
-                    b.Property<byte[]>("Slika")
-                        .HasColumnType("varbinary(max)");
-
-                    b.HasKey("ObavijestID");
-
-                    b.HasIndex("ObavijestKategorijaID");
-
-                    b.ToTable("Obavijest");
+                    b.ToTable("Vozilo");
                 });
 
             modelBuilder.Entity("WebApplication1.Drzava", b =>

@@ -3,17 +3,17 @@
     ViewData["Title"] = "Uredi";
     Layout = null;
 }
-@model WebApplication1.Models.ObavijestKategorija.ObavijestKategorijaUrediVM
+@model WebApplication1.Models.TipUposlenika.TipUposlenikaUrediVM
 
-<form asp-action="Snimi" asp-controller="ObavijestKategorija">
+<form asp-action="Snimi" asp-controller="TipUposlenika">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-               <h1>Uredi</h1> 
+                <h1>Uredi</h1>
             </div>
             <div class="modal-body">
                 <div>
-                    <input hidden readonly asp-for="ObavijestID" />
+                    <input hidden readonly asp-for="TipUposlenikaID" />
                 </div>
                 <div>
                     <label>Naziv</label>
@@ -25,17 +25,7 @@
                 <input type="submit" name="Snimi" value="Sačuvaj" />
             </div>
         </div>
-        </div>
+    </div>
 </form>
-@*Stari kod- nek stoji ako nesto zeznem 
-    <form asp-action="Snimi" asp-controller="ObavijestKategorija">
-        <div>
-            <input hidden readonly asp-for="ObavijestID" />
-        </div>
-        <div>
-            <label>Naziv</label>
-            <input asp-for="Naziv" />
-        </div>
-        <input type="submit" name="Snimi" value="Sačuvaj" />    
-</form>*@
+
 

@@ -14,7 +14,7 @@ using WebApplication1.Models.Obavijest;
 
 namespace WebApplication1.Controllers
 {
-    public class ObavijestObavijestKategorijaController : Controller
+    public class ObavijestController : Controller
     {
         MojDbContext db = new MojDbContext();
 
@@ -97,14 +97,14 @@ namespace WebApplication1.Controllers
             }
 
             db.SaveChanges();
-            return Redirect("/ObavijestObavijestKategorija/Prikaz");
+            return Redirect("/Obavijest/Prikaz");
         }
         public IActionResult Obrisi(int ObavijestID)
         {
             Obavijest o = db.Obavijest.Find(ObavijestID);
             db.Remove(o);
             db.SaveChanges();
-            return Redirect("/ObavijestObavijestKategorija/Prikaz");
+            return Redirect("/Obavijest/Prikaz");
         }
         
     }

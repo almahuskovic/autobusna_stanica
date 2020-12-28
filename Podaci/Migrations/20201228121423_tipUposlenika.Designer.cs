@@ -10,8 +10,8 @@ using Podaci;
 namespace Podaci.Migrations
 {
     [DbContext(typeof(MojDbContext))]
-    [Migration("20201223143225_p")]
-    partial class p
+    [Migration("20201228121423_tipUposlenika")]
+    partial class tipUposlenika
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -71,6 +71,42 @@ namespace Podaci.Migrations
                     b.HasIndex("ObavijestKategorijaID");
 
                     b.ToTable("Obavijest");
+                });
+
+            modelBuilder.Entity("Podaci.Klase.TipUposlenika", b =>
+                {
+                    b.Property<int>("TipUposlenikaID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Naziv")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("TipUposlenikaID");
+
+                    b.ToTable("TipUposlenika");
+                });
+
+            modelBuilder.Entity("Podaci.Klase.Vozilo", b =>
+                {
+                    b.Property<int>("VoziloID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("DatumZadnjegServisa")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("MaxBrojSjedista")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RegistracijskiBroj")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("VoziloID");
+
+                    b.ToTable("Vozilo");
                 });
 
             modelBuilder.Entity("WebApplication1.Drzava", b =>
