@@ -15,7 +15,6 @@ namespace Podaci
         public DbSet<Grad> Grad { get; set; }
         public DbSet<Obavijest> Obavijest { get; set; }
         public DbSet<Vozilo> Vozilo { get; set; }
-        public DbSet<TipUposlenika> TipUposlenika { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -25,9 +24,6 @@ namespace Podaci
                                             User ID=db_AutobusnaStanica;
                                             Password=SisterStres2020;
                                             MultipleActiveResultSets=true;");
-
-
-
         }
     }
 }
