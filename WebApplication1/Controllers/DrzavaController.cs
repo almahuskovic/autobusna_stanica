@@ -4,16 +4,21 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApplication1.Data;
 using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
 {
     public class DrzavaController : Controller
     {
-
+        private readonly ApplicationDbContext db;
+        public DrzavaController(ApplicationDbContext Db)
+        {
+            Db = db;
+        }
         public IActionResult Prikaz(string pretraga)
         {
-            MojDbContext db = new MojDbContext();
+            //MojDbContext db = new MojDbContext();
 
             
             List<DrzavaPrikazVM.Row> Drzave = db.Drzava
@@ -33,7 +38,7 @@ namespace WebApplication1.Controllers
 
         public IActionResult Obrisi(int DrzavaID)
         {
-            MojDbContext db = new MojDbContext();
+            //MojDbContext db = new MojDbContext();
 
             Drzava d = db.Drzava.Find(DrzavaID);
             db.Remove(d);
@@ -46,7 +51,7 @@ namespace WebApplication1.Controllers
 
         public IActionResult Uredi(int DrzavaID)
         {
-            MojDbContext db = new MojDbContext();
+           // MojDbContext db = new MojDbContext();
 
             DrzavaDodajVM d = DrzavaID == 0 ? new DrzavaDodajVM() :
               db.Drzava.Where(w => w.DrzavaID == DrzavaID)
@@ -61,7 +66,7 @@ namespace WebApplication1.Controllers
 
         public IActionResult Snimi (DrzavaDodajVM x)
         {
-            MojDbContext db = new MojDbContext();
+            //MojDbContext db = new MojDbContext();
 
             Drzava drzava;
             if (x.DrzavaID == 0)

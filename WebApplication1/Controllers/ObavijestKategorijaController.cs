@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Podaci;
+using WebApplication1.Data;
 //using WebApplication1.Models;
 using WebApplication1.Models.ObavijestKategorija;
 
@@ -11,7 +12,12 @@ namespace WebApplication1.Controllers
 {
     public class ObavijestKategorijaController : Controller
     {
-        MojDbContext db = new MojDbContext();
+        //MojDbContext db = new MojDbContext();
+        private readonly ApplicationDbContext db;
+        public ObavijestKategorijaController(ApplicationDbContext Db)
+        {
+            Db = db;
+        }
         public IActionResult Prikaz()
         {
             var m = db.ObavijestKategorija.

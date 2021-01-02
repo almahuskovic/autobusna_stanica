@@ -5,13 +5,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApplication1.Data;
 using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
 {
     public class VoziloController : Controller
     {
-        MojDbContext db = new MojDbContext();
+        //MojDbContext db = new MojDbContext();
+        private readonly ApplicationDbContext db;
+        public VoziloController(ApplicationDbContext Db)
+        {
+            Db = db;
+        }
         public IActionResult Prikaz(string pretraga)
         {
             List<VoziloPrikazVM.Row> Vozila = db.Vozilo

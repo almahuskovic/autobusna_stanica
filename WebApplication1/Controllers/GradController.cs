@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApplication1.Data;
 using WebApplication1.Models;
 using WebApplication1.Models.Grad;
 
@@ -13,7 +14,12 @@ namespace WebApplication1.Controllers
 {
     public class GradController : Controller
     {
-        MojDbContext db = new MojDbContext();
+        private readonly ApplicationDbContext db;
+        public GradController(ApplicationDbContext Db)
+        {
+            Db=db;
+        }
+        
         public IActionResult Prikaz(string pretraga)
         {
             //List<SelectListItem> Drzave = db.Drzava
@@ -74,7 +80,7 @@ namespace WebApplication1.Controllers
         }
         public IActionResult Snimi(GradDodajVM x)
         {
-            MojDbContext db = new MojDbContext();
+            //MojDbContext db = new MojDbContext();
 
             Grad grad;
             if (x.GradID== 0)

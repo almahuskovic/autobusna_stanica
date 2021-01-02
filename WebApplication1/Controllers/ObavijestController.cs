@@ -10,14 +10,20 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using WebApplication1.Data;
 using WebApplication1.Models.Obavijest;
 
 namespace WebApplication1.Controllers
 {
     public class ObavijestController : Controller
     {
-        MojDbContext db = new MojDbContext();
+        //MojDbContext db = new MojDbContext();
 
+        private readonly ApplicationDbContext db;
+        public ObavijestController(ApplicationDbContext Db)
+        {
+            Db = db;
+        }
         public IActionResult Prikaz()
         {
             List<ObavijestPrikazVM.Row> obavijesti = db.Obavijest.OrderByDescending(d=>d.DatumObjave).Select(o => new ObavijestPrikazVM.Row
