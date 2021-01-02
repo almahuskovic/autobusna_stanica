@@ -10,6 +10,7 @@ namespace WebApplication1.Models
     public class VoziloUrediVM
     {
         public int VoziloID { get; set; }
+        public string OznakaVozila { get; set; }
         public string RegistracijskiBroj { get; set; }
         public int MaxBrojSjedista { get; set; }
         [BindProperty, DisplayFormat(DataFormatString = "{0:yyyy-MM-ddTHH:mm}", ApplyFormatInEditMode = true)]

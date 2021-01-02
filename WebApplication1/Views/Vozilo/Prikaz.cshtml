@@ -10,9 +10,9 @@
 </form>
 
 <table class="table table-bordered">
-    <thead>
+    <thead class="thead-dark">
         <tr>
-            <th>VoziloID</th>
+            <th>Oznaka vozila</th>
             <th>Registracijski Broj</th>
             <th>Max broj sjedista</th>
             <th>Datum zadnjeg servisa</th>
@@ -24,7 +24,7 @@
         @foreach (var v in Model.Vozila)
         {
             <tr>
-                <td>@v.VoziloID</td>
+                <td>@v.OznakaVozila</td>
                 <td>@v.RegistracijskiBroj</td>
                 <td>@v.MaxBrojSjedista</td>
                 <td>@v.DatumZadnjegServisa</td>
@@ -33,7 +33,7 @@
                             onclick="VoziloUredi(@v.VoziloID)">
                         Uredi
                     </button>
-                    @*<a href="#" onclick="PrikazUredi(@d.DrzavaID)">Uredi</a>*@
+                    
                     <a class="btn btn-warning" href="/Vozilo/Obrisi?VoziloID=@v.VoziloID">Obrisi</a>
                 </td>
             </tr>

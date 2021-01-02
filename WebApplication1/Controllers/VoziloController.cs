@@ -21,10 +21,11 @@ namespace WebApplication1.Controllers
         public IActionResult Prikaz(string pretraga)
         {
             List<VoziloPrikazVM.Row> Vozila = db.Vozilo
-                .Where(v => pretraga == null || v.RegistracijskiBroj.StartsWith(pretraga))
+                .Where(v => pretraga == null || v.RegistracijskiBroj.StartsWith(pretraga) || v.OznakaVozila.StartsWith(pretraga))
                 .Select(v => new VoziloPrikazVM.Row
                 {
                     VoziloID = v.VoziloID,
+                    OznakaVozila = v.OznakaVozila,
                     RegistracijskiBroj = v.RegistracijskiBroj,
                     MaxBrojSjedista = v.MaxBrojSjedista,
                     DatumZadnjegServisa = v.DatumZadnjegServisa
@@ -52,6 +53,7 @@ namespace WebApplication1.Controllers
                 .Select(v => new VoziloUrediVM
                 {
                     VoziloID = v.VoziloID,
+                    OznakaVozila=v.OznakaVozila,
                     RegistracijskiBroj = v.RegistracijskiBroj,
                     MaxBrojSjedista = v.MaxBrojSjedista,
                     DatumZadnjegServisa = v.DatumZadnjegServisa
@@ -73,6 +75,7 @@ namespace WebApplication1.Controllers
             {
                 vozilo = db.Vozilo.Find(x.VoziloID);
             }
+            vozilo.OznakaVozila = x.OznakaVozila;
             vozilo.DatumZadnjegServisa = x.DatumZadnjegServisa;
             vozilo.RegistracijskiBroj = x.RegistracijskiBroj;
             vozilo.MaxBrojSjedista = x.MaxBrojSjedista;
