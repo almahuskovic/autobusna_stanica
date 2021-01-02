@@ -14,7 +14,7 @@ namespace WebApplication1.Controllers
         private readonly ApplicationDbContext db;
         public DrzavaController(ApplicationDbContext Db)
         {
-            Db = db;
+            db = Db;
         }
         public IActionResult Prikaz(string pretraga)
         {

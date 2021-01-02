@@ -37,5 +37,7 @@
         <label asp-for="ObavijestKategorija" class="control-label"></label>
         <select asp-for="KategorijaID" asp-items="Model.Kategorije"></select><br />
     </div>
+    <input type="button" value="Odustani" onClick="document.location.reload(true)">
+
     <input type="submit" value="Snimi" />
 </form>

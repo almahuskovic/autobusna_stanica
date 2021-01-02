@@ -22,7 +22,7 @@ namespace WebApplication1.Controllers
         private readonly ApplicationDbContext db;
         public ObavijestController(ApplicationDbContext Db)
         {
-            Db = db;
+            db = Db;
         }
         public IActionResult Prikaz()
         {

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApplication1.Data;
 using WebApplication1.Models;
 
 
@@ -11,9 +12,13 @@ namespace WebApplication1.Controllers
 {
     public class LinijaController : Controller
     {
-        MojDbContext db = new MojDbContext();
+        private readonly ApplicationDbContext db;
+        public LinijaController(ApplicationDbContext Db)
+        {
+            db = Db;
+        }
 
-        
+
         public IActionResult Prikaz(string pretraga)
         {
             List<LinijaPrikazVM.Row> Linije = db.Linija

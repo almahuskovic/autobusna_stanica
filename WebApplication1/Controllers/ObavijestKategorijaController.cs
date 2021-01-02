@@ -16,7 +16,7 @@ namespace WebApplication1.Controllers
         private readonly ApplicationDbContext db;
         public ObavijestKategorijaController(ApplicationDbContext Db)
         {
-            Db = db;
+            db = Db;
         }
         public IActionResult Prikaz()
         {
