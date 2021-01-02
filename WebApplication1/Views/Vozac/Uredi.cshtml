@@ -1,0 +1,43 @@
+﻿
+@using WebApplication1.Models.Vozac
+@model VozacUrediVM.Row
+@{ 
+    Layout = null;
+}
+
+<form asp-action="Snimi" asp-controller="Vozac">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1>Uredi</h1>
+            </div>
+            <div class="modal-body">
+                <input hidden readonly asp-for="VozacID" /><br />
+                <div class="form-group">
+                    <label asp-for="Ime" class="control-label"></label>
+                    <input asp-for="Ime" /><br />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Prezime" class="control-label"></label>
+                    <input asp-for="Prezime" /><br />
+                </div>
+                <div class="form-group">
+                    <label asp-for="BrojVozacke" class="control-label"></label>
+                    <input asp-for="BrojVozacke" /><br />
+                </div>
+                <div class="form-group">
+                    <label asp-for="DatumRodjenja" class="control-label"></label>
+                    <input asp-for="@Model.DatumRodjenja" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="DatumZaposlenja" class="control-label"></label>
+                    <input asp-for="@Model.DatumZaposlenja" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="button" value="Odustani" onClick="document.location.reload(true)">
+                <input type="submit" name="Snimi" value="Sačuvaj" />
+            </div>
+        </div>
+    </div>
+</form>

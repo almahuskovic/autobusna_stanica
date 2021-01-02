@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace WebApplication1.Models.Obavijest
 {
-    public class ObavijestDodajVM
+    public class ObavijestUrediVM
     {
         public int ObavijestID { get; set; }
         public string Naslov { get; set; }

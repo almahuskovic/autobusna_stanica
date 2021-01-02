@@ -50,10 +50,10 @@ namespace WebApplication1.Controllers
                 Value = k.ObavijestKategorijaID.ToString()
             }).ToList();
 
-            ObavijestDodajVM m;
+            ObavijestUrediVM m;
             if (ObavijestID == 0)
             {
-                m = new ObavijestDodajVM
+                m = new ObavijestUrediVM
                 {
                     DatumObjave = DateTime.Now,
                     Kategorije = ok,
@@ -62,7 +62,7 @@ namespace WebApplication1.Controllers
             else
             {
                 
-                m = db.Obavijest.Where(o => o.ObavijestID == ObavijestID).Select(k => new ObavijestDodajVM
+                m = db.Obavijest.Where(o => o.ObavijestID == ObavijestID).Select(k => new ObavijestUrediVM
                 {
                     ObavijestID = k.ObavijestID,
                     Naslov = k.Naslov,
@@ -77,7 +77,7 @@ namespace WebApplication1.Controllers
             return View(m);
         }
         [HttpPost]
-        public IActionResult Snimi(ObavijestDodajVM x, IFormFile file)
+        public IActionResult Snimi(ObavijestUrediVM x, IFormFile file)
         {
             Obavijest o;
             if (x.ObavijestID == 0)

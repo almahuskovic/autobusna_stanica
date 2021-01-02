@@ -314,6 +314,33 @@ namespace WebApplication1.Data.Migrations
                     b.ToTable("Obavijest");
                 });
 
+            modelBuilder.Entity("Podaci.Klase.Vozac", b =>
+                {
+                    b.Property<int>("VozacID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("BrojVozacke")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DatumRodjenja")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DatumZaposlenja")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Ime")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Prezime")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("VozacID");
+
+                    b.ToTable("Vozac");
+                });
+
             modelBuilder.Entity("Podaci.Klase.Vozilo", b =>
                 {
                     b.Property<int>("VoziloID")
