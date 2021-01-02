@@ -1,0 +1,68 @@
+﻿@model LinijaPrikazVM
+
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ajaxPrikaz"
+        onclick="LinijaUredi()">
+    Dodaj novu liniju
+</button>
+
+<form style="margin:20px 0px">
+    <input name="pretraga" value="@Model.pretraga" />
+    <input type="submit" value="Pretraga" />
+</form>
+
+<table class="table table-bordered">
+    <thead class="thead-dark">
+        <tr>
+            <th>Oznaka</th>
+            <th>Grad polaska</th>
+            <th>Grad dolaska</th>
+            <th>Cijena jednosmijerna (BAM)</th>
+            <th>Cijena povratna (BAM)</th>
+            <th>Akcije</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var l in Model.Linije)
+        {
+        <tr>
+            <td>@l.OznakaLinije</td>
+            <td>@l.GradPolaska</td>
+            <td>@l.GradDolaska</td>
+            <td>@l.CijenaJednosmijerna</td>
+            <td>@l.CijenaPovratna</td>
+            <td>
+                <button type="button" , class="btn btn-primary" data-toggle="modal" data-target="#ajaxPrikaz"
+                        onclick="LinijaUredi(@l.LinijaID)">
+                    Uredi
+                </button>
+
+                <a class="btn btn-warning" href="/Linija/Obrisi?LinijaID=@l.LinijaID">Obrisi</a>
+            </td>
+        </tr>
+        }
+    </tbody>
+
+</table>
+<div class="modal fade" id="ajaxPrikaz" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+
+</div>
+
+<script>
+
+    function LinijaUredi(LinijaID) {
+        if (LinijaID == 0) {
+            $.get("/Vozilo/Uredi", function (data) {
+                $("#ajaxPrikaz").html(data);
+
+            })
+        }
+        else {
+            $.get("/Vozilo/Uredi?VoziloID=" + LinijaID, function (data) {
+                $("#ajaxPrikaz").html(data);
+            });
+        }
+    }
+
+</script>

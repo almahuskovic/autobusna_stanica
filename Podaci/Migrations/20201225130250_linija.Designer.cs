@@ -10,8 +10,8 @@ using Podaci;
 namespace Podaci.Migrations
 {
     [DbContext(typeof(MojDbContext))]
-    [Migration("20201223143225_p")]
-    partial class p
+    [Migration("20201225130250_linija")]
+    partial class linija
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -39,6 +39,43 @@ namespace Podaci.Migrations
                     b.HasIndex("DrzavaID");
 
                     b.ToTable("Grad");
+                });
+
+            modelBuilder.Entity("Podaci.Klase.Linija", b =>
+                {
+                    b.Property<int>("LinijaID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<float>("CijenaJednosmijerna")
+                        .HasColumnType("real");
+
+                    b.Property<float>("CijenaPovratna")
+                        .HasColumnType("real");
+
+                    b.Property<int>("GDolaskaID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GPolaskaID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("GradDolaskaGradID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("GradPolaskaGradID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("OznakaLinije")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("LinijaID");
+
+                    b.HasIndex("GradDolaskaGradID");
+
+                    b.HasIndex("GradPolaskaGradID");
+
+                    b.ToTable("Linija");
                 });
 
             modelBuilder.Entity("Podaci.Klase.Obavijest", b =>
@@ -71,6 +108,30 @@ namespace Podaci.Migrations
                     b.HasIndex("ObavijestKategorijaID");
 
                     b.ToTable("Obavijest");
+                });
+
+            modelBuilder.Entity("Podaci.Klase.Vozilo", b =>
+                {
+                    b.Property<int>("VoziloID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("DatumZadnjegServisa")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("MaxBrojSjedista")
+                        .HasColumnType("int");
+
+                    b.Property<string>("OznakaVozila")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RegistracijskiBroj")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("VoziloID");
+
+                    b.ToTable("Vozilo");
                 });
 
             modelBuilder.Entity("WebApplication1.Drzava", b =>
@@ -110,6 +171,17 @@ namespace Podaci.Migrations
                         .HasForeignKey("DrzavaID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Podaci.Klase.Linija", b =>
+                {
+                    b.HasOne("Podaci.Klase.Grad", "GradDolaska")
+                        .WithMany()
+                        .HasForeignKey("GradDolaskaGradID");
+
+                    b.HasOne("Podaci.Klase.Grad", "GradPolaska")
+                        .WithMany()
+                        .HasForeignKey("GradPolaskaGradID");
                 });
 
             modelBuilder.Entity("Podaci.Klase.Obavijest", b =>

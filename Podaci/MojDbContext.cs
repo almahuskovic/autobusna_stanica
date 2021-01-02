@@ -15,6 +15,7 @@ namespace Podaci
         public DbSet<Grad> Grad { get; set; }
         public DbSet<Obavijest> Obavijest { get; set; }
         public DbSet<Vozilo> Vozilo { get; set; }
+        public DbSet<Linija> Linija { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

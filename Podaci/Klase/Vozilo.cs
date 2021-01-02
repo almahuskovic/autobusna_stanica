@@ -9,6 +9,7 @@ namespace Podaci.Klase
     {
         [Key]
         public int VoziloID { get; set; }
+        public string OznakaVozila { get; set; }
         public string RegistracijskiBroj { get; set; }
         public int MaxBrojSjedista { get; set; }
         public DateTime DatumZadnjegServisa { get; set; }
