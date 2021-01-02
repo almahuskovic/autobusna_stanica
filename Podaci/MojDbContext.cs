@@ -25,9 +25,6 @@ namespace Podaci
                                             User ID=db_AutobusnaStanica;
                                             Password=SisterStres2020;
                                             MultipleActiveResultSets=true;");
-
-
-
         }
     }
 }
