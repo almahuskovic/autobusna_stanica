@@ -1,0 +1,29 @@
+﻿
+@{
+    ViewData["Title"] = "Uredi";
+    Layout = null;
+}
+@model WebApplication1.Models.TipKarte.TipKarteUrediVM
+<h1>Uredi</h1>
+<form asp-action="Snimi" asp-controller="TipKarte">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1>Uredi</h1>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <input hidden readonly asp-for="TipKarteID" />
+                </div>
+                <div>
+                    <label>Naziv</label>
+                    <input asp-for="Naziv" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="button" value="Odustani" onClick="document.location.reload(true)">
+                <input type="submit" name="Snimi" value="Sačuvaj" />
+            </div>
+        </div>
+    </div>
+</form>
