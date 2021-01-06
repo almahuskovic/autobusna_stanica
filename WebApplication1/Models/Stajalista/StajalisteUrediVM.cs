@@ -22,5 +22,6 @@ namespace WebApplication1.Models.Stajalista
         public List<SelectListItem> Gradovi;
         public int _linijaID { get; set; }
         public int _stajalisteID { get; set; }
+
     }
 }

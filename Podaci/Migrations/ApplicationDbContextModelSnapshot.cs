@@ -174,6 +174,46 @@ namespace Podaci.Migrations
                     b.ToTable("Grad");
                 });
 
+            modelBuilder.Entity("Podaci.Klase.Karta", b =>
+                {
+                    b.Property<int>("KartaID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("BrojPutnika")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Datum")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsRezervisana")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Sjediste")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TipKarteID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("VaziDo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("VaziOd")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("VrstaPopustaID")
+                        .HasColumnType("int");
+
+                    b.HasKey("KartaID");
+
+                    b.HasIndex("TipKarteID");
+
+                    b.HasIndex("VrstaPopustaID");
+
+                    b.ToTable("Karta");
+                });
+
             modelBuilder.Entity("Podaci.Klase.Korisnik", b =>
                 {
                     b.Property<string>("Id")
@@ -357,6 +397,21 @@ namespace Podaci.Migrations
                     b.ToTable("Stajalista");
                 });
 
+            modelBuilder.Entity("Podaci.Klase.TipKarte", b =>
+                {
+                    b.Property<int>("TipKarteID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Naziv")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("TipKarteID");
+
+                    b.ToTable("TipKarte");
+                });
+
             modelBuilder.Entity("Podaci.Klase.Vozac", b =>
                 {
                     b.Property<int>("VozacID")
@@ -406,6 +461,24 @@ namespace Podaci.Migrations
                     b.HasKey("VoziloID");
 
                     b.ToTable("Vozilo");
+                });
+
+            modelBuilder.Entity("Podaci.Klase.VrstaPopusta", b =>
+                {
+                    b.Property<int>("VrstaPopustaID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<float>("Iznos")
+                        .HasColumnType("real");
+
+                    b.Property<string>("Naziv")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("VrstaPopustaID");
+
+                    b.ToTable("VrstaPopusta");
                 });
 
             modelBuilder.Entity("WebApplication1.Drzava", b =>
@@ -494,6 +567,21 @@ namespace Podaci.Migrations
                     b.HasOne("WebApplication1.Drzava", "Drzava")
                         .WithMany()
                         .HasForeignKey("DrzavaID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Podaci.Klase.Karta", b =>
+                {
+                    b.HasOne("Podaci.Klase.TipKarte", "TipKarte")
+                        .WithMany()
+                        .HasForeignKey("TipKarteID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Podaci.Klase.VrstaPopusta", "VrstaPopusta")
+                        .WithMany()
+                        .HasForeignKey("VrstaPopustaID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

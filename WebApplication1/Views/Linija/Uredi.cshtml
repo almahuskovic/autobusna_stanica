@@ -52,10 +52,10 @@
                     <label class="glavne">Vrijeme dolaska:</label>
                     <input class="obicni" asp-for="VrijemeDolaska" />
                 </div>
-                <div>
-                    <a class="btn btn-info" href=""/>Stajalista</a>
-                    <div id="ajaxPrikaz"></div>
-                </div>
+                <!--<div>-->
+                   @* <a class="btn btn-info" href="/Stajalista/Prikaz?LinijaID=@Model.LinijaID"/>Stajalista</a>*@
+                    <!--<div id="ajaxPrikaz"></div>
+                </div>-->
                 <div>
                     <label class="glavne">Dani kojim linija vozi: </label><br />
                     <label class="cb">Ponedjeljak</label><input type="checkbox" asp-for="Ponedjeljak" /><br>
@@ -75,15 +75,15 @@
 </form>
 
 <script>
-    function PrikazStajalista(LinijaID) {
-        if (LinijaID == 0) {
-            $.get("/Stajaliste/Prikaz", function (data) {
-                $("#ajaxPrikaz").html(data);
-            })
-        } else {
-            $.get("/Stajaliste/Prikaz?LinijaID=" + LinijaID, function (data) {
-                $("#ajaxPrikaz").html(data);
-            })
-        }
-    }
+    //function PrikazStajalista(LinijaID) {
+    //    if (LinijaID == 0) {
+    //        $.get("/Stajaliste/Prikaz", function (data) {
+    //            $("#ajaxPrikaz").html(data);
+    //        })
+    //    } else {
+    //        $.get("/Stajaliste/Prikaz?LinijaID=" + LinijaID, function (data) {
+    //            $("#ajaxPrikaz").html(data);
+    //        })
+    //    }
+    //}
 </script>

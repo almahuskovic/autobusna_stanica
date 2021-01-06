@@ -58,6 +58,10 @@ namespace WebApplication1.Controllers
 
         public IActionResult Obrisi(int LinijaID)
         {
+            List<Stajalista> stajalistazaBrisati = db.Stajalista.Where(x => x.LinijaID == LinijaID).ToList();
+            db.RemoveRange(stajalistazaBrisati);
+            db.SaveChanges();
+
             Linija linija = db.Linija.Find(LinijaID);
             db.Remove(linija);
             db.SaveChanges();

@@ -22,7 +22,7 @@ namespace WebApplication1.Controllers
         {
             Linija linija = db.Linija.Find(LinijaID);
 
-            List<StajalistePrikazVM.Row> Stajalista = db.Stajalista
+            List<StajalistePrikazVM.Row> Stajalista = db.Stajalista.Where(s => s.LinijaID==LinijaID)
                 .Select(s => new StajalistePrikazVM.Row
                 {
                     StajaistaID = s.StajaistaID,
@@ -38,19 +38,19 @@ namespace WebApplication1.Controllers
             s.Stajalista = Stajalista;
             //s.OznakaLinije = linija.OznakaLinije;
             s._linijaID = LinijaID;
-
+            
 
             return View(s);
         }
 
 
-        public IActionResult Obrisi(int StajalisteID)
+        public IActionResult Obrisi(int LinijaID, int StajalisteID)
         {
             Stajalista stajaliste = db.Stajalista.Find(StajalisteID);
             db.Remove(stajaliste);
             db.SaveChanges();
 
-            return Redirect("/Stajalista/Prikaz");
+            return Redirect("/Stajalista/Prikaz?LinijaID="+LinijaID);
         }
 
         public IActionResult Uredi(int LinijaID,int StajalisteID)
@@ -66,8 +66,8 @@ namespace WebApplication1.Controllers
                 db.Stajalista.Where(s => s.StajaistaID == StajalisteID)
                 .Select(s => new StajalisteUrediVM()
                 {
-                    StajaistaID=s.StajaistaID,
-                    LinijaID=s.LinijaID,
+                    StajaistaID=StajalisteID,
+                    LinijaID=LinijaID,
                     Linija=s.Linija.OznakaLinije,
                     GradID=s.GradID,
                     Grad=s.Grad.Naziv,
@@ -76,6 +76,7 @@ namespace WebApplication1.Controllers
                 }).Single();
             stajaliste.Gradovi = gradovi;
             stajaliste._linijaID = LinijaID;
+            stajaliste._stajalisteID = StajalisteID;
 
             return View("Uredi",stajaliste);
         }
@@ -98,7 +99,7 @@ namespace WebApplication1.Controllers
             stajaliste.SatnicaStizanja = x.SatnicaStizanja;
 
             db.SaveChanges();
-            return Redirect("/Stajalista/Prikaz");
+            return Redirect("/Stajalista/Prikaz?LinijaID="+x._linijaID);
         }
 
     }
