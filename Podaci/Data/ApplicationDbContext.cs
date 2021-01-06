@@ -25,5 +25,6 @@ namespace WebApplication1.Data
         public DbSet<VrstaPopusta> VrstaPopusta{ get; set; }
         public DbSet<Karta> Karta{ get; set; }
         public DbSet<Stajalista> Stajalista{ get; set; }
+        public DbSet<Cijena> Cijena { get; set; }
     }
 }
