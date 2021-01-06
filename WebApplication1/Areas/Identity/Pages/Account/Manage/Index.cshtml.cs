@@ -33,6 +33,16 @@ namespace WebApplication1.Areas.Identity.Pages.Account.Manage
 
         public class InputModel
         {
+            [Required]
+            [DataType(DataType.Text)]
+            [Display(Name ="Ime")]
+            public string Ime { get; set; }
+
+            [Required]
+            [DataType(DataType.Text)]
+            [Display(Name = "Prezime")]
+            public string Prezime { get; set; }
+
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
@@ -47,6 +57,8 @@ namespace WebApplication1.Areas.Identity.Pages.Account.Manage
 
             Input = new InputModel
             {
+                Ime = user.Ime,
+                Prezime=user.Prezime,
                 PhoneNumber = phoneNumber
             };
         }
@@ -87,7 +99,14 @@ namespace WebApplication1.Areas.Identity.Pages.Account.Manage
                     return RedirectToPage();
                 }
             }
-
+            if(Input.Ime != user.Ime)
+            {
+                user.Ime = Input.Ime;
+            }
+            if (Input.Prezime != user.Prezime)
+            {
+                user.Prezime = Input.Prezime;
+            }
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";
             return RedirectToPage();
