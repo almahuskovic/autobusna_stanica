@@ -4,9 +4,8 @@ using System.Text;
 
 namespace Podaci.Klase
 {
-    class Kupac:Korisnik
+    public class Kupac:Korisnik
     {
         public int KupacID { get; set; }
-        public string BrojKreditneKartice { get; set; }
     }
 }

@@ -1,0 +1,43 @@
+﻿
+@{
+    ViewData["Title"] = "Prikaz";
+}
+
+@model WebApplication1.Models.Karta.KartaPrikazVM
+<a class="btn btn-info" href="/Karta/Uredi">Dodaj</a>
+<table class="table-bordered">
+    <thead>
+        <tr>
+            <td>Datum</td>
+            <td>Vazi od:</td>
+            <td>Vazi do:</td>
+            <td>Sjediste:</td>
+            <td>Rezervacija/Kupovina:</td>
+            <td>Broj putnika:</td>
+            <td>Tip karte:</td>
+            <td>Vrsta karte:</td>
+            <td>Akcija</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (WebApplication1.Models.Karta.KartaPrikazVM.Row k in Model.karte)
+        {
+        <tr>
+            <td>@k.Datum</td>
+            <td>@k.VaziOd</td>
+            <td>@k.VaziDo</td>
+            <td>@k.Sjediste</td>
+            <td>@{@k.IsRezervisana} ? "Rezervacija" : "Kupovina";}</td>
+            <td>@k.BrojPutnika</td>
+            <td>@k.TipKarte</td>
+            <td>@k.VrstaPopusta</td>
+            <td>
+                <a href="/Karta/Uredi?KartaID="@k.KartaID>Uredi</a>
+                <a href="/Karta/Obrisi?KartaID="@k.KartaID>Otkazi</a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+
