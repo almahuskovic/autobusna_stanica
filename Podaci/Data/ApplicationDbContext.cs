@@ -21,5 +21,6 @@ namespace WebApplication1.Data
         public DbSet<Vozilo> Vozilo { get; set; }
         public DbSet<Linija> Linija { get; set; }
         public DbSet<Vozac> Vozac { get; set; }
+        public DbSet<Stajalista> Stajalista{ get; set; }
     }
 }

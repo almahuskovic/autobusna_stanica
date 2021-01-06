@@ -21,7 +21,7 @@ namespace WebApplication1.Controllers
         public IActionResult Prikaz(string pretraga)
         {
             List<VoziloPrikazVM.Row> Vozila = db.Vozilo
-                .Where(v => pretraga == null || v.RegistracijskiBroj.StartsWith(pretraga) || v.OznakaVozila.StartsWith(pretraga))
+                .Where(v => pretraga == null || v.RegistracijskiBroj.ToLower().StartsWith(pretraga.ToLower()) || v.OznakaVozila.ToLower().StartsWith(pretraga.ToLower()))
                 .Select(v => new VoziloPrikazVM.Row
                 {
                     VoziloID = v.VoziloID,
