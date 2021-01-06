@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApplication1.Data;
 
-namespace WebApplication1.Data.Migrations
+namespace Podaci.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -252,25 +252,40 @@ namespace WebApplication1.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<float>("CijenaJednosmijerna")
-                        .HasColumnType("real");
+                    b.Property<bool>("Cetvrtak")
+                        .HasColumnType("bit");
 
-                    b.Property<float>("CijenaPovratna")
-                        .HasColumnType("real");
-
-                    b.Property<int>("GDolaskaID")
+                    b.Property<int>("GradDolaskaGradID")
                         .HasColumnType("int");
 
-                    b.Property<int>("GPolaskaID")
+                    b.Property<int>("GradPolaskaGradID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("GradDolaskaGradID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("GradPolaskaGradID")
-                        .HasColumnType("int");
+                    b.Property<bool>("Nedjelja")
+                        .HasColumnType("bit");
 
                     b.Property<string>("OznakaLinije")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Petak")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Ponedjeljak")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Srijeda")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Subota")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Utorak")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("VrijemeDolaska")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VrijemePolaska")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("LinijaID");
@@ -312,6 +327,34 @@ namespace WebApplication1.Data.Migrations
                     b.HasIndex("ObavijestKategorijaID");
 
                     b.ToTable("Obavijest");
+                });
+
+            modelBuilder.Entity("Podaci.Klase.Stajalista", b =>
+                {
+                    b.Property<int>("StajaistaID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("GradID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LinijaID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RedniBrojStajalista")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SatnicaStizanja")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("StajaistaID");
+
+                    b.HasIndex("GradID");
+
+                    b.HasIndex("LinijaID");
+
+                    b.ToTable("Stajalista");
                 });
 
             modelBuilder.Entity("Podaci.Klase.Vozac", b =>
@@ -459,11 +502,15 @@ namespace WebApplication1.Data.Migrations
                 {
                     b.HasOne("Podaci.Klase.Grad", "GradDolaska")
                         .WithMany()
-                        .HasForeignKey("GradDolaskaGradID");
+                        .HasForeignKey("GradDolaskaGradID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Podaci.Klase.Grad", "GradPolaska")
                         .WithMany()
-                        .HasForeignKey("GradPolaskaGradID");
+                        .HasForeignKey("GradPolaskaGradID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Podaci.Klase.Obavijest", b =>
@@ -471,6 +518,21 @@ namespace WebApplication1.Data.Migrations
                     b.HasOne("WebApplication1.ObavijestKategorija", "ObavijestKategorija")
                         .WithMany()
                         .HasForeignKey("ObavijestKategorijaID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Podaci.Klase.Stajalista", b =>
+                {
+                    b.HasOne("Podaci.Klase.Grad", "Grad")
+                        .WithMany()
+                        .HasForeignKey("GradID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Podaci.Klase.Linija", "Linija")
+                        .WithMany()
+                        .HasForeignKey("LinijaID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
