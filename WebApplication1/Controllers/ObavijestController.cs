@@ -55,7 +55,7 @@ namespace WebApplication1.Controllers
             {
                 m = new ObavijestUrediVM
                 {
-                    DatumObjave = DateTime.Now,
+                    DatumObjave = DateTime.Now.ToString(),
                     Kategorije = ok,
                 };
             }
@@ -68,7 +68,7 @@ namespace WebApplication1.Controllers
                     Naslov = k.Naslov,
                     Podnaslov = k.Podnaslov,
                     Opis = k.Opis,
-                    DatumObjave = DateTime.Now,
+                    DatumObjave = DateTime.Now.Date.ToString(),
                     KategorijaID = k.ObavijestKategorijaID,
                     Kategorije = ok,
                     Slika = KonvertovanjeSlike.GetImageBase64(k.Slika)

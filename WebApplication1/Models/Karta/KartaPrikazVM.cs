@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,18 +9,14 @@ namespace WebApplication1.Models.Karta
 {
     public class KartaPrikazVM
     {
-        public class Row
-        {
-            public int KartaID { get; set; }
-            public DateTime Datum { get; set; }
-            public DateTime VaziOd { get; set; }
-            public DateTime VaziDo { get; set; }
-            public bool IsRezervisana { get; set; }
-            public string Sjediste { get; set; }
-            public int BrojPutnika { get; set; }
-            public string VrstaPopusta { get; set; }
-            public string TipKarte { get; set; }
-        }
-        public List<Row> karte;
+        public int KartaID { get; set; }
+        public DateTime DatumPolaska { get; set; }
+        public DateTime DatumDolaska { get; set; }
+        public List<SelectListItem> TipKarte { get; set; }
+        public int TipKarteID { get; set; }
+        public List<SelectListItem> Polaziste { get; set; }
+        public int PolazisteID { get; set; }
+        public List<SelectListItem> Dolaziste { get; set; }
+        public int DolazisteID { get; set; }
     }
 }

@@ -1,43 +1,52 @@
-﻿
-@{
-    ViewData["Title"] = "Prikaz";
+﻿@model WebApplication1.Models.Karta.KartaUrediVM
+<div>
+    <form asp-action="Uredi" asp-controller="Karta">
+        <div>
+            <label asp-for="TipKarte" class="control-label"></label>
+            <select asp-for="TipKarteID" asp-items="Model.TipKarte"></select>
+            <div>
+
+                <label asp-for="Polaziste" class="control-label"></label>
+                <select asp-for="PolazisteID" asp-items="Model.Polaziste"></select>
+
+                <label asp-for="Dolaziste" class="control-label"></label>
+                <select asp-for="DolazisteID" asp-items="Model.Dolaziste"></select>
+
+                <label asp-for="DatumPolaska" class="control-label"></label>
+                <input id="datepicker" asp-for="DatumPolaska" />
+
+                @*<input type="submit" value="Trazi" />*@
+                <button class="btn btn-group" onclick="PrikaziLinije(@Model)">
+                    Trazi
+                </button>
+            </div>
+        </div>
+        <div id="ajaxPrikaz" style="border:1px solid red">
+
+        </div>
+    </form>
+
+</div>
+
+<script>
+    function PrikaziLinije(Model) {
+        var url = "/Karta/Uredi?x=" + Model;
+        $.get(url, function (d) {
+            $("#ajaxPrikaz").html(d);
+        });
+    }
+</script>
+
+@section Scripts
+{
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.js">
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#datepicker").datepicker({
+                format: 'dd/mm/yyyy'
+            })
+        });
+    </script>
 }
-
-@model WebApplication1.Models.Karta.KartaPrikazVM
-<a class="btn btn-info" href="/Karta/Uredi">Dodaj</a>
-<table class="table-bordered">
-    <thead>
-        <tr>
-            <td>Datum</td>
-            <td>Vazi od:</td>
-            <td>Vazi do:</td>
-            <td>Sjediste:</td>
-            <td>Rezervacija/Kupovina:</td>
-            <td>Broj putnika:</td>
-            <td>Tip karte:</td>
-            <td>Vrsta karte:</td>
-            <td>Akcija</td>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (WebApplication1.Models.Karta.KartaPrikazVM.Row k in Model.karte)
-        {
-        <tr>
-            <td>@k.Datum</td>
-            <td>@k.VaziOd</td>
-            <td>@k.VaziDo</td>
-            <td>@k.Sjediste</td>
-            <td>@{@k.IsRezervisana} ? "Rezervacija" : "Kupovina";}</td>
-            <td>@k.BrojPutnika</td>
-            <td>@k.TipKarte</td>
-            <td>@k.VrstaPopusta</td>
-            <td>
-                <a href="/Karta/Uredi?KartaID="@k.KartaID>Uredi</a>
-                <a href="/Karta/Obrisi?KartaID="@k.KartaID>Otkazi</a>
-            </td>
-        </tr>
-        }
-    </tbody>
-</table>
-
-

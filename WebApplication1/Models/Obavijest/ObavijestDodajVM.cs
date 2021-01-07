@@ -19,9 +19,7 @@ namespace WebApplication1.Models.Obavijest
         public string Opis { get; set; }
         public string Slika { get; set; }
         public string ObavijestKategorija { get; set; }
-
-        [BindProperty, DisplayFormat(DataFormatString = "{0:yyyy-MM-ddTHH:mm}", ApplyFormatInEditMode = true)]
-        public DateTime DatumObjave { get; set; }  
+        public string DatumObjave { get; set; }  
         public List<SelectListItem> Kategorije { get; set; }
         public int KategorijaID { get; set; }
     }

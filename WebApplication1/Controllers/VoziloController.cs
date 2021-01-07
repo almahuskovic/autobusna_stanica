@@ -28,7 +28,7 @@ namespace WebApplication1.Controllers
                     OznakaVozila = v.OznakaVozila,
                     RegistracijskiBroj = v.RegistracijskiBroj,
                     MaxBrojSjedista = v.MaxBrojSjedista,
-                    DatumZadnjegServisa = v.DatumZadnjegServisa
+                    DatumZadnjegServisa = v.DatumZadnjegServisa.ToString()
                 }).ToList();
             VoziloPrikazVM v = new VoziloPrikazVM();
             v.pretraga = pretraga;
@@ -48,7 +48,7 @@ namespace WebApplication1.Controllers
 
         public IActionResult Uredi(int VoziloID)
         {
-            VoziloUrediVM v = VoziloID == 0 ? new VoziloUrediVM() { DatumZadnjegServisa = DateTime.Now } :
+            VoziloUrediVM v = VoziloID == 0 ? new VoziloUrediVM() { DatumZadnjegServisa = DateTime.Now.Date.ToString() } :
                 db.Vozilo.Where(v => v.VoziloID == VoziloID)
                 .Select(v => new VoziloUrediVM
                 {

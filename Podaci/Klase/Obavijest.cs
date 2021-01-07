@@ -15,7 +15,7 @@ namespace Podaci.Klase
         public string Podnaslov { get; set; }
         public string Opis { get; set; }
         public byte[] Slika { get; set; }
-        public DateTime DatumObjave{ get; set; }
+        public string DatumObjave{ get; set; }
         public int ObavijestKategorijaID { get; set; }
         public ObavijestKategorija ObavijestKategorija { get; set; }
     }

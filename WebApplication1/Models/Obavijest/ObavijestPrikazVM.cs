@@ -16,7 +16,7 @@ namespace WebApplication1.Models.Obavijest
             public string Opis { get; set; }
             public string Slika { get; set; }
             public string ObavijestKategorija { get; set; }
-            public DateTime DatumObjave { get; set; }
+            public string DatumObjave { get; set; }
         }
         public List<Row> obavijesti;
     }

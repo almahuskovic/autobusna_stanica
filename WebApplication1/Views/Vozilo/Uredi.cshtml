@@ -11,7 +11,7 @@
                 <h1>Uredi</h1>
             </div>
             <div class="modal-body">
-                <div >
+                <div>
                     <input hidden readonly asp-for="VoziloID" />
                 </div>
                 <div>
@@ -28,7 +28,7 @@
                 </div>
                 <div>
                     <label>Datum zadnjeg servisa</label>
-                    <input asp-for="@Model.DatumZadnjegServisa" />
+                    <input id="datepicker" type="date" asp-for="DatumZadnjegServisa" />
                 </div>
             </div>
             <div class="modal-footer">
@@ -38,3 +38,18 @@
         </div>
     </div>
 </form>
+
+
+@section Scripts
+{
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.js">
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#datepicker").datepicker({
+                format: 'dd/mm/yyyy'
+            })
+        });
+    </script>
+}
