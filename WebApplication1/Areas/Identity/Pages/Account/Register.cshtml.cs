@@ -84,7 +84,7 @@ namespace WebApplication1.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new Korisnik { Ime=Input.Ime,Prezime=Input.Prezime, UserName = Input.Email, Email = Input.Email };
+                var user = new Kupac { Ime=Input.Ime,Prezime=Input.Prezime, UserName = Input.Email, Email = Input.Email };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {

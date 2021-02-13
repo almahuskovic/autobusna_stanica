@@ -295,9 +295,9 @@ namespace WebApplication1.Controllers
 
             return View(m);
         }
-        public async Task<IActionResult> Placanje(KartaKupovinaVM x)
+        public IActionResult Placanje(KartaKupovinaVM x)
         {
-            Korisnik user = await userManager.GetUserAsync(User);
+            Korisnik user =  userManager.GetUserAsync(User).Result;
           
             
             if(user!=null && user is Kupac)
