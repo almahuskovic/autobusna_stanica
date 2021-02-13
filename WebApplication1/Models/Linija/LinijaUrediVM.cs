@@ -30,7 +30,7 @@ namespace WebApplication1.Models
         public string VrijemeDolaska { get; set; }
 
 
-
+        public string[] DaniUSedmici { get; set; }
         public List<SelectListItem> Gradovi;
     }
 }

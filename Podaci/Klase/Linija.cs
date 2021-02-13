@@ -27,5 +27,7 @@ namespace Podaci.Klase
         public string VrijemePolaska { get; set; }
         public string VrijemeDolaska { get; set; }
 
+        public string[] DaniUSedmici { get; set; }
+
     }
 }

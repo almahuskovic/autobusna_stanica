@@ -6,6 +6,5 @@ namespace Podaci.Klase
 {
     public class Kupac:Korisnik
     {
-        public int KupacID { get; set; }
     }
 }

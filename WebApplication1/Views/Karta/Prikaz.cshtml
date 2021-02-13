@@ -1,52 +1,170 @@
-﻿@model WebApplication1.Models.Karta.KartaUrediVM
-<div>
-    <form asp-action="Uredi" asp-controller="Karta">
+﻿@{
+
+}
+@model WebApplication1.Models.Karta.KartaPrikazVM
+
+<form asp-action="Uredi1" asp-controller="Karta" style="display:inline">
+    <div>
+        <label asp-for="TipKarte" class="control-label"></label>
+        <select id="izbor" asp-for="TipKarteID" asp-items="@Model.TipKarte"></select>
+    </div>
+    <div style="display:inline">
+        <label asp-for="Polaziste" class="control-label"></label>
+        <select asp-for="PolazisteID" asp-items="@Model.Polaziste"></select>
+
+        <label asp-for="Dolaziste" class="control-label"></label>
+        <select asp-for="DolazisteID" asp-items="@Model.Dolaziste"></select>
+
+        <label asp-for="DatumPolaska" class="control-label"></label>
+        <input type="date" asp-for="DatumPolaska" />
+        @if (Model.TipKarteID == 2)
+        {
+            <label id="datN" asp-for="DatumDolaska" class="control-label"></label>
+            <input id="dat" type="date" asp-for="DatumDolaska" />
+        }
+
+        <label id="datN" style="display:none" asp-for="DatumDolaska" class="control-label"></label>
+        <input id="dat" type="date" style="display:none" asp-for="DatumDolaska" />
+
+    </div>
+    <input type="submit" class="btn btn-primary" value="Trazi" />
+</form>
+@if (Model.polazni != null)
+{
+<div style="border-top:1px solid black; border-bottom:1px solid black; padding:10px; margin:10px 0;">
+    <form asp-action="Kupovina" asp-controller="Karta">
+        <input hidden asp-for="TipKarteID"/>
+        <input hidden asp-for="PolazisteID"/>
+        <input hidden asp-for="DolazisteID"/>
+        <input hidden asp-for="DatumPolaska"/>
+        <input hidden asp-for="DatumDolaska"/>
         <div>
-            <label asp-for="TipKarte" class="control-label"></label>
-            <select asp-for="TipKarteID" asp-items="Model.TipKarte"></select>
-            <div>
-
-                <label asp-for="Polaziste" class="control-label"></label>
-                <select asp-for="PolazisteID" asp-items="Model.Polaziste"></select>
-
-                <label asp-for="Dolaziste" class="control-label"></label>
-                <select asp-for="DolazisteID" asp-items="Model.Dolaziste"></select>
-
-                <label asp-for="DatumPolaska" class="control-label"></label>
-                <input id="datepicker" asp-for="DatumPolaska" />
-
-                @*<input type="submit" value="Trazi" />*@
-                <button class="btn btn-group" onclick="PrikaziLinije(@Model)">
-                    Trazi
-                </button>
-            </div>
+            <label asp-for="LinijaPolaziste" class="control-label"></label>
+            <select asp-for="LinijaPolazisteID" asp-items="@Model.LinijaPolaziste"></select>
+            @if (Model.TipKarteID == 2)
+            {
+                <label asp-for="LinijaDolaziste" class="control-label"></label>
+                <select asp-for="LinijaDolazisteID" asp-items="@Model.LinijaDolaziste"></select>
+            }
         </div>
-        <div id="ajaxPrikaz" style="border:1px solid red">
-
+        <div>
+            <label asp-for="Dijete" class="control-label"></label>
+            <input type="number" asp-for="Dijete" />
+            <label asp-for="Odrasli" class="control-label"></label>
+            <input type="number" asp-for="Odrasli" />
+            <label asp-for="Student" class="control-label"></label>
+            <input type="number" asp-for="Student" />
+            <label asp-for="Penzioner" class="control-label"></label>
+            <input type="number" asp-for="Penzioner" />
         </div>
+        <input class="btn btn-warning" type="submit" value="Kupi/Rezervisi"/>
     </form>
-
 </div>
+    
+    <h3>Polazni autobusi</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <td>Vrijeme polaska:</td>
+                <td>Vrijeme dolaska:</td>
+                <td>Mjesto polaska:</td>
+                <td>Mjesto dolaska:</td>
+                @*<td>Broj putnika:</td>*@
+                <td>Ime linije:</td>
+                <td>Stajalista i satnice:</td>
+                <td>Akcija</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var k in Model.polazni)
+            {
+                <tr>
+                    <td>@k.VrijemePolaska</td>
+                    <td>@k.VrijemeDolaska</td>
+                    <td>@k.PolazisteNaziv</td>
+                    <td>@k.DolazisteNaziv</td>
+                    <td>@k.ImeLinije</td>
+                    <td>@k.Stajalista</td>
+                    <td>
+                    </td>
 
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div>
+        <label>Nema rezultata pretrage</label>
+    </div>
+}
+@if (Model.dolazni != null && Model.TipKarteID==2)
+{
+    <h3>Povratni autobusi</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <td>Vrijeme polaska:</td>
+                <td>Vrijeme dolaska:</td>
+                <td>Mjesto polaska:</td>
+                <td>Mjesto dolaska:</td>
+                @*<td>Broj putnika:</td>*@
+                <td>Ime linije:</td>
+                <td>Stajalista i satnice:</td>
+                <td>Akcija</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var k in Model.dolazni)
+            {
+                <tr>
+                    <td>@k.VrijemePolaska</td>
+                    <td>@k.VrijemeDolaska</td>
+                    <td>@k.PolazisteNaziv</td>
+                    <td>@k.DolazisteNaziv</td>
+                    <td>@k.ImeLinije</td>
+                    <td>@k.Stajalista</td>
+                    <td>
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div>
+        <label>Nema rezultata pretrage</label>
+    </div>
+}
 <script>
-    function PrikaziLinije(Model) {
-        var url = "/Karta/Uredi?x=" + Model;
-        $.get(url, function (d) {
-            $("#ajaxPrikaz").html(d);
+    $(document).ready(function () {
+        $("#izbor").on("change", function () {
+            if (this.value == '2') {
+                $("#datN").show();
+                $("#dat").show();
+            }
+            else {
+                $("#datN").hide();
+                $("#dat").hide();
+            }
         });
-    }
+    });
 </script>
 
-@section Scripts
-{
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.js">
-    </script>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#datepicker").datepicker({
-                format: 'dd/mm/yyyy'
-            })
-        });
-    </script>
-}
+@*@section Scripts
+    {
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.js">
+        </script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $("#datepicker").datepicker({
+                    format: 'dd/mm/yyyy'
+                })
+            });
+        </script>
+
+    }*@

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApplication1.Data;
 
-namespace Podaci.Migrations
+namespace WebApplication1.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210209215459_dani")]
+    partial class dani
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -221,9 +223,6 @@ namespace Podaci.Migrations
                     b.Property<bool>("IsRezervisana")
                         .HasColumnType("bit");
 
-                    b.Property<int>("KreditnaKarticaID")
-                        .HasColumnType("int");
-
                     b.Property<int>("PolazisteID")
                         .HasColumnType("int");
 
@@ -242,8 +241,6 @@ namespace Podaci.Migrations
                     b.HasKey("KartaID");
 
                     b.HasIndex("DolazisteID");
-
-                    b.HasIndex("KreditnaKarticaID");
 
                     b.HasIndex("PolazisteID");
 
@@ -329,38 +326,6 @@ namespace Podaci.Migrations
                     b.ToTable("AspNetUsers");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("Korisnik");
-                });
-
-            modelBuilder.Entity("Podaci.Klase.KreditnaKartica", b =>
-                {
-                    b.Property<int>("KreditnaKarticaID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("BrojKartice")
-                        .HasColumnType("int");
-
-                    b.Property<string>("DatumIsteka")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImeVlasnikaKartice")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("KupacID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("KupacId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("VerifikacijskiKod")
-                        .HasColumnType("int");
-
-                    b.HasKey("KreditnaKarticaID");
-
-                    b.HasIndex("KupacId");
-
-                    b.ToTable("KreditnaKartica");
                 });
 
             modelBuilder.Entity("Podaci.Klase.Linija", b =>
@@ -695,12 +660,6 @@ namespace Podaci.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Podaci.Klase.KreditnaKartica", "KreditnaKartica")
-                        .WithMany()
-                        .HasForeignKey("KreditnaKarticaID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Podaci.Klase.Stajalista", "Polaziste")
                         .WithMany()
                         .HasForeignKey("PolazisteID")
@@ -718,13 +677,6 @@ namespace Podaci.Migrations
                         .HasForeignKey("VrstaPopustaID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Podaci.Klase.KreditnaKartica", b =>
-                {
-                    b.HasOne("Podaci.Klase.Kupac", "Kupac")
-                        .WithMany()
-                        .HasForeignKey("KupacId");
                 });
 
             modelBuilder.Entity("Podaci.Klase.Linija", b =>

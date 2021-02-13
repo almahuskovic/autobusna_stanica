@@ -12,7 +12,17 @@ namespace WebApplication1.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
+           
+        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<Linija>()
+             .Property(e => e.DaniUSedmici)
+             .HasConversion(
+                 v => string.Join(',', v),
+                 v => v.Split(',', StringSplitOptions.RemoveEmptyEntries));
         }
         public DbSet<ObavijestKategorija> ObavijestKategorija { get; set; }
         public DbSet<Drzava> Drzava { get; set; }
@@ -26,6 +36,8 @@ namespace WebApplication1.Data
         public DbSet<Karta> Karta{ get; set; }
         public DbSet<Stajalista> Stajalista{ get; set; }
         public DbSet<Cijena> Cijena { get; set; }
-        //public DbSet<Kartica> Kartica{ get; set; }
+        public DbSet<KreditnaKartica> KreditnaKartica { get; set; }
+        public DbSet<Kupac> Kupac { get; set; }
+        public DbSet<Menadzer> Menadzer { get; set; }
     }
 }

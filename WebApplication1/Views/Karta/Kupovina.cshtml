@@ -1,0 +1,82 @@
+﻿@{
+    ViewData["Title"] = "Prikaz";   
+}
+@model WebApplication1.Models.Karta.KartaKupovinaVM
+
+    <div>
+        <div>
+            <label>Tip karte: @Model.TipKarte</label>
+        </div>
+        <div>
+            Od: @Model.PolazisteNaziv
+        </div>
+        <div>
+            Do: @Model.DolazisteNaziv
+        </div>
+        <div>
+            <label>Linija polaziste: @Model.LinijaPolaziste</label>
+            <label>Datum polaska: @Model.DatumPolaska</label>
+        </div>
+        @if (Model.TipKarteID == 2)
+        {
+            <div>
+                <label>Linija dolaziste: @Model.LinijaDolaziste</label>
+                <label>Datum dolaska: @Model.DatumDolaska</label>
+            </div>
+        }
+        <div>
+            <label>Cijena: @Model.Cijena KM</label>
+        </div>
+        @if (Model.Dijete > 0)
+        {
+            <div>
+                <label>Dijete: x @Model.Dijete</label>
+            </div>
+        }
+        @if (Model.Odrasli > 0)
+        {
+            <div>
+                <label>Odrasli: x @Model.Odrasli</label>
+            </div>
+        }
+        @if (Model.Student > 0)
+        {
+            <div>
+                <label>Student: x @Model.Student</label>
+            </div>
+        }
+        @if (Model.Penzioner > 0)
+        {
+            <div>
+                <label>Penzioner: x @Model.Penzioner</label>
+            </div>
+        }
+        <div>
+            Mozete izabrati sjediste koje zelite!
+        </div>
+        <form asp-action="Placanje" asp-controller="Karta">
+            <div>
+                <label>Unesite broj kartice:</label>
+                <input type="text" asp-for="BrojKartice" />
+            </div>
+            <div>
+                <label>Unesite ime vlasnika kartice:</label>
+                <input type="text" asp-for="ImeVlasnika" />
+            </div>
+            <div>
+                <label>Unesite verifikacijski kod:</label>
+                <input type="text" asp-for="VerKod" />
+                <label>Unesite datum isteka:</label>
+                <input type="text" asp-for="DatumIsteka" />
+            </div>
+            Spasi karticu:
+            <input asp-for="SpasiKarticu" type="checkbox"/>
+            <input type="submit" value="Plati"/>
+        </form>
+    </div>
+@*<div id="placanjeKarticom"></div>
+<script>
+    $.get("/Karta/UnosPodatakaKartice", function (d) {
+        $("#placanjeKarticom").html(d);
+    })
+</script>*@

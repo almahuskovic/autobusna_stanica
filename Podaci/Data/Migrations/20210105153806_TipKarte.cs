@@ -6,21 +6,21 @@ namespace WebApplication1.Data.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "Discriminator",
-                table: "AspNetUsers",
-                nullable: false,
-                defaultValue: "");
+            //migrationBuilder.AddColumn<string>(
+            //    name: "Discriminator",
+            //    table: "AspNetUsers",
+            //    nullable: false,
+            //    defaultValue: "");
 
-            migrationBuilder.AddColumn<string>(
-                name: "BrojKreditneKartice",
-                table: "AspNetUsers",
-                nullable: true);
+            //migrationBuilder.AddColumn<string>(
+            //    name: "BrojKreditneKartice",
+            //    table: "AspNetUsers",
+            //    nullable: true);
 
-            migrationBuilder.AddColumn<int>(
-                name: "KupacID",
-                table: "AspNetUsers",
-                nullable: true);
+            //migrationBuilder.AddColumn<int>(
+            //    name: "KupacID",
+            //    table: "AspNetUsers",
+            //    nullable: true);
 
             //migrationBuilder.CreateTable(
             //    name: "Feedback",
@@ -44,18 +44,18 @@ namespace WebApplication1.Data.Migrations
             //            onDelete: ReferentialAction.Restrict);
             //    });
 
-            migrationBuilder.CreateTable(
-                name: "TipKarte",
-                columns: table => new
-                {
-                    TipKarteID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Naziv = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TipKarte", x => x.TipKarteID);
-                });
+            //migrationBuilder.CreateTable(
+            //    name: "TipKarte",
+            //    columns: table => new
+            //    {
+            //        TipKarteID = table.Column<int>(nullable: false)
+            //            .Annotation("SqlServer:Identity", "1, 1"),
+            //        Naziv = table.Column<string>(nullable: true)
+            //    },
+            //    constraints: table =>
+            //    {
+            //        table.PrimaryKey("PK_TipKarte", x => x.TipKarteID);
+            //    });
 
             //migrationBuilder.CreateIndex(
             //    name: "IX_Feedback_KupacId",
@@ -68,20 +68,20 @@ namespace WebApplication1.Data.Migrations
             //migrationBuilder.DropTable(
             //    name: "Feedback");
 
-            migrationBuilder.DropTable(
-                name: "TipKarte");
+            //migrationBuilder.DropTable(
+            //    name: "TipKarte");
 
-            migrationBuilder.DropColumn(
-                name: "Discriminator",
-                table: "AspNetUsers");
+            ////migrationBuilder.DropColumn(
+            ////    name: "Discriminator",
+            ////    table: "AspNetUsers");
 
-            migrationBuilder.DropColumn(
-                name: "BrojKreditneKartice",
-                table: "AspNetUsers");
+            //migrationBuilder.DropColumn(
+            //    name: "BrojKreditneKartice",
+            //    table: "AspNetUsers");
 
-            migrationBuilder.DropColumn(
-                name: "KupacID",
-                table: "AspNetUsers");
+            //migrationBuilder.DropColumn(
+            //    name: "KupacID",
+            //    table: "AspNetUsers");
         }
     }
 }

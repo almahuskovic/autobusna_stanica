@@ -130,6 +130,22 @@ namespace WebApplication1.Controllers
             linija.VrijemePolaska = x.VrijemePolaska;
             linija.VrijemeDolaska = x.VrijemeDolaska;
 
+            linija.DaniUSedmici = new string[7];
+            if (x.Ponedjeljak)
+                linija.DaniUSedmici[0]=("Monday");
+            if (x.Utorak)
+                linija.DaniUSedmici[1]=("Tuesday");
+            if (x.Srijeda)
+                linija.DaniUSedmici[2] = ("Wednesday");
+            if (x.Cetvrtak)
+                linija.DaniUSedmici[3] = ("Thursday");
+            if (x.Petak)
+                linija.DaniUSedmici[4] = ("Friday");
+            if (x.Subota)
+                linija.DaniUSedmici[5] = ("Saturday");
+            if (x.Nedjelja)
+                linija.DaniUSedmici[6] = ("Sunday");
+
             db.SaveChanges();
             return Redirect("/Linija/Prikaz");
         }

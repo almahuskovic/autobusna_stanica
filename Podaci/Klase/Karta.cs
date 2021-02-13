@@ -9,9 +9,9 @@ namespace Podaci.Klase
     {
         [Key]
         public int KartaID { get; set; }
-        public DateTime Datum { get; set; }
-        public string VaziOd { get; set; }
-        public string VaziDo { get; set; }
+        public string Datum { get; set; }//viska?
+        public string VaziOd { get; set; }//datumpolaska
+        public string VaziDo { get; set; }//datumdolaska
         public bool IsRezervisana { get; set; }
         public int BrojPutnika{ get; set; }
         public TipKarte TipKarte { get; set; }
@@ -22,5 +22,7 @@ namespace Podaci.Klase
         public int PolazisteID { get; set; }
         public Stajalista Dolaziste { get; set; }
         public int DolazisteID { get; set; }
+        public int KreditnaKarticaID { get; set; }
+        public KreditnaKartica KreditnaKartica { get; set; }
     }
 }
