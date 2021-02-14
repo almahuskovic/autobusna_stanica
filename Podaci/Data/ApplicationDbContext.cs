@@ -25,11 +25,51 @@ namespace WebApplication1.Data
                  v => string.Join(',', v),
                  v => v.Split(',', StringSplitOptions.RemoveEmptyEntries));
 
+            //za cascade
             var cascadeFKs = modelBuilder.Model.GetEntityTypes()
                 .SelectMany(t => t.GetForeignKeys())
                 .Where(fk => fk.IsOwnership && fk.DeleteBehavior == DeleteBehavior.Cascade);
             foreach (var fk in cascadeFKs)
                 fk.DeleteBehavior = DeleteBehavior.Restrict;
+
+            modelBuilder.Entity<LinijaVozilo>()
+            .HasKey(x => new { x.LinijaID, x.VoziloID });
+
+            modelBuilder.Entity<LinijaVozilo>()
+                .HasOne(x => x.Linija)
+                .WithMany(y => y.Vozilo)
+                .HasForeignKey(y => y.LinijaID);
+
+            modelBuilder.Entity<LinijaVozilo>()
+                .HasOne(x => x.Vozilo)
+                .WithMany(y =>y.Linija)
+                .HasForeignKey(y => y.VoziloID);
+
+            modelBuilder.Entity<LinijaVozac>()
+            .HasKey(x => new { x.LinijaID, x.VozacID });
+
+            modelBuilder.Entity<LinijaVozac>()
+               .HasOne(x => x.Linija)
+               .WithMany(y => y.Vozac)
+               .HasForeignKey(y => y.LinijaID);
+
+            modelBuilder.Entity<LinijaVozac>()
+                .HasOne(x => x.Vozac)
+                .WithMany(y => y.Linija)
+                .HasForeignKey(y => y.VozacID);
+
+            modelBuilder.Entity<KartaKupac>()
+            .HasKey(x => new { x.KartaID, x.KupacID });
+
+            modelBuilder.Entity<KartaKupac>()
+               .HasOne(x => x.Karta)
+               .WithMany(y => y.Kupac)
+               .HasForeignKey(y => y.KartaID);
+
+            modelBuilder.Entity<KartaKupac>()
+                .HasOne(x => x.Kupac)
+                .WithMany(y => y.Karta)
+                .HasForeignKey(y => y.KupacID);
         }
         public DbSet<ObavijestKategorija> ObavijestKategorija { get; set; }
         public DbSet<Drzava> Drzava { get; set; }
@@ -46,5 +86,8 @@ namespace WebApplication1.Data
         public DbSet<KreditnaKartica> KreditnaKartica { get; set; }
         public DbSet<Kupac> Kupac { get; set; }
         public DbSet<Menadzer> Menadzer { get; set; }
+        public DbSet<LinijaVozilo> LinijaVozilo { get; set; }
+        public DbSet<LinijaVozac> LinijaVozac { get; set; }
+        public DbSet<KartaKupac> KartaKupac { get; set; }
     }
 }

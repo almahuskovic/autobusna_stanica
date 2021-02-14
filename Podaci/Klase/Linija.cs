@@ -28,6 +28,7 @@ namespace Podaci.Klase
         public string VrijemeDolaska { get; set; }
 
         public string[] DaniUSedmici { get; set; }
-
+        public virtual ICollection<LinijaVozilo> Vozilo { get; set; }
+        public virtual ICollection<LinijaVozac> Vozac { get; set; }
     }
 }

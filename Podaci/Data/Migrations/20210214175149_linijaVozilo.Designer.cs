@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApplication1.Data;
 
-namespace Podaci.Migrations
+namespace WebApplication1.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210214175149_linijaVozilo")]
+    partial class linijaVozilo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -254,21 +256,6 @@ namespace Podaci.Migrations
                     b.ToTable("Karta");
                 });
 
-            modelBuilder.Entity("Podaci.Klase.KartaKupac", b =>
-                {
-                    b.Property<int>("KartaID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("KupacID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("KartaID", "KupacID");
-
-                    b.HasIndex("KupacID");
-
-                    b.ToTable("KartaKupac");
-                });
-
             modelBuilder.Entity("Podaci.Klase.Korisnik", b =>
                 {
                     b.Property<string>("Id")
@@ -428,21 +415,6 @@ namespace Podaci.Migrations
                     b.HasIndex("GradPolaskaGradID");
 
                     b.ToTable("Linija");
-                });
-
-            modelBuilder.Entity("Podaci.Klase.LinijaVozac", b =>
-                {
-                    b.Property<int>("LinijaID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("VozacID")
-                        .HasColumnType("int");
-
-                    b.HasKey("LinijaID", "VozacID");
-
-                    b.HasIndex("VozacID");
-
-                    b.ToTable("LinijaVozac");
                 });
 
             modelBuilder.Entity("Podaci.Klase.LinijaVozilo", b =>
@@ -762,21 +734,6 @@ namespace Podaci.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Podaci.Klase.KartaKupac", b =>
-                {
-                    b.HasOne("Podaci.Klase.Karta", "Karta")
-                        .WithMany("Kupac")
-                        .HasForeignKey("KartaID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Podaci.Klase.Kupac", "Kupac")
-                        .WithMany("Karta")
-                        .HasForeignKey("KupacID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Podaci.Klase.KreditnaKartica", b =>
                 {
                     b.HasOne("Podaci.Klase.Kupac", "Kupac")
@@ -799,21 +756,6 @@ namespace Podaci.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Podaci.Klase.LinijaVozac", b =>
-                {
-                    b.HasOne("Podaci.Klase.Linija", "Linija")
-                        .WithMany("Vozac")
-                        .HasForeignKey("LinijaID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Podaci.Klase.Vozac", "Vozac")
-                        .WithMany("Linija")
-                        .HasForeignKey("VozacID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Podaci.Klase.LinijaVozilo", b =>
                 {
                     b.HasOne("Podaci.Klase.Linija", "Linija")
@@ -823,7 +765,7 @@ namespace Podaci.Migrations
                         .IsRequired();
 
                     b.HasOne("Podaci.Klase.Vozilo", "Vozilo")
-                        .WithMany("Linija")
+                        .WithMany("Linije")
                         .HasForeignKey("VoziloID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

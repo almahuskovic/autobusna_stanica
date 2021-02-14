@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
-namespace Podaci.Klase
+namespace WebApplication1.Models.Menadzer
 {
-    public class Vozilo
+    public class VoziloUrediVM
     {
-        [Key]
         public int VoziloID { get; set; }
         public string OznakaVozila { get; set; }
         public string RegistracijskiBroj { get; set; }
         public int MaxBrojSjedista { get; set; }
+        [BindProperty, DisplayFormat(DataFormatString = "{0:yyyy-MM-ddTHH:mm}", ApplyFormatInEditMode = true)]
+        //public DateTime DatumZadnjegServisa { get; set; }
         public string DatumZadnjegServisa { get; set; }
-        public  ICollection<LinijaVozilo> Linija { get; set; }
-
     }
 }

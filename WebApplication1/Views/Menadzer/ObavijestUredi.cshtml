@@ -1,0 +1,61 @@
+﻿
+@{
+    ViewData["Title"] = "Uredi";
+}
+
+<h1>Uredi</h1>
+@model WebApplication1.Models.Menadzer.ObavijestUrediVM
+<style>
+
+</style>
+<form method="post" enctype="multipart/form-data" asp-action="ObavijestSnimi" asp-controller="Menadzer">
+    <input hidden readonly asp-for="ObavijestID" /><br />
+    <div class="form-group">
+        <label asp-for="ObavijestKategorija" class="control-label"></label>
+        <select asp-for="KategorijaID" asp-items="Model.Kategorije"></select><br />
+        @*<button type="button" style="display:inline" class="btn btn-primary" data-toggle="modal" data-target="#ajaxPrikaz"
+                    onclick="PrikazUredi()">
+                Dodaj kategoriju obavijesti
+            </button>*@
+        @*<a type="button" class="btn btn-primary" href="/Menadzer/ObavijestKategorijaUredi">Dodaj kategoriju obavijesti</a>*@
+    </div>
+    <div class="form-group">
+        <label asp-for="Naslov" class="control-label"></label>
+        <input asp-for="Naslov" /><br />
+    </div>
+    <div class="form-group">
+        <label asp-for="Podnaslov" class="control-label"></label>
+        <input asp-for="Podnaslov" /><br />
+    </div>
+    <div class="form-group">
+        <label asp-for="Opis" class="control-label"></label>
+        <input asp-for="Opis" /><br />
+    </div>
+    <div class="form-group">
+        <label class="control-label"></label>
+        @if (!string.IsNullOrEmpty(Model.Slika))
+        {
+            <img src="@Model.Slika" style="max-width:100px; max-height:100px" />
+        }
+        <input type="file" name="file" id="file" />
+    </div>
+    <br />
+    <div class="form-group">
+        <label asp-for="DatumObjave" class="control-label"></label>
+        <input readonly asp-for="DatumObjave" /><br />
+    </div>
+    <a type="button" class="btn btn-warning" href="/Menadzer/ObavijestPrikaz">Odustani</a>
+    <input class="btn btn-danger" type="submit" value="Snimi" />
+</form>
+<div class="modal fade" id="ajaxPrikaz" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+
+</div>
+<script>
+    function PrikazUredi() {
+       
+        $.get("/Menadzer/ObavijestKategorijaUredi", function (data) {
+                $("#ajaxPrikaz").html(data);
+            })
+    }
+</script>

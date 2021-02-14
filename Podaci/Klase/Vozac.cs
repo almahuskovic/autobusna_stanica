@@ -14,5 +14,7 @@ namespace Podaci.Klase
         public DateTime DatumRodjenja{ get; set; }
         public DateTime DatumZaposlenja { get; set; }
         public string BrojVozacke { get; set; }
+        public virtual ICollection<LinijaVozac> Linija { get; set; }
+
     }
 }

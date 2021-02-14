@@ -1,0 +1,36 @@
+﻿
+@{
+    ViewData["Title"] = "Uredi";
+    Layout = null;
+}
+@model WebApplication1.Models.Menadzer.ObavijestKategorijaUrediVM
+
+<form asp-action="ObavijestKategorijaSnimi" asp-controller="Menadzer">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+               <h1>Uredi</h1> 
+            </div>
+            <div class="modal-body">
+                <div>
+                    <input hidden readonly asp-for="ObavijestID" />
+                </div>
+                <div>
+                    <label>Naziv</label>
+                    <input asp-for="Naziv" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="button" value="Odustani" onClick="document.location.reload(true)">
+                <input type="submit" name="Snimi" value="Sačuvaj" />
+            </div>
+        </div>
+        </div>
+</form>
+
+<script>
+    @*$(document).ready(function () {
+        console.log(document.location);
+    })
+        @Model.Lokacija=document.location.pathname;*@
+</script>

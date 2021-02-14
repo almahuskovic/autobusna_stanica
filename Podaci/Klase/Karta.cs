@@ -24,5 +24,6 @@ namespace Podaci.Klase
         public int DolazisteID { get; set; }
         public int KreditnaKarticaID { get; set; }
         public KreditnaKartica KreditnaKartica { get; set; }
+        public virtual ICollection<KartaKupac> Kupac { get; set; }
     }
 }
