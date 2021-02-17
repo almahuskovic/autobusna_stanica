@@ -58,18 +58,6 @@ namespace WebApplication1.Data
                 .WithMany(y => y.Linija)
                 .HasForeignKey(y => y.VozacID);
 
-            modelBuilder.Entity<KartaKupac>()
-            .HasKey(x => new { x.KartaID, x.KupacID });
-
-            modelBuilder.Entity<KartaKupac>()
-               .HasOne(x => x.Karta)
-               .WithMany(y => y.Kupac)
-               .HasForeignKey(y => y.KartaID);
-
-            modelBuilder.Entity<KartaKupac>()
-                .HasOne(x => x.Kupac)
-                .WithMany(y => y.Karta)
-                .HasForeignKey(y => y.KupacID);
         }
         public DbSet<ObavijestKategorija> ObavijestKategorija { get; set; }
         public DbSet<Drzava> Drzava { get; set; }
@@ -88,6 +76,5 @@ namespace WebApplication1.Data
         public DbSet<Menadzer> Menadzer { get; set; }
         public DbSet<LinijaVozilo> LinijaVozilo { get; set; }
         public DbSet<LinijaVozac> LinijaVozac { get; set; }
-        public DbSet<KartaKupac> KartaKupac { get; set; }
     }
 }

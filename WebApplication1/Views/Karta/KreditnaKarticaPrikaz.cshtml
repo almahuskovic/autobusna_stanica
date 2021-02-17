@@ -1,0 +1,85 @@
+﻿
+@{
+    ViewData["Title"] = "KreditnaKarticaPrikaz";
+}
+
+<h3>Unesite podatke kartice.</h3>
+@model WebApplication1.Models.Karta.KreditnaKarticaPrikazVM
+@if (Model.KarticeKupca.Count() > 0)
+{
+    <form asp-action="Placanje" asp-controller="Karta">
+        <select asp-for="KarticeID" asp-items="@Model.Kartice"></select>
+        <input type="submit" value="Plati" />
+    </form>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <td>Broj kartice</td>
+                <td>Ime vlasnika</td>
+                <td>Verifikacijski kod</td>
+                <td>Datum isteka</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var k in Model.KarticeKupca)
+            {
+                <tr>
+                    <td>@k.BrojKartice</td>
+                    <td>@k.ImeVlasnika</td>
+                    <td>@k.VerKod</td>
+                    <td>@k.DatumIsteka</td>
+                    <td>
+                        <a class="btn btn-warning" href="/Karta/KreditnaKarticaObrisi?KarticaID=@k.KreditnaKarticaID">Obrisi</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    @*<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ajaxPrikaz"
+            onClick="KarticaUredi(0)">
+        Dodaj novu karticu
+    </button>*@
+
+    <form asp-action="Placanje" asp-controller="Karta">
+        <div>
+            <label>Unesite broj kartice:</label>
+            <input type="text" asp-for="BrojKarticeNova" />
+        </div>
+        <div>
+            <label>Unesite ime vlasnika kartice:</label>
+            <input type="text" asp-for="ImeVlasnikaNova" />
+        </div>
+        <div>
+            <label>Unesite verifikacijski kod:</label>
+            <input type="text" asp-for="VerKodNova" />
+        </div>
+        <div>
+            <label>Unesite datum isteka:</label>
+            <input type="text" asp-for="DatumIstekaNova" />
+        </div>
+        <input type="submit" value="Plati" />
+    </form>
+    <div class="modal fade" id="ajaxPrikaz" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+
+    </div>
+}
+<script>
+
+    function KarticaUredi(KarticaID) {
+        if (KarticaID == 0) {
+            $.get("/Karta/KreditnaKarticaUredi", function (data) {
+                $("#ajaxPrikaz").html(data);
+            })
+        }
+        else {
+            $.get("/Karta/KreditnaKarticaUredi?KarticaID=" + KarticaID, function (data) {
+                $("#ajaxPrikaz").html(data);
+            });
+        }
+    }
+
+</script>

@@ -8,7 +8,7 @@ namespace Podaci.Klase
     public class Stajalista
     {
         [Key]
-        public int StajaistaID { get; set; }
+        public int StajalistaID { get; set; }
 
         public Linija Linija { get; set; }
         public int LinijaID { get; set; }

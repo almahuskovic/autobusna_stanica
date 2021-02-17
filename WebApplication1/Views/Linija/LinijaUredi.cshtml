@@ -41,14 +41,14 @@
                 </div>
                 <div>
                     <label class="glavne">Grad polaska:</label>
-                    <select class="obicni" asp-for="GradPolaskaGradID" asp-items="Model.Gradovi"></select>
+                    <select class="obicni" asp-for="GradPolaskaGradID" asp-items="@Model.Gradovi"></select>
                     <label class="glavne">Vrijeme polaska:</label>
                     <input class="obicni" asp-for="VrijemePolaska" />
 
                 </div>
                 <div >
                     <label class="glavne">Grad dolaska:</label>
-                    <select class="obicni" asp-for="GradDolaskaGradID" asp-items="Model.Gradovi"></select>
+                    <select class="obicni" asp-for="GradDolaskaGradID" asp-items="@Model.Gradovi"></select>
                     <label class="glavne">Vrijeme dolaska:</label>
                     <input class="obicni" asp-for="VrijemeDolaska" />
                 </div>

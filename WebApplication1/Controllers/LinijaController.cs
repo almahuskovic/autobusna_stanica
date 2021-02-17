@@ -284,7 +284,7 @@ namespace WebApplication1.Controllers
             List<StajalistePrikazVM.Row> Stajalista = db.Stajalista.Where(s => s.LinijaID == LinijaID)
                 .Select(s => new StajalistePrikazVM.Row
                 {
-                    StajaistaID = s.StajaistaID,
+                    StajaistaID = s.StajalistaID,
                     LinijaID = s.LinijaID,
                     Linija = s.Linija.OznakaLinije,
                     GradID = s.GradID,
@@ -322,7 +322,7 @@ namespace WebApplication1.Controllers
                 }).ToList();
 
             StajalisteUrediVM stajaliste = StajalisteID == 0 ? new StajalisteUrediVM() :
-                db.Stajalista.Where(s => s.StajaistaID == StajalisteID)
+                db.Stajalista.Where(s => s.StajalistaID == StajalisteID)
                 .Select(s => new StajalisteUrediVM()
                 {
                     StajaistaID = StajalisteID,

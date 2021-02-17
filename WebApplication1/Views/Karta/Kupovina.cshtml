@@ -1,82 +1,184 @@
 ﻿@{
-    ViewData["Title"] = "Prikaz";   
+    ViewData["Title"] = "Prikaz";
 }
 @model WebApplication1.Models.Karta.KartaKupovinaVM
 
+<div>
     <div>
-        <div>
-            <label>Tip karte: @Model.TipKarte</label>
-        </div>
-        <div>
-            Od: @Model.PolazisteNaziv
-        </div>
-        <div>
-            Do: @Model.DolazisteNaziv
-        </div>
-        <div>
-            <label>Linija polaziste: @Model.LinijaPolaziste</label>
-            <label>Datum polaska: @Model.DatumPolaska</label>
-        </div>
-        @if (Model.TipKarteID == 2)
-        {
-            <div>
-                <label>Linija dolaziste: @Model.LinijaDolaziste</label>
-                <label>Datum dolaska: @Model.DatumDolaska</label>
-            </div>
-        }
-        <div>
-            <label>Cijena: @Model.Cijena KM</label>
-        </div>
-        @if (Model.Dijete > 0)
-        {
-            <div>
-                <label>Dijete: x @Model.Dijete</label>
-            </div>
-        }
-        @if (Model.Odrasli > 0)
-        {
-            <div>
-                <label>Odrasli: x @Model.Odrasli</label>
-            </div>
-        }
-        @if (Model.Student > 0)
-        {
-            <div>
-                <label>Student: x @Model.Student</label>
-            </div>
-        }
-        @if (Model.Penzioner > 0)
-        {
-            <div>
-                <label>Penzioner: x @Model.Penzioner</label>
-            </div>
-        }
-        <div>
-            Mozete izabrati sjediste koje zelite!
-        </div>
-        <form asp-action="Placanje" asp-controller="Karta">
-            <div>
-                <label>Unesite broj kartice:</label>
-                <input type="text" asp-for="BrojKartice" />
-            </div>
-            <div>
-                <label>Unesite ime vlasnika kartice:</label>
-                <input type="text" asp-for="ImeVlasnika" />
-            </div>
-            <div>
-                <label>Unesite verifikacijski kod:</label>
-                <input type="text" asp-for="VerKod" />
-                <label>Unesite datum isteka:</label>
-                <input type="text" asp-for="DatumIsteka" />
-            </div>
-            Spasi karticu:
-            <input asp-for="SpasiKarticu" type="checkbox"/>
-            <input type="submit" value="Plati"/>
-        </form>
+        <label>Tip karte: @Model.TipKarte</label>
     </div>
-@*<div id="placanjeKarticom"></div>
+    <div>
+        Od: @Model.PolazisteNaziv
+    </div>
+    <div>
+        Do: @Model.DolazisteNaziv
+    </div>
+    <div>
+        <label>Linija polaziste: @Model.LinijaPolaziste</label>
+        <label>Datum polaska: @Model.DatumPolaska</label>
+    </div>
+    @if (Model.TipKarteID == 2)
+    {
+        <div>
+            <label>Linija dolaziste: @Model.LinijaDolaziste</label>
+            <label>Datum dolaska: @Model.DatumDolaska</label>
+        </div>
+    }
+    <div>
+        <label>Cijena: @Model.Cijena KM</label>
+    </div>
+    @if (Model.Dijete > 0)
+    {
+        <div>
+            <label>Dijete: x @Model.Dijete</label>
+        </div>
+    }
+    @if (Model.Odrasli > 0)
+    {
+        <div>
+            <label>Odrasli: x @Model.Odrasli</label>
+        </div>
+    }
+    @if (Model.Student > 0)
+    {
+        <div>
+            <label>Student: x @Model.Student</label>
+        </div>
+    }
+    @if (Model.Penzioner > 0)
+    {
+        <div>
+            <label>Penzioner: x @Model.Penzioner</label>
+        </div>
+    }
+    <div>
+        Mozete izabrati sjediste koje zelite!
+    </div>
+    @*<button onclick="OtvoriListuKartica()">Odaberi postojecu karticu</button>
+    <a onclick="UnesiNovuKarticu()" class="btn btn-primary">Nova kartica</a>*@
+
+</div>
+<p id="poruka" style="display:none">Nema spasenih kartica</p>
+<form asp-action="Placanje" asp-controller="Karta" id="listaKartica" style="display:none">
+    <input hidden asp-for="PolazisteID" />
+    <input hidden asp-for="DolazisteID" />
+    <input hidden asp-for="TipKarteID" />
+    <input hidden asp-for="KarticeID" />
+    <input hidden asp-for="DatumPolaska" />
+    <input hidden asp-for="DatumDolaska" />
+    <input hidden asp-for="Penzioner" />
+    <input hidden asp-for="Student" />
+    <input hidden asp-for="Odrasli" />
+    <input hidden asp-for="Dijete" />
+    <input hidden asp-for="Cijena" />
+    <input hidden asp-for="CijenaBezPopusta" />
+    <input hidden asp-for="OznakaLinije" />
+    <select asp-for="KarticeID" asp-items="@Model.Kartice"></select>
+    <input type="submit" value="Plati" />
+</form>
+<button id="btnNovaKartica" onclick="otvoriFormuZaNovuKarticu()" style="display:none">Nova kartica+</button>
+<table id="tabelaKartica" class="table table-bordered" style="display:none">
+    <thead>
+        <tr>
+            <td>Broj kartice</td>
+            <td>Ime vlasnika</td>
+            <td>Verifikacijski kod</td>
+            <td>Datum isteka</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var k in Model.KarticeKupca)
+        {
+            <tr>
+                <td>@k.BrojKartice</td>
+                <td>@k.ImeVlasnika</td>
+                <td>@k.VerKod</td>
+                <td>@k.DatumIsteka</td>
+                <td>
+                    <a class="btn btn-warning" href="/Karta/KreditnaKarticaObrisi?KarticaID=@k.KreditnaKarticaID">Obrisi</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@*<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ajaxPrikaz"
+            onClick="KarticaUredi(0)">
+        Dodaj novu karticu
+    </button>*@
+<button id="btnNazad" onclick="otvoriFormuSvihKartica()">Odaberi postojecu karticu</button>
+<form asp-action="Placanje" asp-controller="Karta" id="formaNovaKartica">
+    <input hidden asp-for="PolazisteID" />
+    <input hidden asp-for="DolazisteID" />
+    <input hidden asp-for="TipKarteID" />
+    <input hidden asp-for="KarticeID" />
+    <input hidden asp-for="DatumPolaska" />
+    <input hidden asp-for="DatumDolaska" />
+    <input hidden asp-for="Penzioner" />
+    <input hidden asp-for="Student" />
+    <input hidden asp-for="Odrasli" />
+    <input hidden asp-for="Dijete" />
+    <input hidden asp-for="Cijena" />
+    <input hidden asp-for="CijenaBezPopusta" />
+    <input hidden asp-for="OznakaLinije" />
+    <div>
+        <label>Unesite broj kartice:</label>
+        <input type="text" maxlength="13" asp-for="BrojKarticeNova" />
+    </div>
+    <div>
+        <label>Unesite ime vlasnika kartice:</label>
+        <input type="text" pattern="{50}[A-Z]" asp-for="ImeVlasnikaNova" />
+    </div>
+    <div>
+        <label>Unesite verifikacijski kod:</label>
+        <input type="number" min="0" maxlength="3" asp-for="VerKodNova" />
+    </div>
+    <div>
+        <label>Unesite datum isteka:</label>
+        <input type="text" min="0" maxlength="5" placeholder="" pattern="{2}[1-9]/{2}[1-9]" asp-for="DatumIstekaNova" />
+    </div>
+    <input type="submit" value="Plati" />
+</form>
+@*<div class="modal fade" id="ajaxPrikaz" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+
+</div>*@
+
+
+<div id="placanjeKarticom"></div>
 <script>
-    $.get("/Karta/UnosPodatakaKartice", function (d) {
-        $("#placanjeKarticom").html(d);
-    })
-</script>*@
+    function OtvoriListuKartica() {
+        $.get("/Karta/KreditnaKarticaPrikaz", function (d) {
+            $("#placanjeKarticom").html(d);
+        })
+    }
+    function UnesiNovuKarticu() {
+        $.get("/Karta/KreditnaKarticaPrikaz", function (d) {
+            $("#placanjeKarticom").html(d);
+        })
+    }
+
+    function otvoriFormuZaNovuKarticu() {
+        document.getElementById("tabelaKartica").style.display = "none";
+        document.getElementById("formaNovaKartica").style.display = "block";
+        document.getElementById("btnNovaKartica").style.display = "none";
+        document.getElementById("listaKartica").style.display = "none";
+        document.getElementById("btnNazad").style.display = "block";
+        document.getElementById("poruka").style.display = "none";
+    }
+    function otvoriFormuSvihKartica() {
+        if (@Model.KarticeKupca.Count() > 0)
+        {
+            document.getElementById("tabelaKartica").style.display = "block";
+            document.getElementById("listaKartica").style.display = "block";
+        }
+        else
+        {           
+            document.getElementById("poruka").style.display = "block";
+            document.getElementById("listaKartica").style.display = "none";  
+        }
+        document.getElementById("btnNovaKartica").style.display = "block";
+        document.getElementById("formaNovaKartica").style.display = "none";
+        document.getElementById("btnNazad").style.display = "none";
+    }
+</script>

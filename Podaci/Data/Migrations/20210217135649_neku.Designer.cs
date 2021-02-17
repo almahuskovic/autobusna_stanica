@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApplication1.Data;
 
-namespace Podaci.Migrations
+namespace WebApplication1.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210217135649_neku")]
+    partial class neku
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -487,7 +489,7 @@ namespace Podaci.Migrations
 
             modelBuilder.Entity("Podaci.Klase.Stajalista", b =>
                 {
-                    b.Property<int>("StajalistaID")
+                    b.Property<int>("StajaistaID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -504,7 +506,7 @@ namespace Podaci.Migrations
                     b.Property<string>("SatnicaStizanja")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("StajalistaID");
+                    b.HasKey("StajaistaID");
 
                     b.HasIndex("GradID");
 

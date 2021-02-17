@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApplication1.Data;
 
-namespace Podaci.Migrations
+namespace WebApplication1.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210217115000_naglePromjene")]
+    partial class naglePromjene
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -221,7 +223,7 @@ namespace Podaci.Migrations
                     b.Property<string>("DatumPolaska")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("DolazisteID")
+                    b.Property<int>("DolazisteID")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsAktivna")
@@ -236,7 +238,7 @@ namespace Podaci.Migrations
                     b.Property<string>("NazivLinije")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PolazisteID")
+                    b.Property<int>("PolazisteID")
                         .HasColumnType("int");
 
                     b.Property<int>("TipKarteID")
@@ -487,7 +489,7 @@ namespace Podaci.Migrations
 
             modelBuilder.Entity("Podaci.Klase.Stajalista", b =>
                 {
-                    b.Property<int>("StajalistaID")
+                    b.Property<int>("StajaistaID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -504,7 +506,7 @@ namespace Podaci.Migrations
                     b.Property<string>("SatnicaStizanja")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("StajalistaID");
+                    b.HasKey("StajaistaID");
 
                     b.HasIndex("GradID");
 
@@ -726,7 +728,9 @@ namespace Podaci.Migrations
                 {
                     b.HasOne("Podaci.Klase.Stajalista", "Dolaziste")
                         .WithMany()
-                        .HasForeignKey("DolazisteID");
+                        .HasForeignKey("DolazisteID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Podaci.Klase.KreditnaKartica", "KKartica")
                         .WithMany()
@@ -738,7 +742,9 @@ namespace Podaci.Migrations
 
                     b.HasOne("Podaci.Klase.Stajalista", "Polaziste")
                         .WithMany()
-                        .HasForeignKey("PolazisteID");
+                        .HasForeignKey("PolazisteID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Podaci.Klase.TipKarte", "TipKarte")
                         .WithMany()

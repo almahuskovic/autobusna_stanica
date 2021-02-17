@@ -40,6 +40,7 @@ namespace WebApplication1.Models.Karta
         public List<SelectListItem> LinijaPolaziste { get; set; }
         public int LinijaDolazisteID { get; set; }
         public List<SelectListItem> LinijaDolaziste { get; set; }
+        public string OznakaLinije { get; set; }
         //popust
         public int Dijete { get; set; }
         public int Odrasli { get; set; }
