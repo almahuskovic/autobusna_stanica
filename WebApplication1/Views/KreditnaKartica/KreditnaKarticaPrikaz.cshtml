@@ -24,12 +24,12 @@
             @foreach (var k in Model.KarticeKupca)
             {
                 <tr>
-                    <td>@k.BrojKartice</td>
-                    <td>@k.ImeVlasnika</td>
-                    <td>@k.VerKod</td>
-                    <td>@k.DatumIsteka</td>
+                    <td>@k.brojKartice</td>
+                    <td>@k.imeVlasnika</td>
+                    <td>@k.verKod</td>
+                    <td>@k.datumIsteka</td>
                     <td>
-                        <a class="btn btn-warning" href="/Karta/KreditnaKarticaObrisi?KarticaID=@k.KreditnaKarticaID">Obrisi</a>
+                        <a class="btn btn-warning" href="/Karta/KreditnaKarticaObrisi?KarticaID=@k.kreditnaKarticaID">Obrisi</a>
                     </td>
                 </tr>
             }

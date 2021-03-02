@@ -1,0 +1,32 @@
+﻿
+@{
+    ViewData["Title"] = "Uredi";
+    Layout = null;
+}
+@model WebApplication1.Models.VrstaPopusta.VrstaPopustaUrediVM
+<form asp-action="VrstaPopustaSnimi" asp-controller="Menadzer">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1>Uredi</h1>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <input hidden readonly asp-for="VrstaPopustaID" />
+                </div>
+                <div>
+                    <label>Naziv</label>
+                    <input asp-for="Naziv" />
+                </div>
+                <div>
+                    <label>Iznos</label>
+                    <input asp-for="Iznos" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="button" value="Odustani" onClick="document.location.reload(true)">
+                <input type="submit" name="Snimi" value="Sačuvaj" />
+            </div>
+        </div>
+    </div>
+</form>

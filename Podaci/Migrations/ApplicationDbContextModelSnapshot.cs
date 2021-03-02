@@ -221,7 +221,7 @@ namespace Podaci.Migrations
                     b.Property<string>("DatumPolaska")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("DolazisteID")
+                    b.Property<int>("DolazisteID")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsAktivna")
@@ -236,7 +236,7 @@ namespace Podaci.Migrations
                     b.Property<string>("NazivLinije")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PolazisteID")
+                    b.Property<int>("PolazisteID")
                         .HasColumnType("int");
 
                     b.Property<int>("TipKarteID")
@@ -538,11 +538,11 @@ namespace Podaci.Migrations
                     b.Property<string>("BrojVozacke")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("DatumRodjenja")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("DatumRodjenja")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("DatumZaposlenja")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("DatumZaposlenja")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ime")
                         .HasColumnType("nvarchar(max)");
@@ -726,7 +726,9 @@ namespace Podaci.Migrations
                 {
                     b.HasOne("Podaci.Klase.Stajalista", "Dolaziste")
                         .WithMany()
-                        .HasForeignKey("DolazisteID");
+                        .HasForeignKey("DolazisteID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Podaci.Klase.KreditnaKartica", "KKartica")
                         .WithMany()
@@ -738,7 +740,9 @@ namespace Podaci.Migrations
 
                     b.HasOne("Podaci.Klase.Stajalista", "Polaziste")
                         .WithMany()
-                        .HasForeignKey("PolazisteID");
+                        .HasForeignKey("PolazisteID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Podaci.Klase.TipKarte", "TipKarte")
                         .WithMany()

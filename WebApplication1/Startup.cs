@@ -14,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Podaci.Klase;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.CodeAnalysis.Options;
 
 namespace WebApplication1
 {
@@ -46,6 +47,15 @@ namespace WebApplication1
                options.ClientId = googleAuthNSection["ClientId"];
                options.ClientSecret = googleAuthNSection["ClientSecret"];
            });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader());
+                    //.AllowCredentials());
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -66,6 +76,8 @@ namespace WebApplication1
             app.UseStaticFiles();
 
             app.UseRouting();
+            //app.UseCors("CorsPolicy");
+            app.UseCors();
 
             app.UseAuthentication();
             app.UseAuthorization();

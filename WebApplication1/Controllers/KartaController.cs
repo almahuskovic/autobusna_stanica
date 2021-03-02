@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -15,6 +16,7 @@ using WebApplication1.Models.Karta;
 
 namespace WebApplication1.Controllers
 {
+    [Authorize]
     public class KartaController : Controller
     {
         private readonly ApplicationDbContext db;
@@ -38,8 +40,6 @@ namespace WebApplication1.Controllers
             if (polazni == null || polazni.Count()==0)
             {
                 m = new KartaPrikazVM();
-                m.DatumPolaska = DateTime.Now.Date.ToString();
-                m.DatumDolaska = DateTime.Now.Date.ToString();
                 m.polazni = null;
                 m.dolazni = null;
             }
@@ -58,21 +58,27 @@ namespace WebApplication1.Controllers
                 };
                 foreach (var p in polazni)
                 {
-                    var item = new SelectListItem
+                    if (p.SlobodnihMjesta > 0)
                     {
-                        Text = p.ImeLinije + " - " + p.VrijemePolaska,
-                        Value = p.LinijaId.ToString()
-                    };
-                    polazneLinije.Add(item);
+                        var item = new SelectListItem
+                        {
+                            Text = p.ImeLinije + " - " + p.VrijemePolaska,
+                            Value = p.LinijaId.ToString()
+                        };
+                        polazneLinije.Add(item);
+                    }
                 }
                 foreach (var p in dolazni)
                 {
-                    var item = new SelectListItem
+                    if (p.SlobodnihMjesta > 0)
                     {
-                        Text = p.ImeLinije +" - "+ p.VrijemePolaska,
-                        Value = p.LinijaId.ToString()
-                    };
-                    dolazneLinije.Add(item);
+                        var item = new SelectListItem
+                        {
+                            Text = p.ImeLinije + " - " + p.VrijemePolaska,
+                            Value = p.LinijaId.ToString()
+                        };
+                        dolazneLinije.Add(item);
+                    }
                 }
             }
            
@@ -99,70 +105,6 @@ namespace WebApplication1.Controllers
             m.Dolaziste = dol;
             return View(m);
         }
-        //u slucaju da zajebem kod koji je radio na pocetku-->
-        //public IActionResult Uredi(KartaUrediVM x)
-        //{
-        //    int polazisteRedniBroj = -1, dolazisteRedniBroj = -1;
-        //    string vrijemePolaska="",vrijemeDolaska="",gradP="",gradD="";
-        //    int linijaId=0;
-
-        //    List<KartaUrediVM> podlinije=new List<KartaUrediVM>();
-        //    foreach (var t in db.Stajalista)
-        //    {
-        //        if(t.GradID == x.PolazisteID){
-        //            polazisteRedniBroj = t.RedniBrojStajalista;
-        //            vrijemePolaska = t.SatnicaStizanja;
-        //            linijaId = t.LinijaID;
-        //            gradP = db.Grad.Find(t.GradID).Naziv;
-        //        }
-        //        if (t.GradID == x.DolazisteID && linijaId==t.LinijaID){
-        //            dolazisteRedniBroj = t.RedniBrojStajalista;
-        //            vrijemeDolaska = t.SatnicaStizanja;
-        //            gradD = db.Grad.Find(t.GradID).Naziv;
-        //        }
-        //        if(polazisteRedniBroj < dolazisteRedniBroj && polazisteRedniBroj!=-1 && dolazisteRedniBroj != -1)
-        //        {
-        //            podlinije.Add(new KartaUrediVM()
-        //            {
-        //                LinijaId = linijaId,
-        //                RedniBrojPolazista = polazisteRedniBroj,
-        //                RedniBrojDolazista = dolazisteRedniBroj,
-        //                VrijemePolaska=vrijemePolaska,
-        //                VrijemeDolaska=vrijemeDolaska,
-        //                PolazisteNaziv=gradP,
-        //                DolazisteNaziv=gradD,
-        //            });
-        //            polazisteRedniBroj = -1;
-        //            dolazisteRedniBroj = -1;
-        //        }
-        //    }
-        //    string stanica = "";
-
-        //    List<KartaUrediVM> Pkarte=new List<KartaUrediVM>();
-        //    foreach (var t in podlinije)
-        //    {
-        //        foreach (var i in db.Stajalista)
-        //        {
-        //            if(t.LinijaId==i.LinijaID)
-        //            {
-        //                if (i.RedniBrojStajalista > t.RedniBrojPolazista && i.RedniBrojStajalista < t.RedniBrojDolazista)
-        //                    stanica += db.Grad.Find(i.GradID).Naziv + " " + i.SatnicaStizanja + "\n";
-        //            }
-        //        }
-        //        KartaUrediVM y = new KartaUrediVM()
-        //        {
-        //            PolazisteNaziv = t.PolazisteNaziv,
-        //            DolazisteNaziv = t.DolazisteNaziv,
-        //            ImeLinije = db.Linija.Find(t.LinijaId).OznakaLinije,
-        //            VrijemePolaska = t.VrijemePolaska,
-        //            VrijemeDolaska = t.VrijemeDolaska,
-        //            Stajalista = stanica==""?"nema stajanja":stanica
-        //        };
-        //        Pkarte.Add(y);
-        //    }
-            
-        //    return View(Pkarte);
-        //}
         public IActionResult Uredi1(KartaPrikazVM x)
         {
             polazni = PronadjiLinije(x);
@@ -211,18 +153,25 @@ namespace WebApplication1.Controllers
                 {
                     var linija = db.Linija.Where(l => l.LinijaID == linijaId).SingleOrDefault();
                     var parsedDate = DateTime.Parse(x.DatumPolaska);
+                    var parsedTime = DateTime.Parse(vrijemePolaska);
                     if (linija.DaniUSedmici.Contains(parsedDate.DayOfWeek.ToString()))
                     {
-                        podlinije.Add(new KartaPrikazVM.Row()
+                        if((parsedDate==DateTime.Now && parsedTime.TimeOfDay > DateTime.Now.TimeOfDay)
+                         || parsedDate.Date != DateTime.Now.Date)
                         {
-                            LinijaId = linijaId,
-                            RedniBrojPolazista = polazisteRedniBroj,
-                            RedniBrojDolazista = dolazisteRedniBroj,
-                            VrijemePolaska = vrijemePolaska,
-                            VrijemeDolaska = vrijemeDolaska,
-                            PolazisteNaziv = gradP,
-                            DolazisteNaziv = gradD,
-                        });
+                            podlinije.Add(new KartaPrikazVM.Row()
+                            {
+                                LinijaId = linijaId,
+                                RedniBrojPolazista = polazisteRedniBroj,
+                                RedniBrojDolazista = dolazisteRedniBroj,
+                                VrijemePolaska = vrijemePolaska,
+                                VrijemeDolaska = vrijemeDolaska,
+                                PolazisteNaziv = gradP,
+                                DolazisteNaziv = gradD,
+                                SlobodnihMjesta = 50 - db.Karta.Where(s => s.PolazisteID == polazisteRedniBroj &&
+                                s.DolazisteID == dolazisteRedniBroj && s.DatumPolaska == x.DatumPolaska).Count()
+                            });
+                        }
                     }
                     polazisteRedniBroj = -1;
                     dolazisteRedniBroj = -1;
@@ -252,6 +201,7 @@ namespace WebApplication1.Controllers
                     VrijemePolaska = t.VrijemePolaska,
                     VrijemeDolaska = t.VrijemeDolaska,
                     Stajalista = stanica == "" ? "nema stajanja" : stanica,
+                    SlobodnihMjesta=t.SlobodnihMjesta
                 };
                 Pkarte.Add(y);
             }
@@ -324,6 +274,19 @@ namespace WebApplication1.Controllers
         }
         public IActionResult Placanje(KartaKupovinaVM x)
         {
+            KreditnaKartica kk=null;
+            if (x.SpasiKarticu)
+            {
+                kk = new KreditnaKartica();
+                kk.DatumIsteka = x.DatumIstekaNova;
+                kk.BrojKartice = x.BrojKarticeNova;
+                kk.ImeVlasnikaKartice = x.ImeVlasnikaNova;
+                kk.VerifikacijskiKod = x.VerKodNova;
+                kk.Kupac = (Kupac)HttpContext.LogiraniKorisnik();
+               
+                db.KreditnaKartica.Add(kk);
+                db.SaveChanges();
+            }
             int ukupnoPonavljanja = x.Dijete + x.Student + x.Penzioner + x.Odrasli;
             for(int i=0;i< ukupnoPonavljanja;i++)
             {
@@ -356,16 +319,19 @@ namespace WebApplication1.Controllers
                         DatumPolaska = x.DatumPolaska,
                         DatumDolaska = x.TipKarteID == 2 ? x.DatumDolaska : null,
                         TipKarteID = x.TipKarteID,
-                        //PolazisteID = x.PolazisteID,
-                        //DolazisteID = x.DolazisteID,
                         VrstaPopustaID = p.VrstaPopustaID,
                         NazivLinije=x.OznakaLinije,
                         IsAktivna=true,
                         Cijena =(float)Math.Round(x.CijenaBezPopusta - x.CijenaBezPopusta * p.Iznos,2),
                         Kupac = (Kupac)HttpContext.LogiraniKorisnik(),
                     };
-                    if (x.KarticeID != 0)
-                        k.KKarticaID = x.KarticeID;
+                    if (kk != null)
+                        k.KKarticaID = kk.KreditnaKarticaID;
+                    else if (x.BrojKarticeNova == null)
+                        k.KKarticaID=x.KarticeID;
+                    else
+                        k.KKarticaID = null;
+                    
                     k.PolazisteID = x.PolazisteID;
                     k.DolazisteID = x.DolazisteID;
                     db.Karta.Add(k);
@@ -373,6 +339,8 @@ namespace WebApplication1.Controllers
                     p = null;
                 }
             }
+            polazni = null;
+            dolazni = null;
             return RedirectToAction("KupljeneKarte");
         }
         public IActionResult KupljeneKarte()
@@ -394,7 +362,7 @@ namespace WebApplication1.Controllers
                 .Include(i => i.Dolaziste.Grad)
                 .Include(i => i.TipKarte)
                 .Include(i => i.VrstaPopusta)
-                .OrderBy(i=>i.DatumKupovine)
+                .OrderByDescending(i=>i.DatumKupovine)
                 .Where(i => i.Kupac.Id == HttpContext.LogiraniKorisnik().Id).Select(i => new KupljeneKarteVM.Row
             {
                 Cijena = i.Cijena,
@@ -423,80 +391,89 @@ namespace WebApplication1.Controllers
             db.SaveChanges();
             return Redirect("KupljeneKarte");
         }
-        #region KreditnaKartica
-        public IActionResult KreditnaKarticaPrikaz()
-        {
-            var kartice= new List<KreditnaKarticaPrikazVM.KarticaRedovi>(); 
-            if (db.KreditnaKartica.Where(k => k.Kupac.Id == HttpContext.LogiraniKorisnik().Id).Count() > 0)
-            {
-                kartice = db.KreditnaKartica.Where(k => k.Kupac.Id == HttpContext.LogiraniKorisnik().Id).Select(k => new KreditnaKarticaPrikazVM.KarticaRedovi
-                {
-                    KreditnaKarticaID = k.KreditnaKarticaID,
-                    BrojKartice = k.BrojKartice,
-                    DatumIsteka = k.DatumIsteka,
-                    ImeVlasnika = k.ImeVlasnikaKartice,
-                    VerKod = k.VerifikacijskiKod
-                }).ToList();
-            }
-            var listak= db.KreditnaKartica.Where(k => k.Kupac.Id == HttpContext.LogiraniKorisnik().Id).Select(k => new SelectListItem
-            {
-               Value=k.KreditnaKarticaID.ToString(),
-               Text= k.BrojKartice
-            }).ToList();
-            var m = new KreditnaKarticaPrikazVM
-            {
-                Kartice=listak,
-                KarticeKupca = kartice
-            };
-            return PartialView(m); 
-            //ako je view onda moze da otvori sa get, a ne moze da ucita ispod onog, a kad je partial onda ucita, al ne otvori vamo fak
+        //#region KreditnaKartica
+        //[HttpGet]
+        //public IActionResult KreditnaKarticaPrikaz()
+        //{
+        //    var kartice= new List<KreditnaKarticaPrikazVM.KarticaRedovi>(); 
+        //    if (db.KreditnaKartica.Where(k => k.Kupac.Id == HttpContext.LogiraniKorisnik().Id).Count() > 0)
+        //    {
+        //        kartice = db.KreditnaKartica.Where(k => k.Kupac.Id == HttpContext.LogiraniKorisnik().Id).Select(k => new KreditnaKarticaPrikazVM.KarticaRedovi
+        //        {
+        //            kreditnaKarticaID = k.KreditnaKarticaID,
+        //            brojKartice = k.BrojKartice,
+        //            datumIsteka = k.DatumIsteka,
+        //            imeVlasnika = k.ImeVlasnikaKartice,
+        //            verKod = k.VerifikacijskiKod
+        //        }).ToList();
+        //    }
+        //    var listak= db.KreditnaKartica.Where(k => k.Kupac.Id == HttpContext.LogiraniKorisnik().Id).Select(k => new SelectListItem
+        //    {
+        //       Value=k.KreditnaKarticaID.ToString(),
+        //       Text= k.BrojKartice
+        //    }).ToList();
+        //    var m = new KreditnaKarticaPrikazVM
+        //    {
+        //        Kartice=listak,
+        //        KarticeKupca = kartice
+        //    };
+        //    return Json(m); 
+        //    //ako je view onda moze da otvori sa get, a ne moze da ucita ispod onog, a kad je partial onda ucita, al ne otvori vamo fak
 
-        }
+        //}
        
-        public IActionResult KreditnaKarticaObrisi(int KarticaID)
-        {
-            KreditnaKartica v = db.KreditnaKartica.Find(KarticaID);
-            db.Remove(v);
-            db.SaveChanges();
+        //public IActionResult KreditnaKarticaObrisi(int KarticaID)
+        //{
+        //    KreditnaKartica v = db.KreditnaKartica.Find(KarticaID);
+        //    foreach(var k in db.Karta)
+        //    {
+        //        if (k.KKarticaID == KarticaID)
+        //        {
+        //            k.KKarticaID = null;
+        //        }
+        //    }
+        //    db.SaveChanges();
+        //    //db.Remove(v);
+        //    db.SaveChanges();
 
-            return Redirect("/Karta/KreditnaKarticaPrikaz");
-        }
-        public IActionResult KreditnaKarticaUredi(int KarticaID)
-        {
-            KreditnaKarticaUrediVM v = KarticaID == 0 ? new KreditnaKarticaUrediVM() :
-                db.KreditnaKartica.Where(v => v.KreditnaKarticaID == KarticaID)
-                .Select(v => new KreditnaKarticaUrediVM
-                {
-                    ImeVlasnika=v.ImeVlasnikaKartice,
-                    VerKod=v.VerifikacijskiKod,
-                    DatumIsteka=v.DatumIsteka,
-                    BrojKartice=v.BrojKartice
-                }).Single();
+        //    return RedirectToAction("Kupovina");
+        //}
+        //public IActionResult KreditnaKarticaUredi(int KarticaID)
+        //{
+        //    KreditnaKarticaUrediVM v = KarticaID == 0 ? new KreditnaKarticaUrediVM() :
+        //        db.KreditnaKartica.Where(v => v.KreditnaKarticaID == KarticaID)
+        //        .Select(v => new KreditnaKarticaUrediVM
+        //        {
+        //            ImeVlasnika=v.ImeVlasnikaKartice,
+        //            VerKod=v.VerifikacijskiKod,
+        //            DatumIsteka=v.DatumIsteka,
+        //            BrojKartice=v.BrojKartice
+        //        }).Single();
 
-            return View(v);
+        //    return View(v);
 
-        }
-        public IActionResult KreditnaKarticaSnimi(KreditnaKarticaUrediVM x)
-        {
-            KreditnaKartica kartica;
-            if (x.KreditnaKarticaID == 0)
-            {
-                kartica = new KreditnaKartica();
-                db.Add(kartica);
-            }
-            else
-            {
-                kartica = db.KreditnaKartica.Find(x.KreditnaKarticaID);
-            }
-            kartica.ImeVlasnikaKartice = x.ImeVlasnika;
-            kartica.VerifikacijskiKod = x.VerKod;
-            kartica.DatumIsteka = x.DatumIsteka;
-            kartica.BrojKartice = x.BrojKartice;
-            kartica.Kupac = (Kupac)HttpContext.LogiraniKorisnik();
+        //}
+        //public IActionResult KreditnaKarticaSnimi(KreditnaKarticaUrediVM x)
+        //{
+        //    KreditnaKartica kartica;
+        //    if (x.KreditnaKarticaID == 0)
+        //    {
+        //        kartica = new KreditnaKartica();
+        //        db.Add(kartica);
+        //    }
+        //    else
+        //    {
+        //        kartica = db.KreditnaKartica.Find(x.KreditnaKarticaID);
+        //    }
+        //    kartica.ImeVlasnikaKartice = x.ImeVlasnika;
+        //    kartica.VerifikacijskiKod = x.VerKod;
+        //    kartica.DatumIsteka = x.DatumIsteka;
+        //    kartica.BrojKartice = x.BrojKartice;
+        //    kartica.Kupac = (Kupac)HttpContext.LogiraniKorisnik();
 
-            db.SaveChanges();
-            return Redirect("/Karta/KreditnaKarticaPrikaz");
-        }
-        #endregion
+        //    db.SaveChanges();
+        //    return Redirect("/Karta/KreditnaKarticaPrikaz");
+        //}
+        //#endregion
     }
 }

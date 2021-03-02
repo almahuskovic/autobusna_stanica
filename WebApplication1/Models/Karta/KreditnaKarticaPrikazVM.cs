@@ -10,11 +10,11 @@ namespace WebApplication1.Models.Karta
     {
         public class KarticaRedovi
         {
-            public int KreditnaKarticaID { get; set; }
-            public string BrojKartice { get; set; }
-            public string ImeVlasnika { get; set; }
-            public int VerKod { get; set; }
-            public string DatumIsteka { get; set; }
+            public int kreditnaKarticaID { get; set; }
+            public string brojKartice { get; set; }
+            public string imeVlasnika { get; set; }
+            public int verKod { get; set; }
+            public string datumIsteka { get; set; }
         }
         public List<KarticaRedovi> KarticeKupca { get; set; }
         public List<SelectListItem> Kartice{ get; set; }

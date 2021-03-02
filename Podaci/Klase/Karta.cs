@@ -18,9 +18,9 @@ namespace Podaci.Klase
         public VrstaPopusta VrstaPopusta{ get; set; }
         public int VrstaPopustaID { get; set; }
         public Stajalista Polaziste{ get; set; }
-        public int? PolazisteID { get; set; }
+        public int PolazisteID { get; set; }
         public Stajalista Dolaziste { get; set; }
-        public int? DolazisteID { get; set; }
+        public int DolazisteID { get; set; }
         public bool IsAktivna { get; set; }
         public string NazivLinije{ get; set; }
         public int? KKarticaID { get; set; }

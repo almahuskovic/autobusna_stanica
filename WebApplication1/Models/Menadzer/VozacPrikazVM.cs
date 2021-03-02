@@ -14,8 +14,8 @@ namespace WebApplication1.Models.Menadzer
             public int VozacID { get; set; }
             public string Ime { get; set; }
             public string Prezime { get; set; }
-            public DateTime DatumRodjenja{ get; set; }
-            public DateTime DatumZaposlenja { get; set; }
+            public string DatumRodjenja{ get; set; }
+            public string DatumZaposlenja { get; set; }
             public string BrojVozacke { get; set; }
         }
         public List<Row> Vozaci;

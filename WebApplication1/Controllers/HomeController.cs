@@ -28,7 +28,7 @@ namespace WebApplication1.Controllers
             signInManager = sm;
             db = DB;
         }
-        [Authorize]
+        
         public IActionResult Index()
         {
            return View(); 
@@ -44,6 +44,7 @@ namespace WebApplication1.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+        [Authorize]
         public IActionResult DodajMenadzera()
         {
             return View();

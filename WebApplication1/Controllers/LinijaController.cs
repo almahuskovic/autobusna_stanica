@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Podaci;
 using Podaci.Klase;
@@ -12,6 +13,7 @@ using WebApplication1.Models.Linija;
 
 namespace WebApplication1.Controllers
 {
+    [Authorize]
     public class LinijaController : Controller
     {
         private readonly ApplicationDbContext db;
@@ -148,6 +150,7 @@ namespace WebApplication1.Controllers
         //    return Redirect("/Linija/Prikaz");
         //}
 
+      
         #region Linija
         public IActionResult LinijaPrikaz(string pretraga)
         {
@@ -275,7 +278,8 @@ namespace WebApplication1.Controllers
             return Redirect("/Linija/LinijaPrikaz");
         }
         #endregion
-
+        //ako pokusas brisati neko stajaliste, grad.. puknut ce app jer se ti ID-jevi pojavljuju u karti..
+        //mozes prvo proci kroz karte i setovati ih na null i onda da brises sve sto ti treba
         #region Stajalista
         public IActionResult StajalistaPrikaz(int LinijaID)
         {

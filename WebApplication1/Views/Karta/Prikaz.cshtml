@@ -3,104 +3,104 @@
 }
 @model WebApplication1.Models.Karta.KartaPrikazVM
 
-    <form asp-action="Uredi1" asp-controller="Karta" style="display:inline" onsubmit="return validateFormSearch()"
-          name="myFormSearch" method="post">
-        <div>
-            <label asp-for="TipKarte" class="control-label"></label>
-            <select id="izbor" asp-for="TipKarteID" asp-items="@Model.TipKarte"></select>
+<form asp-action="Uredi1" asp-controller="Karta" style="display:inline" onsubmit="return validateFormSearch()"
+      name="myFormSearch" method="post">
+    <div class="card ">
+        <div class="card-header">
+            <div>
+                <div>
+                    <label class="font-weight-bold">Tip Karte</label>
+                    <select id="izbor" asp-for="TipKarteID" asp-items="@Model.TipKarte" name="TipKarteID"></select>
+                </div>
+                <div style="display:inline">
+                    <label class="font-weight-bold">Polazište</label>
+                    <select asp-for="PolazisteID" asp-items="@Model.Polaziste" style="margin-right:10px"></select>
+
+                    <label class="font-weight-bold">Dolazište</label>
+                    <select asp-for="DolazisteID" asp-items="@Model.Dolaziste" style="margin-right:10px"></select>
+
+                    <label class="font-weight-bold">Datum Polaska</label>
+                    <input id="datP" type="date" asp-for="DatumPolaska" name="DatumPolaska" min="@DateTime.Now.Date" style="margin-right:10px"/>
+
+                    <label id="datN" style="display:none" class="font-weight-bold">Datum Dolaska</label>
+                    <input id="dat" type="date" style="display:none" asp-for="DatumDolaska" name="DatumDolaska" />
+                    <input type="submit" class="btn btn-primary" value="Traži" />
+                </div>
+            </div>
         </div>
-        <div style="display:inline">
-            <label asp-for="Polaziste" class="control-label"></label>
-            <select asp-for="PolazisteID" asp-items="@Model.Polaziste"></select>
+    </div>
 
-            <label asp-for="Dolaziste" class="control-label"></label>
-            <select asp-for="DolazisteID" asp-items="@Model.Dolaziste"></select>
 
-            <label asp-for="DatumPolaska" class="control-label"></label>
-            <input type="date" asp-for="DatumPolaska" name="DatumPolaska"/>
-            @if (Model.TipKarteID == 2)
-            {
-                <label id="datN" asp-for="DatumDolaska" class="control-label"></label>
-                <input id="dat" type="date" asp-for="DatumDolaska" name="DatumDolaska"/>
-            }
-
-            <label id="datN" style="display:none" asp-for="DatumDolaska" class="control-label"></label>
-            <input id="dat" type="date" style="display:none" asp-for="DatumDolaska" name="DatumDolaska"/>
-
-        </div>
-        <input type="submit" class="btn btn-primary" value="Trazi" />
-        <div class="alert alert-warning alert-dismissible fade show" role="alert" style="display:none" id="porukaTrazi">
-            Niste odabrali datum!
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    </form>
+    <div class="alert alert-warning alert-dismissible fade show" role="alert" style="display:none" id="porukaTrazi">
+        Niste odabrali datum!
+    </div>
+</form>
 @if (Model.polazni != null)
 {
-<div style="border-top:1px solid black; border-bottom:1px solid black; padding:10px; margin:10px 0;">
-    <form asp-action="Kupovina" asp-controller="Karta" onsubmit="return validateForm()" name="myForm" method="post">
-        <input hidden asp-for="TipKarteID" />
-        <input hidden asp-for="PolazisteID" />
-        <input hidden asp-for="DolazisteID" />
-        <input hidden asp-for="DatumPolaska" />
-        <input hidden asp-for="DatumDolaska" />
-        <input hidden asp-for="OznakaLinije" />
-        <div>
-            <label asp-for="LinijaPolaziste" class="control-label"></label>
-            <select asp-for="LinijaPolazisteID" asp-items="@Model.LinijaPolaziste"></select>
-            @if (Model.TipKarteID == 2)
-            {
-                <label asp-for="LinijaDolaziste" class="control-label"></label>
-                <select asp-for="LinijaDolazisteID" asp-items="@Model.LinijaDolaziste"></select>
-            }
-        </div>
-        <div>
-            <label asp-for="Dijete" class="control-label"></label>
-            <input type="number" min="0" max="5" asp-for="Dijete" name="Dijete" />
-            <label asp-for="Odrasli" class="control-label"></label>
-            <input type="number" min="0" max="5" asp-for="Odrasli" name="Odrasli" />
-            <label asp-for="Student" class="control-label"></label>
-            <input type="number" min="0" max="5" asp-for="Student" name="Student" />
-            <label asp-for="Penzioner" class="control-label"></label>
-            <input type="number" min="0" max="5" asp-for="Penzioner" name="Penzioner" />
-        </div>
-        <div class="alert alert-warning alert-dismissible fade show" role="alert" style="display:none" id="poruka">
-            Niste unijeli sve potrebne vrijednosti!
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <input class="btn btn-warning" type="submit" value="Kupi" onclick="validateForm()" />
-    </form>
-</div>
-    
+    <div style=" padding:10px; margin:10px 0;">
+        <form asp-action="Kupovina" asp-controller="Karta" onsubmit="return validateForm()" name="myForm" method="post">
+            <input hidden asp-for="TipKarteID" />
+            <input hidden asp-for="PolazisteID" />
+            <input hidden asp-for="DolazisteID" />
+            <input hidden asp-for="DatumPolaska" />
+            <input hidden asp-for="DatumDolaska" />
+            <input hidden asp-for="OznakaLinije" />
+
+            <div class="card text-center">
+                <div class="card-header">
+                    <div>
+                        <label class=" font-weight-bold">Linija Polazište</label>
+                        <select asp-for="LinijaPolazisteID" asp-items="@Model.LinijaPolaziste"></select>
+                        @if (Model.TipKarteID == 2)
+                        {
+                            <label class=" font-weight-bold">Linija Dolazište</label>
+                            <select asp-for="LinijaDolazisteID" asp-items="@Model.LinijaDolaziste"></select>
+                        }
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div>
+                        <label asp-for="Dijete" class="control-label"></label>
+                        <input type="number" min="0" max="5" asp-for="Dijete" name="Dijete" />
+                        <label asp-for="Odrasli" class="control-label"></label>
+                        <input type="number" min="0" max="5" asp-for="Odrasli" name="Odrasli" />
+                        <label asp-for="Student" class="control-label"></label>
+                        <input type="number" min="0" max="5" asp-for="Student" name="Student" />
+                        <label asp-for="Penzioner" class="control-label"></label>
+                        <input type="number" min="0" max="5" asp-for="Penzioner" name="Penzioner" />
+                    </div>
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert" style="display:none" id="poruka">
+                        Niste unijeli sve potrebne vrijednosti!
+                    </div>
+                    <input class="btn btn-warning" type="submit" value="Kupi" onclick="validateForm()" />
+                </div>
+            </div>
+        </form>
+    </div>
+
     <h3>Polazni autobusi</h3>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <td>Vrijeme polaska:</td>
-                <td>Vrijeme dolaska:</td>
-                <td>Mjesto polaska:</td>
-                <td>Mjesto dolaska:</td>
-                <td>Ime linije:</td>
-                <td>Stajalista i satnice:</td>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var k in Model.polazni)
-            {
-                <tr>
-                    <td>@k.VrijemePolaska</td>
-                    <td>@k.VrijemeDolaska</td>
-                    <td>@k.PolazisteNaziv</td>
-                    <td>@k.DolazisteNaziv</td>
-                    <td>@k.ImeLinije</td>
-                    <td>@k.Stajalista</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    @foreach (var k in Model.polazni)
+    {
+<div class="card" style="width:550px">
+    <p class="card-header text-center" style="background-color:rgba(251, 255, 125,0.3); ">Linija: @k.ImeLinije</p>
+        <div class="card-body" style="background-color:white; ">
+            <div>
+                <div class="row">
+                    <div class="col">
+                        <p class="card-text font-weight-bold">@k.VrijemePolaska ----------------- @k.VrijemeDolaska</p>
+                        <p style="width:12px;display:inline" class="card-text font-weight-bold">@k.PolazisteNaziv</p>
+                        <p style="width:12px;display:inline;margin-left:85px;" class="card-text font-weight-bold">@k.DolazisteNaziv</p>
+                    </div>
+                    <div class="col">
+                        <p class="font-weight-bold">Stajališta i satnice:</p>
+                        <p class="card-text">@k.Stajalista</p>
+                    </div>
+                </div>
+            </div>
+            <p class="card-text text-center" style="margin-top:30px;font-size:14px;">Slobodnih mjesta: @k.SlobodnihMjesta</p>
+        </div>
+</div>
+    }
 }
 else
 {
@@ -108,41 +108,33 @@ else
         <label>Nema rezultata pretrage</label>
     </div>
 }
-@if (Model.dolazni != null && Model.TipKarteID==2)
+@if (Model.dolazni != null && Model.TipKarteID == 2)
 {
     <h3>Povratni autobusi</h3>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <td>Vrijeme polaska:</td>
-                <td>Vrijeme dolaska:</td>
-                <td>Mjesto polaska:</td>
-                <td>Mjesto dolaska:</td>
-                <td>Ime linije:</td>
-                <td>Stajalista i satnice:</td>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var k in Model.dolazni)
-            {
-                <tr>
-                    <td>@k.VrijemePolaska</td>
-                    <td>@k.VrijemeDolaska</td>
-                    <td>@k.PolazisteNaziv</td>
-                    <td>@k.DolazisteNaziv</td>
-                    <td>@k.ImeLinije</td>
-                    <td>@k.Stajalista</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    @foreach (var k in Model.dolazni)
+    {
+        <div class="card" style="width:43%">
+            <p class="card-header text-center" style="background-color:rgba(251, 255, 125,0.3); ">Linija: @k.ImeLinije</p>
+            <div class="card-body" style="background-color:white; ">
+                <div>
+                    <div class="row">
+                        <div class="col">
+                            <p class="card-text font-weight-bold">@k.VrijemePolaska ----------------- @k.VrijemeDolaska</p>
+                            <p style="width:12px;display:inline" class="card-text font-weight-bold">@k.PolazisteNaziv</p>
+                            <p style="width:12px;display:inline;margin-left:85px;" class="card-text font-weight-bold">@k.DolazisteNaziv</p>
+                        </div>
+                        <div class="col">
+                            <p class="font-weight-bold">Stajališta i satnice:</p>
+                            <p class="card-text">@k.Stajalista</p>
+                        </div>
+                    </div>
+                </div>
+                <p class="card-text text-center" style="margin-top:30px;font-size:14px;">Slobodnih mjesta: @k.SlobodnihMjesta</p>
+            </div>
+        </div>
+    }
 }
-else
-{
-    <div>
-        <label>Nema rezultata pretrage</label>
-    </div>
-}
+
 <script>
     $(document).ready(function () {
         $("#izbor").on("change", function () {
@@ -155,6 +147,31 @@ else
                 $("#dat").hide();
             }
         });
+        var tip = document.forms["myFormSearch"]["TipKarteID"].value;
+
+        if (tip == 2) {
+            $("#datN").show();
+            $("#dat").show();
+        }
+
+        $("#datP").focusout(function () {
+            if (this.value != null || this.value != "")
+                document.getElementById("porukaTrazi").style.display = "none";
+        });
+        $("#dat").focusout(function () {
+            if (this.value != null || this.value != "")
+                document.getElementById("porukaTrazi").style.display = "none";
+        });
+        var now = new Date();
+
+        var day = ("0" + now.getDate()).slice(-2);
+        var month = ("0" + (now.getMonth() + 1)).slice(-2);
+
+        var today = now.getFullYear() + "-" + (month) + "-" + (day);
+
+        //$('#datP').val(today);
+        $('#datP').attr('min', today);
+        $('#dat').attr('min', today);
     });
     function validateForm() {
         var d = document.forms["myForm"]["Dijete"].value;
@@ -169,12 +186,22 @@ else
     function validateFormSearch() {
         var dP = document.forms["myFormSearch"]["DatumPolaska"].value;
         var dD = document.forms["myFormSearch"]["DatumDolaska"].value;
-       
-        if ((dP == null || dP == "") && (dD == null || dD == 0)) {
-            document.getElementById("porukaTrazi").style.display = "block";
-            return false;
+        var tip = document.forms["myFormSearch"]["TipKarteID"].value;
+
+        if (tip == 2) {
+            if ((dP == null || dP == "") || (dD == null || dD == 0)) {
+                document.getElementById("porukaTrazi").style.display = "block";
+                return false;
+            }
+        }
+        if (tip == 1) {
+            if ((dP == null || dP == "")) {
+                document.getElementById("porukaTrazi").style.display = "block";
+                return false;
+            }
         }
     }
+
 </script>
 
 @*@section Scripts

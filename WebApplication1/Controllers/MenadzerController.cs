@@ -2,16 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Podaci.Klase;
 using WebApplication1.Data;
 using WebApplication1.Models.Menadzer;
-
+using WebApplication1.Models.TipKarte;
+using WebApplication1.Models.VrstaPopusta;
 
 namespace WebApplication1.Controllers
 {
+    [Authorize]
     public class MenadzerController : Controller
     {
         private readonly ApplicationDbContext db;
@@ -24,7 +28,7 @@ namespace WebApplication1.Controllers
             return View();
         }
 
-        #region Vozaci
+        #region Vozac
         public IActionResult VozacPrikaz(string Pretraga)
         {
             var vozaci = db.Vozac.Where(x => Pretraga == null || x.Ime.StartsWith(Pretraga) || x.Prezime.StartsWith(Pretraga))
@@ -37,7 +41,10 @@ namespace WebApplication1.Controllers
                     DatumRodjenja = v.DatumRodjenja,
                     BrojVozacke = v.BrojVozacke
                 }).ToList();
-            VozacPrikazVM m = new VozacPrikazVM();
+            VozacPrikazVM m = new VozacPrikazVM()
+            {
+                Pretraga = Pretraga
+            };
             m.Vozaci = vozaci;
             return View(m);
         }
@@ -47,8 +54,8 @@ namespace WebApplication1.Controllers
             if (VozacID == 0)
             {
                 m = new VozacUrediVM.Row();
-                m.DatumRodjenja = DateTime.Now.Date;
-                m.DatumZaposlenja = DateTime.Now.Date;
+                m.DatumRodjenja = DateTime.Now.Date.ToString("dd-MM-yyyy");
+                m.DatumZaposlenja = DateTime.Now.Date.ToString();
             }
             else
             {
@@ -56,8 +63,8 @@ namespace WebApplication1.Controllers
                 {
                     VozacID = x.VozacID,
                     BrojVozacke = x.BrojVozacke,
-                    DatumRodjenja = x.DatumRodjenja.Date,
-                    DatumZaposlenja = x.DatumZaposlenja.Date,
+                    DatumRodjenja = x.DatumRodjenja,
+                    DatumZaposlenja = x.DatumZaposlenja,
                     Ime = x.Ime,
                     Prezime = x.Prezime
                 }).Single();
@@ -307,6 +314,174 @@ namespace WebApplication1.Controllers
             db.Remove(m);
             db.SaveChanges();
             return Redirect("/Menadzer/ObavijestKategorijaPrikaz");
+        }
+        #endregion
+        #region TipKarte
+        public IActionResult TipKartePrikaz()
+        {
+            var m = db.TipKarte.Select(k => new TipKartePrikazVM()
+            {
+                TipKarteID = k.TipKarteID,
+                Naziv = k.Naziv
+            }).ToList();
+            return View(m);
+        }
+        public IActionResult Obrisi(int TipKarteID)
+        {
+            TipKarte k = db.TipKarte.Find(TipKarteID);
+            db.Remove(k);
+            db.SaveChanges();
+            return Redirect("/Menadzer/TipKartePrikaz/");
+        }
+        public IActionResult TipKarteUredi(int TipKarteID)
+        {
+            TipKarteUrediVM m;
+            if (TipKarteID == 0)
+            {
+                m = new TipKarteUrediVM();
+            }
+            else
+            {
+                m = db.TipKarte.Where(k => k.TipKarteID == TipKarteID).Select(i => new TipKarteUrediVM()
+                {
+                    Naziv = i.Naziv,
+                    TipKarteID = i.TipKarteID
+                }).SingleOrDefault();
+            }
+            return View(m);
+        }
+        public IActionResult TipKarteSnimi(TipKarteUrediVM m)
+        {
+            TipKarte karta;
+            if (m.TipKarteID == 0)
+            {
+                karta = new TipKarte();
+                db.TipKarte.Add(karta);
+            }
+            else
+            {
+                karta = db.TipKarte.Find(m.TipKarteID);
+            }
+            karta.Naziv = m.Naziv;
+            karta.TipKarteID = m.TipKarteID;
+            db.SaveChanges();
+            return Redirect("/Menadzer/TipKartePrikaz");
+        }
+        #endregion
+        #region VrstaPopusta
+        public IActionResult VrstaPopustaPrikaz()
+        {
+            var m = db.VrstaPopusta.Select(k => new VrstaPopustaPrikazVM()
+            {
+                VrstaPopustaID = k.VrstaPopustaID,
+                Naziv = k.Naziv,
+                Iznos = k.Iznos
+            }).ToList();
+            return View(m);
+        }
+        public IActionResult VrstaPopustaObrisi(int VrstaPopustaID)
+        {
+            VrstaPopusta k = db.VrstaPopusta.Find(VrstaPopustaID);
+            db.Remove(k);
+            db.SaveChanges();
+            return Redirect("/Menadzer/VrstaPopustaPrikaz/");
+        }
+        public IActionResult VrstaPopustaUredi(int VrstaPopustaID)
+        {
+            VrstaPopustaUrediVM m;
+            if (VrstaPopustaID == 0)
+            {
+                m = new VrstaPopustaUrediVM();
+            }
+            else
+            {
+                m = db.VrstaPopusta.Where(k => k.VrstaPopustaID == VrstaPopustaID).Select(i => new VrstaPopustaUrediVM()
+                {
+                    VrstaPopustaID = i.VrstaPopustaID,
+                    Naziv = i.Naziv,
+                    Iznos = i.Iznos
+                }).SingleOrDefault();
+            }
+            return View(m);
+        }
+        public IActionResult VrstaPopustaSnimi(VrstaPopustaUrediVM m)
+        {
+            VrstaPopusta popust;
+            if (m.VrstaPopustaID == 0)
+            {
+                popust = new VrstaPopusta();
+                db.VrstaPopusta.Add(popust);
+            }
+            else
+            {
+                popust = db.VrstaPopusta.Find(m.VrstaPopustaID);
+            }
+            popust.VrstaPopustaID = m.VrstaPopustaID;
+            popust.Naziv = m.Naziv;
+            popust.Iznos = m.Iznos;
+
+            db.SaveChanges();
+            return Redirect("/Menadzer/VrstaPopustaPrikaz");
+        }
+        #endregion
+
+        #region LinijaVozac
+        public IActionResult LinijaVozacPrikaz(int LinijaID)
+        {
+            var redovi = db.LinijaVozac.Include(s => s.Vozac).Include(l => l.Linija).Where(i => i.LinijaID == LinijaID).Select(i => new LinijaVozacPrikazVM.Row
+            {
+                VozacID = i.VozacID,
+                ImePrezime = i.Vozac.Ime + " " + i.Vozac.Prezime,
+            }).ToList();
+            var m = new LinijaVozacPrikazVM()
+            {
+                LinijaID=LinijaID,
+                NazivLinije = db.Linija.Where(i => i.LinijaID == LinijaID).FirstOrDefault().OznakaLinije,
+                redovi = redovi
+            };
+
+            return View(m);
+        }
+        public IActionResult LinijaVozacUkloni(int LinijaID,int VozacID)
+        {
+            var x = db.LinijaVozac.Where(i => i.LinijaID == LinijaID && i.VozacID == VozacID).SingleOrDefault();
+            db.Remove(x);
+            db.SaveChanges();
+            return Redirect("/Menadzer/LinijaVozacPrikaz?LinijaID=" + x.LinijaID);
+        }
+        public IActionResult LinijaVozacDodaj(int LinijaID)
+        {
+            List<SelectListItem> vozaci=new List<SelectListItem>();
+            foreach(var i in db.Vozac)
+            {
+                var linija = db.LinijaVozac.Where(l => l.LinijaID == LinijaID && l.VozacID == i.VozacID).SingleOrDefault();
+                if (linija == null)
+                {
+                    SelectListItem item = new SelectListItem
+                    {
+                        Value = i.VozacID.ToString(),
+                        Text = i.Ime + " " + i.Prezime
+                    };
+                    vozaci.Add(item);
+                }
+            }
+            var m = new LinijaVozacDodajVM
+            {
+                LinijaID = LinijaID,
+                Vozaci = vozaci
+            };
+            return View(m);
+        }
+        public IActionResult LinijaVozacSnimi(LinijaVozacDodajVM x)
+        {
+            LinijaVozac vm = new LinijaVozac
+            {
+                LinijaID = x.LinijaID,
+                VozacID = x.VozacID
+            };
+            db.LinijaVozac.Add(vm);
+            db.SaveChanges();
+            return Redirect("/Menadzer/LinijaVozacPrikaz?LinijaID="+x.LinijaID);
         }
         #endregion
         #region Izvjestaj

@@ -42,5 +42,6 @@ namespace WebApplication1.Models.Karta
         public string ImeVlasnikaNova { get; set; }
         public int VerKodNova { get; set; }
         public string DatumIstekaNova { get; set; }
+        public bool SpasiKarticu { get; set; }
     }
 }
