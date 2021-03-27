@@ -14,10 +14,12 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Podaci.Klase;
+using WebApplication1.Helper;
 
 namespace WebApplication1.Areas.Identity.Pages.Account
 {
-    [AllowAnonymous]
+    [AllowAnonymous]//da se menadzer moze samo prijaviti zato ovo
+    //[Authorize]
     public class RegisterModel : PageModel
     {
         private readonly SignInManager<Korisnik> _signInManager;
@@ -50,9 +52,9 @@ namespace WebApplication1.Areas.Identity.Pages.Account
             [DataType(DataType.Text)]
             [Display(Name = "Ime")]
             public string Ime { get; set; }
-            [Required]
-            [DataType(DataType.Text)]
-            [Display(Name = "Prezime")]
+            //[Required]
+            //[DataType(DataType.Text)]
+            //[Display(Name = "Prezime")]
             public string Prezime { get; set; }
 
             [Required]
@@ -88,6 +90,8 @@ namespace WebApplication1.Areas.Identity.Pages.Account
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
+                    HttpContext.SetLogiraniKorisnik(user);
+                    AutentifikacijaMVC.currentUserId = user.Id;
                     _logger.LogInformation("User created a new account with password.");
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);

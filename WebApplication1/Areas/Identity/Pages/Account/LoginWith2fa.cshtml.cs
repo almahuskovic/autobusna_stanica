@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Podaci.Klase;
+using WebApplication1.Helper;
 
 namespace WebApplication1.Areas.Identity.Pages.Account
 {
@@ -81,6 +82,7 @@ namespace WebApplication1.Areas.Identity.Pages.Account
             if (result.Succeeded)
             {
                 _logger.LogInformation("User with ID '{UserId}' logged in with 2fa.", user.Id);
+                HttpContext.SetLogiraniKorisnik(user);
                 return LocalRedirect(returnUrl);
             }
             else if (result.IsLockedOut)

@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Podaci.Klase;
+using WebApplication1.Helper;
 
 namespace WebApplication1.Areas.Identity.Pages.Account.Manage
 {
+    [AllowAnonymous]
     public class ChangePasswordModel : PageModel
     {
         private readonly UserManager<Korisnik> _userManager;
@@ -55,6 +58,7 @@ namespace WebApplication1.Areas.Identity.Pages.Account.Manage
         public async Task<IActionResult> OnGetAsync()
         {
             var user = await _userManager.GetUserAsync(User);
+            user = HttpContext.GetLogiranogUsera();
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
@@ -77,6 +81,7 @@ namespace WebApplication1.Areas.Identity.Pages.Account.Manage
             }
 
             var user = await _userManager.GetUserAsync(User);
+            user = HttpContext.GetLogiranogUsera();
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");

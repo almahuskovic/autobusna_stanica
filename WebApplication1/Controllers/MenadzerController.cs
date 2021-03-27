@@ -9,13 +9,15 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Podaci.Klase;
 using WebApplication1.Data;
+using WebApplication1.Helper;
 using WebApplication1.Models.Menadzer;
 using WebApplication1.Models.TipKarte;
 using WebApplication1.Models.VrstaPopusta;
 
 namespace WebApplication1.Controllers
 {
-    [Authorize]
+    //[Authorize]
+    [Autorizacija(menadzer:true,kupac:false)]
     public class MenadzerController : Controller
     {
         private readonly ApplicationDbContext db;
@@ -177,7 +179,7 @@ namespace WebApplication1.Controllers
                 ObavijestID = o.ObavijestID,
                 Naslov = o.Naslov,
                 Podnaslov = o.Podnaslov,
-                Opis = o.Opis,
+                Opis = o.Opis.Substring(0,100),
                 DatumObjave = o.DatumObjave,
                 ObavijestKategorija = o.ObavijestKategorija.Naziv,
                 Slika = KonvertovanjeSlike.GetImageBase64(o.Slika)
@@ -326,7 +328,7 @@ namespace WebApplication1.Controllers
             }).ToList();
             return View(m);
         }
-        public IActionResult Obrisi(int TipKarteID)
+        public IActionResult TipKarteObrisi(int TipKarteID)
         {
             TipKarte k = db.TipKarte.Find(TipKarteID);
             db.Remove(k);

@@ -8,12 +8,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApplication1.Data;
+using WebApplication1.Helper;
 using WebApplication1.Models;
 using WebApplication1.Models.Linija;
 
 namespace WebApplication1.Controllers
 {
-    [Authorize]
+    //[Authorize]
+    [Autorizacija(menadzer:true,kupac:false)]
     public class LinijaController : Controller
     {
         private readonly ApplicationDbContext db;

@@ -15,6 +15,13 @@ using Microsoft.Extensions.Hosting;
 using Podaci.Klase;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.CodeAnalysis.Options;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using WebApplication1.Models.Autentifikacija;
+using WebApplication1.Models.Karta;
+using Microsoft.AspNetCore.Http;
+using WebApplication1.Helper;
 
 namespace WebApplication1
 {
@@ -32,21 +39,9 @@ namespace WebApplication1
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                    Configuration.GetConnectionString("DefaultConnection")).EnableSensitiveDataLogging());
             services.AddDefaultIdentity<Korisnik>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
-            services.AddControllersWithViews();
-            services.AddRazorPages();
-            //auth
-            services.AddAuthentication()
-           .AddGoogle(options =>
-           {
-               IConfigurationSection googleAuthNSection =
-                   Configuration.GetSection("Authentication:Google");
-
-               options.ClientId = googleAuthNSection["ClientId"];
-               options.ClientSecret = googleAuthNSection["ClientSecret"];
-           });
+                .AddEntityFrameworkStores<ApplicationDbContext>();//.AddDefaultTokenProviders();
 
             services.AddCors(options =>
             {
@@ -54,8 +49,37 @@ namespace WebApplication1
                     builder => builder.AllowAnyOrigin()
                     .AllowAnyMethod()
                     .AllowAnyHeader());
-                    //.AllowCredentials());
+                //.AllowCredentials());
             });
+           
+            services.AddControllersWithViews()
+                .AddJsonOptions(options=> {
+                    options.JsonSerializerOptions.PropertyNamingPolicy = null;
+                    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+            });
+            services.AddRazorPages();
+          
+            services.Configure<ApplicationSettings>(Configuration.GetSection("ApplicationSettings"));
+            var key = Encoding.UTF8.GetBytes(Configuration["ApplicationSettings:JWT_Secret"].ToString());
+            services.AddAuthentication(x => {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = false;
+                x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
+            
+            services.AddSession();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -76,12 +100,13 @@ namespace WebApplication1
             app.UseStaticFiles();
 
             app.UseRouting();
-            //app.UseCors("CorsPolicy");
-            app.UseCors();
-
+         
+            app.UseSession();
+           
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseCors("CorsPolicy");
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

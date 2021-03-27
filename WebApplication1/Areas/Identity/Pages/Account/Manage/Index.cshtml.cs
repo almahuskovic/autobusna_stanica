@@ -3,13 +3,20 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Podaci.Klase;
+using WebApplication1.Data;
+using WebApplication1.Helper;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
+using WebApplication1.Controllers;
 
 namespace WebApplication1.Areas.Identity.Pages.Account.Manage
 {
+    [AllowAnonymous]
     public partial class IndexModel : PageModel
     {
         private readonly UserManager<Korisnik> _userManager;
@@ -38,9 +45,9 @@ namespace WebApplication1.Areas.Identity.Pages.Account.Manage
             [Display(Name ="Ime")]
             public string Ime { get; set; }
 
-            [Required]
-            [DataType(DataType.Text)]
-            [Display(Name = "Prezime")]
+            //[Required]
+            //[DataType(DataType.Text)]
+            //[Display(Name = "Prezime")]
             public string Prezime { get; set; }
 
             [Phone]
@@ -50,7 +57,12 @@ namespace WebApplication1.Areas.Identity.Pages.Account.Manage
 
         private async Task LoadAsync(Korisnik user)
         {
+            KartaController.polazni = null;
+            KartaController.dolazni = null;
+            user = HttpContext.GetLogiranogUsera();
             var userName = await _userManager.GetUserNameAsync(user);
+            userName = user.Email;
+           
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
 
             Username = userName;
@@ -58,14 +70,15 @@ namespace WebApplication1.Areas.Identity.Pages.Account.Manage
             Input = new InputModel
             {
                 Ime = user.Ime,
-                Prezime=user.Prezime,
+                //Prezime=user.Prezime,
                 PhoneNumber = phoneNumber
             };
         }
 
         public async Task<IActionResult> OnGetAsync()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user =await _userManager.GetUserAsync(User);//ostavila sam ovako jer async nije potpun bez await 
+            user = HttpContext.GetLogiranogUsera();
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
@@ -78,6 +91,8 @@ namespace WebApplication1.Areas.Identity.Pages.Account.Manage
         public async Task<IActionResult> OnPostAsync()
         {
             var user = await _userManager.GetUserAsync(User);
+            user = HttpContext.GetLogiranogUsera();
+
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
@@ -103,10 +118,10 @@ namespace WebApplication1.Areas.Identity.Pages.Account.Manage
             {
                 user.Ime = Input.Ime;
             }
-            if (Input.Prezime != user.Prezime)
-            {
-                user.Prezime = Input.Prezime;
-            }
+            //if (Input.Prezime != user.Prezime)
+            //{
+            //    user.Prezime = Input.Prezime;
+            //}
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";
             return RedirectToPage();

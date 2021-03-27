@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Podaci.Klase;
+using WebApplication1.Data;
+using System.Linq;
 
 namespace WebApplication1.Areas.Identity.Pages.Account
 {
@@ -15,11 +17,13 @@ namespace WebApplication1.Areas.Identity.Pages.Account
     {
         private readonly UserManager<Korisnik> _userManager;
         private readonly IEmailSender _sender;
+        private readonly ApplicationDbContext db;
 
-        public RegisterConfirmationModel(UserManager<Korisnik> userManager, IEmailSender sender)
+        public RegisterConfirmationModel(UserManager<Korisnik> userManager, IEmailSender sender, ApplicationDbContext DB)
         {
             _userManager = userManager;
             _sender = sender;
+            db = DB;
         }
 
         public string Email { get; set; }
@@ -36,6 +40,8 @@ namespace WebApplication1.Areas.Identity.Pages.Account
             }
 
             var user = await _userManager.FindByEmailAsync(email);
+            user = db.Users.Where(x => x.Email == email).FirstOrDefault();
+
             if (user == null)
             {
                 return NotFound($"Unable to load user with email '{email}'.");

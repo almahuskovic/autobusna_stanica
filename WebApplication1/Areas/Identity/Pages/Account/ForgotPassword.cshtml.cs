@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Podaci.Klase;
+using WebApplication1.Data;
+using System.Linq;
 
 namespace WebApplication1.Areas.Identity.Pages.Account
 {
@@ -19,11 +21,12 @@ namespace WebApplication1.Areas.Identity.Pages.Account
     {
         private readonly UserManager<Korisnik> _userManager;
         private readonly IEmailSender _emailSender;
-
-        public ForgotPasswordModel(UserManager<Korisnik> userManager, IEmailSender emailSender)
+        private readonly ApplicationDbContext db;
+        public ForgotPasswordModel(UserManager<Korisnik> userManager, IEmailSender emailSender, ApplicationDbContext Db)
         {
             _userManager = userManager;
             _emailSender = emailSender;
+            db = Db;
         }
 
         [BindProperty]
@@ -41,6 +44,8 @@ namespace WebApplication1.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByEmailAsync(Input.Email);
+                user = db.Users.Where(x => x.Email == Input.Email).FirstOrDefault();
+
                 if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
                 {
                     // Don't reveal that the user does not exist or is not confirmed

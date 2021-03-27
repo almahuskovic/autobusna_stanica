@@ -11,9 +11,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Podaci.Klase;
+using Microsoft.AspNetCore.Authorization;
+using WebApplication1.Helper;
 
 namespace WebApplication1.Areas.Identity.Pages.Account.Manage
 {
+    [AllowAnonymous]
+    //[Autorizacija(menadzer: true, kupac: true)] //ne prolazi samo sa ovim :/
     public partial class EmailModel : PageModel
     {
         private readonly UserManager<Korisnik> _userManager;
@@ -53,6 +57,7 @@ namespace WebApplication1.Areas.Identity.Pages.Account.Manage
         private async Task LoadAsync(Korisnik user)
         {
             var email = await _userManager.GetEmailAsync(user);
+            email = HttpContext.GetLogiraniKorisnik().Email;//dodala
             Email = email;
 
             Input = new InputModel
@@ -66,6 +71,7 @@ namespace WebApplication1.Areas.Identity.Pages.Account.Manage
         public async Task<IActionResult> OnGetAsync()
         {
             var user = await _userManager.GetUserAsync(User);
+            user = HttpContext.GetLogiraniKorisnik();
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
@@ -78,6 +84,7 @@ namespace WebApplication1.Areas.Identity.Pages.Account.Manage
         public async Task<IActionResult> OnPostChangeEmailAsync()
         {
             var user = await _userManager.GetUserAsync(User);
+            user = HttpContext.GetLogiraniKorisnik();
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
@@ -90,9 +97,11 @@ namespace WebApplication1.Areas.Identity.Pages.Account.Manage
             }
 
             var email = await _userManager.GetEmailAsync(user);
+            email = HttpContext.GetLogiraniKorisnik().Email;//dodala
             if (Input.NewEmail != email)
             {
                 var userId = await _userManager.GetUserIdAsync(user);
+                userId = user.Id;
                 var code = await _userManager.GenerateChangeEmailTokenAsync(user, Input.NewEmail);
                 var callbackUrl = Url.Page(
                     "/Account/ConfirmEmailChange",
@@ -115,6 +124,7 @@ namespace WebApplication1.Areas.Identity.Pages.Account.Manage
         public async Task<IActionResult> OnPostSendVerificationEmailAsync()
         {
             var user = await _userManager.GetUserAsync(User);
+            user = HttpContext.GetLogiraniKorisnik();
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
@@ -129,6 +139,11 @@ namespace WebApplication1.Areas.Identity.Pages.Account.Manage
             var userId = await _userManager.GetUserIdAsync(user);
             var email = await _userManager.GetEmailAsync(user);
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            //dodala
+            //userId = HttpContext.GetLogiraniKorisnik().Id;
+            //email= HttpContext.GetLogiraniKorisnik().Email;
+            //nez sta cu dodijeliti za code
+          
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
             var callbackUrl = Url.Page(
                 "/Account/ConfirmEmail",

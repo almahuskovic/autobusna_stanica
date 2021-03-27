@@ -13,7 +13,7 @@
 </form>
 
 <table class=" table table-bordered">
-    <thead class="thead-dark">
+    <thead style="background-color:whitesmoke">
         <tr>
             <td>Ime Prezime</td>
             <td>Broj Vozacke</td>
@@ -35,7 +35,7 @@
                             onclick="VozacUredi(@v.VozacID)">
                         Uredi
                     </button>
-                    <a href="/Menadzer/VozacObrisi?VozacID=@v.VozacID" class="btn btn-danger">Obrisi</a>
+                    <a href="/Menadzer/VozacObrisi?VozacID=@v.VozacID" class="btn btn-outline-warning">Obrisi</a>
                 </td>
             </tr>
         }

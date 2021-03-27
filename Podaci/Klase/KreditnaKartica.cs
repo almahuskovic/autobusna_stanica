@@ -13,6 +13,6 @@ namespace Podaci.Klase
         public string DatumIsteka { get; set; }
         public string ImeVlasnikaKartice { get; set; }
         public int VerifikacijskiKod { get; set; }
-        public Kupac Kupac { get; set; }
+        public virtual Kupac Kupac { get; set; }
     }
 }

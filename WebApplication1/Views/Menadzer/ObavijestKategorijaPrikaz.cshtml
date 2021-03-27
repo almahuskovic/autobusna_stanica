@@ -6,9 +6,12 @@
 
 @model List<WebApplication1.Models.Menadzer.ObavijestKategorijaPrikazVM>
 
-<h1>Prikaz</h1>
-<table class="table table-bordered">
-    <thead>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ajaxPrikaz"
+        onclick="UrediKatObavijesti()" style="margin-bottom:10px">
+    Dodaj
+</button>
+<table class="table table-bordered" style="margin-top:15px">
+    <thead style="background-color:whitesmoke">
         <tr>
             <td>Naziv</td>
             <td>Akcija</td>
@@ -20,22 +23,17 @@
             <tr>
                 <td>@k.Naziv</td>
                 <td>
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ajaxPrikaz"
+                    <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#ajaxPrikaz"
                             onclick="UrediKatObavijesti(@k.ObavijestID)">
                         Uredi
                     </button>
-                    @*<a class="btn btn-primary" href="/ObavijestKategorija/Uredi?ObavijestID=@k.ObavijestID">Uredi</a>*@
-                    <a class="btn btn-warning" href="/Menadzer/ObavijestKategorijaObrisi?ObavijestID=@k.ObavijestID">Obrisi</a>
+                    <a class="btn btn-outline-warning" href="/Menadzer/ObavijestKategorijaObrisi?ObavijestID=@k.ObavijestID">Obrisi</a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ajaxPrikaz"
-        onclick="UrediKatObavijesti()">
-    Dodaj
-</button>
-@*<a class="btn btn-danger" href="/ObavijestKategorija/Uredi">Dodaj</a>*@
+
 
 <div class="modal fade" id="ajaxPrikaz" tabindex="-1" role="dialog" 
      aria-labelledby="exampleModalCenterTitle" aria-hidden="true">

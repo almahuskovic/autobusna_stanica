@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Podaci.Klase;
+using WebApplication1.Data;
 
 namespace WebApplication1.Areas.Identity.Pages.Account
 {
@@ -17,10 +18,12 @@ namespace WebApplication1.Areas.Identity.Pages.Account
     public class ResetPasswordModel : PageModel
     {
         private readonly UserManager<Korisnik> _userManager;
+        private readonly ApplicationDbContext db;
 
-        public ResetPasswordModel(UserManager<Korisnik> userManager)
+        public ResetPasswordModel(UserManager<Korisnik> userManager, ApplicationDbContext DB)
         {
             _userManager = userManager;
+            db = DB;
         }
 
         [BindProperty]
@@ -69,6 +72,7 @@ namespace WebApplication1.Areas.Identity.Pages.Account
             }
 
             var user = await _userManager.FindByEmailAsync(Input.Email);
+            user = db.Users.Where(x => x.Email == Input.Email).FirstOrDefault();
             if (user == null)
             {
                 // Don't reveal that the user does not exist

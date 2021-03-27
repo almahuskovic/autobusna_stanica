@@ -28,9 +28,11 @@ namespace WebApplication1.Controllers
             signInManager = sm;
             db = DB;
         }
-        
+        [Autorizacija(menadzer:true,kupac:true)]
         public IActionResult Index()
         {
+            KartaController.polazni = null;
+            KartaController.dolazni = null;
            return View(); 
         }
 
@@ -44,7 +46,7 @@ namespace WebApplication1.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-        [Authorize]
+        [Autorizacija(menadzer:true,kupac:false)]
         public IActionResult DodajMenadzera()
         {
             return View();

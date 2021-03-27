@@ -11,9 +11,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Podaci.Klase;
-
+using Microsoft.AspNetCore.Authorization;
+using WebApplication1.Helper;
+using Microsoft.EntityFrameworkCore;
+using WebApplication1.Data;
+using Microsoft.Extensions.DependencyInjection;
 namespace WebApplication1.Areas.Identity.Pages.Account.Manage
 {
+    [AllowAnonymous]
     public class EnableAuthenticatorModel : PageModel
     {
         private readonly UserManager<Korisnik> _userManager;
@@ -53,10 +58,12 @@ namespace WebApplication1.Areas.Identity.Pages.Account.Manage
             [Display(Name = "Verification Code")]
             public string Code { get; set; }
         }
-
+       
         public async Task<IActionResult> OnGetAsync()
         {
             var user = await _userManager.GetUserAsync(User);
+            user = HttpContext.GetLogiranogUsera();
+
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
@@ -70,6 +77,8 @@ namespace WebApplication1.Areas.Identity.Pages.Account.Manage
         public async Task<IActionResult> OnPostAsync()
         {
             var user = await _userManager.GetUserAsync(User);
+            user = HttpContext.GetLogiranogUsera();
+
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
@@ -96,6 +105,8 @@ namespace WebApplication1.Areas.Identity.Pages.Account.Manage
 
             await _userManager.SetTwoFactorEnabledAsync(user, true);
             var userId = await _userManager.GetUserIdAsync(user);
+            userId = HttpContext.GetLogiraniKorisnik().Id; //dodala
+
             _logger.LogInformation("User with ID '{UserId}' has enabled 2FA with an authenticator app.", userId);
 
             StatusMessage = "Your authenticator app has been verified.";

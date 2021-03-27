@@ -7,8 +7,8 @@
         onclick="OtvoriVrstaPopustaUredi()">
     Dodaj
 </button>
-<table class="table-bordered">
-    <thead>
+<table class="table table-bordered" style="margin-top:15px">
+    <thead style="background-color:whitesmoke">
         <tr>
             <td>Naziv</td>
             <td>Iznos</td>
@@ -22,11 +22,11 @@
                 <td>@t.Naziv</td>
                 <td>@t.Iznos</td>
                 <td>
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ajaxPrikaz"
+                    <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#ajaxPrikaz"
                             onclick="OtvoriVrstaPopustaUredi(@t.VrstaPopustaID)">
                         Uredi
                     </button>
-                    <a class="btn btn-primary" href="/Menadzer/VrstaPopustaObrisi?VrstaPopustaID=@t.VrstaPopustaID">Obrisi</a>
+                    <a class="btn btn-outline-warning" href="/Menadzer/VrstaPopustaObrisi?VrstaPopustaID=@t.VrstaPopustaID">Obrisi</a>
                 </td>
             </tr>
         }

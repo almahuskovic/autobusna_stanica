@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Podaci.Klase;
+using WebApplication1.Helper;
 
 namespace WebApplication1.Areas.Identity.Pages.Account
 {
@@ -30,6 +31,7 @@ namespace WebApplication1.Areas.Identity.Pages.Account
         public async Task<IActionResult> OnPost(string returnUrl = null)
         {
             await _signInManager.SignOutAsync();
+            HttpContext.SetLogiraniKorisnik(null);
             _logger.LogInformation("User logged out.");
             if (returnUrl != null)
             {

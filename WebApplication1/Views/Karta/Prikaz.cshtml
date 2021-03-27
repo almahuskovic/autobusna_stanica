@@ -3,7 +3,7 @@
 }
 @model WebApplication1.Models.Karta.KartaPrikazVM
 
-<form asp-action="Uredi1" asp-controller="Karta" style="display:inline" onsubmit="return validateFormSearch()"
+<form asp-action="Uredi" asp-controller="Karta" style="display:inline" onsubmit="return validateFormSearch()"
       name="myFormSearch" method="post">
     <div class="card ">
         <div class="card-header">
@@ -32,7 +32,7 @@
 
 
     <div class="alert alert-warning alert-dismissible fade show" role="alert" style="display:none" id="porukaTrazi">
-        Niste odabrali datum!
+        Odabrani datum nije ispravan!
     </div>
 </form>
 @if (Model.polazni != null)
@@ -153,7 +153,7 @@ else
             $("#datN").show();
             $("#dat").show();
         }
-
+        
         $("#datP").focusout(function () {
             if (this.value != null || this.value != "")
                 document.getElementById("porukaTrazi").style.display = "none";
@@ -188,8 +188,11 @@ else
         var dD = document.forms["myFormSearch"]["DatumDolaska"].value;
         var tip = document.forms["myFormSearch"]["TipKarteID"].value;
 
+        var date1 = new Date(dP);
+        var date2 = new Date(dD);
+
         if (tip == 2) {
-            if ((dP == null || dP == "") || (dD == null || dD == 0)) {
+            if ((dP == null || dP == "") || (dD == null || dD == 0) || (date1>=date2)) {
                 document.getElementById("porukaTrazi").style.display = "block";
                 return false;
             }

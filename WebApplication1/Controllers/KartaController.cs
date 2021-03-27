@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +17,7 @@ using WebApplication1.Models.Karta;
 
 namespace WebApplication1.Controllers
 {
-    [Authorize]
+    [Autorizacija(menadzer:false,kupac:true)]
     public class KartaController : Controller
     {
         private readonly ApplicationDbContext db;
@@ -105,7 +106,7 @@ namespace WebApplication1.Controllers
             m.Dolaziste = dol;
             return View(m);
         }
-        public IActionResult Uredi1(KartaPrikazVM x)
+        public IActionResult Uredi(KartaPrikazVM x)
         {
             polazni = PronadjiLinije(x);
             int temp = x.PolazisteID;
@@ -230,9 +231,9 @@ namespace WebApplication1.Controllers
                 ukupna += x.Odrasli * iznos;
 
             var kartice = new List<KartaKupovinaVM.KarticaRedovi>();
-            if (db.KreditnaKartica.Where(k => k.Kupac.Id == HttpContext.LogiraniKorisnik().Id).Count() > 0)
+            if (db.KreditnaKartica.Where(k => k.Kupac.Id == HttpContext.GetLogiranogUsera().Id).Count() > 0)
             {
-                kartice = db.KreditnaKartica.Where(k => k.Kupac.Id == HttpContext.LogiraniKorisnik().Id).Select(k => new KartaKupovinaVM.KarticaRedovi
+                kartice = db.KreditnaKartica.Where(k => k.Kupac.Id == HttpContext.GetLogiranogUsera().Id).Select(k => new KartaKupovinaVM.KarticaRedovi
                 {
                     KreditnaKarticaID = k.KreditnaKarticaID,
                     BrojKartice = k.BrojKartice,
@@ -241,7 +242,7 @@ namespace WebApplication1.Controllers
                     VerKod = k.VerifikacijskiKod
                 }).ToList();
             }
-            var listak = db.KreditnaKartica.Where(k => k.Kupac.Id == HttpContext.LogiraniKorisnik().Id).Select(k => new SelectListItem
+            var listak = db.KreditnaKartica.Where(k => k.Kupac.Id == HttpContext.GetLogiranogUsera().Id).Select(k => new SelectListItem
             {
                 Value = k.KreditnaKarticaID.ToString(),
                 Text = k.BrojKartice
@@ -282,9 +283,12 @@ namespace WebApplication1.Controllers
                 kk.BrojKartice = x.BrojKarticeNova;
                 kk.ImeVlasnikaKartice = x.ImeVlasnikaNova;
                 kk.VerifikacijskiKod = x.VerKodNova;
-                kk.Kupac = (Kupac)HttpContext.LogiraniKorisnik();
-               
+                kk.Kupac =  (Kupac)HttpContext.GetLogiranogUsera();
+                db.Entry<Kupac>(kk.Kupac).State= EntityState.Unchanged;
+
                 db.KreditnaKartica.Add(kk);
+                db.Entry<Kupac>(kk.Kupac).State= EntityState.Detached;
+
                 db.SaveChanges();
             }
             int ukupnoPonavljanja = x.Dijete + x.Student + x.Penzioner + x.Odrasli;
@@ -323,7 +327,7 @@ namespace WebApplication1.Controllers
                         NazivLinije=x.OznakaLinije,
                         IsAktivna=true,
                         Cijena =(float)Math.Round(x.CijenaBezPopusta - x.CijenaBezPopusta * p.Iznos,2),
-                        Kupac = (Kupac)HttpContext.LogiraniKorisnik(),
+                        Kupac = (Kupac)HttpContext.GetLogiranogUsera(),
                     };
                     if (kk != null)
                         k.KKarticaID = kk.KreditnaKarticaID;
@@ -335,6 +339,7 @@ namespace WebApplication1.Controllers
                     k.PolazisteID = x.PolazisteID;
                     k.DolazisteID = x.DolazisteID;
                     db.Karta.Add(k);
+                    db.Entry<Kupac>(k.Kupac).State = EntityState.Unchanged;
                     db.SaveChanges();
                     p = null;
                 }
@@ -345,6 +350,8 @@ namespace WebApplication1.Controllers
         }
         public IActionResult KupljeneKarte()
         {
+            polazni = null;
+            dolazni = null;
             foreach(var i in db.Karta)
             {
                 if (i.TipKarteID == 1 && DateTime.Compare(DateTime.Parse(i.DatumPolaska), DateTime.Now) == -1)
@@ -363,7 +370,7 @@ namespace WebApplication1.Controllers
                 .Include(i => i.TipKarte)
                 .Include(i => i.VrstaPopusta)
                 .OrderByDescending(i=>i.DatumKupovine)
-                .Where(i => i.Kupac.Id == HttpContext.LogiraniKorisnik().Id).Select(i => new KupljeneKarteVM.Row
+                .Where(i => i.Kupac.Id == HttpContext.GetLogiranogUsera().Id).Select(i => new KupljeneKarteVM.Row
             {
                 Cijena = i.Cijena,
                 DatumPolaska = i.DatumPolaska,
@@ -391,89 +398,5 @@ namespace WebApplication1.Controllers
             db.SaveChanges();
             return Redirect("KupljeneKarte");
         }
-        //#region KreditnaKartica
-        //[HttpGet]
-        //public IActionResult KreditnaKarticaPrikaz()
-        //{
-        //    var kartice= new List<KreditnaKarticaPrikazVM.KarticaRedovi>(); 
-        //    if (db.KreditnaKartica.Where(k => k.Kupac.Id == HttpContext.LogiraniKorisnik().Id).Count() > 0)
-        //    {
-        //        kartice = db.KreditnaKartica.Where(k => k.Kupac.Id == HttpContext.LogiraniKorisnik().Id).Select(k => new KreditnaKarticaPrikazVM.KarticaRedovi
-        //        {
-        //            kreditnaKarticaID = k.KreditnaKarticaID,
-        //            brojKartice = k.BrojKartice,
-        //            datumIsteka = k.DatumIsteka,
-        //            imeVlasnika = k.ImeVlasnikaKartice,
-        //            verKod = k.VerifikacijskiKod
-        //        }).ToList();
-        //    }
-        //    var listak= db.KreditnaKartica.Where(k => k.Kupac.Id == HttpContext.LogiraniKorisnik().Id).Select(k => new SelectListItem
-        //    {
-        //       Value=k.KreditnaKarticaID.ToString(),
-        //       Text= k.BrojKartice
-        //    }).ToList();
-        //    var m = new KreditnaKarticaPrikazVM
-        //    {
-        //        Kartice=listak,
-        //        KarticeKupca = kartice
-        //    };
-        //    return Json(m); 
-        //    //ako je view onda moze da otvori sa get, a ne moze da ucita ispod onog, a kad je partial onda ucita, al ne otvori vamo fak
-
-        //}
-       
-        //public IActionResult KreditnaKarticaObrisi(int KarticaID)
-        //{
-        //    KreditnaKartica v = db.KreditnaKartica.Find(KarticaID);
-        //    foreach(var k in db.Karta)
-        //    {
-        //        if (k.KKarticaID == KarticaID)
-        //        {
-        //            k.KKarticaID = null;
-        //        }
-        //    }
-        //    db.SaveChanges();
-        //    //db.Remove(v);
-        //    db.SaveChanges();
-
-        //    return RedirectToAction("Kupovina");
-        //}
-        //public IActionResult KreditnaKarticaUredi(int KarticaID)
-        //{
-        //    KreditnaKarticaUrediVM v = KarticaID == 0 ? new KreditnaKarticaUrediVM() :
-        //        db.KreditnaKartica.Where(v => v.KreditnaKarticaID == KarticaID)
-        //        .Select(v => new KreditnaKarticaUrediVM
-        //        {
-        //            ImeVlasnika=v.ImeVlasnikaKartice,
-        //            VerKod=v.VerifikacijskiKod,
-        //            DatumIsteka=v.DatumIsteka,
-        //            BrojKartice=v.BrojKartice
-        //        }).Single();
-
-        //    return View(v);
-
-        //}
-        //public IActionResult KreditnaKarticaSnimi(KreditnaKarticaUrediVM x)
-        //{
-        //    KreditnaKartica kartica;
-        //    if (x.KreditnaKarticaID == 0)
-        //    {
-        //        kartica = new KreditnaKartica();
-        //        db.Add(kartica);
-        //    }
-        //    else
-        //    {
-        //        kartica = db.KreditnaKartica.Find(x.KreditnaKarticaID);
-        //    }
-        //    kartica.ImeVlasnikaKartice = x.ImeVlasnika;
-        //    kartica.VerifikacijskiKod = x.VerKod;
-        //    kartica.DatumIsteka = x.DatumIsteka;
-        //    kartica.BrojKartice = x.BrojKartice;
-        //    kartica.Kupac = (Kupac)HttpContext.LogiraniKorisnik();
-
-        //    db.SaveChanges();
-        //    return Redirect("/Karta/KreditnaKarticaPrikaz");
-        //}
-        //#endregion
     }
 }

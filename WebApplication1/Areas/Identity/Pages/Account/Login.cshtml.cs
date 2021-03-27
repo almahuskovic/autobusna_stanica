@@ -12,6 +12,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Podaci.Klase;
+using System.Security.Principal;
+using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using System.IdentityModel.Tokens.Jwt;
+using WebApplication1.Helper;
+using WebApplication1.Models.Autentifikacija;
+using WebApplication1.Data;
+using Microsoft.Extensions.Options;
 
 namespace WebApplication1.Areas.Identity.Pages.Account
 {
@@ -21,14 +30,14 @@ namespace WebApplication1.Areas.Identity.Pages.Account
         private readonly UserManager<Korisnik> _userManager;
         private readonly SignInManager<Korisnik> _signInManager;
         private readonly ILogger<LoginModel> _logger;
-
+        private readonly ApplicationDbContext db;
         public LoginModel(SignInManager<Korisnik> signInManager, 
             ILogger<LoginModel> logger,
-            UserManager<Korisnik> userManager)
+            UserManager<Korisnik> userManager, ApplicationDbContext Db)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _logger = logger;
+            _logger = logger; db = Db;
         }
 
         [BindProperty]
@@ -81,13 +90,17 @@ namespace WebApplication1.Areas.Identity.Pages.Account
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                Korisnik nalog = db.Users.Where(s => s.Email == Input.Email).FirstOrDefault();
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
+                    HttpContext.SetLogiraniKorisnik(nalog);
+                    AutentifikacijaMVC.currentUserId = nalog.Id;
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
                 {
+                    AutentifikacijaMVC.currentUserId = nalog.Id;
                     return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
                 }
                 if (result.IsLockedOut)

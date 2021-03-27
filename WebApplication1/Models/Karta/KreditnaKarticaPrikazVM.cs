@@ -16,7 +16,7 @@ namespace WebApplication1.Models.Karta
             public int verKod { get; set; }
             public string datumIsteka { get; set; }
         }
-        public List<KarticaRedovi> KarticeKupca { get; set; }
+        public List<KarticaRedovi> karticeKupca { get; set; }
         public List<SelectListItem> Kartice{ get; set; }
         public int KarticeID{ get; set; }
         public string BrojKarticeNova { get; set; }

@@ -2,9 +2,8 @@
     ViewData["Title"] = "Home Page";
 }
 
-    <div class="text-center">
-        
-        <h1 class="display-4">Dobro došli</h1>
-        @*<p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>*@
-        @*<p>Pretragu željenih destinacija možete započeti klikom na "Kupi kartu".</p>*@
-    </div>
+<div class="text-center">
+    <h1 class="display-4">Dobro došli @User.Identity.Name</h1>
+    @*<p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>*@
+    @*<p>Pretragu željenih destinacija možete započeti klikom na "Kupi kartu".</p>*@
+</div>
