@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using System.Security.Cryptography.X509Certificates;
@@ -10,10 +11,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Podaci.Klase;
 using WebApplication1.Data;
 using WebApplication1.Helper;
 using WebApplication1.Models.Karta;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace WebApplication1.Controllers
 {
@@ -83,11 +86,13 @@ namespace WebApplication1.Controllers
                 }
             }
            
-            List<SelectListItem> tip = db.TipKarte.OrderBy(n => n.Naziv).Select(t => new SelectListItem
+            List<SelectListItem> tip = db.TipKarte.OrderBy(n => n.Naziv).Where(s=>s.IsAktivan==true)
+                .Select(t => new SelectListItem
             {
                 Text = t.Naziv,
                 Value = t.TipKarteID.ToString()
             }).ToList();
+
             List<SelectListItem> pol = db.Grad.OrderBy(n => n.Naziv).Select(t => new SelectListItem
             {
                 Text = t.Naziv,
@@ -104,6 +109,8 @@ namespace WebApplication1.Controllers
             m.TipKarte = tip;
             m.Polaziste = pol;
             m.Dolaziste = dol;
+            m.popusti = ListaPopustaHelper();
+            m.kolicina = new int[m.popusti.Count()];
             return View(m);
         }
         public IActionResult Uredi(KartaPrikazVM x)
@@ -157,7 +164,7 @@ namespace WebApplication1.Controllers
                     var parsedTime = DateTime.Parse(vrijemePolaska);
                     if (linija.DaniUSedmici.Contains(parsedDate.DayOfWeek.ToString()))
                     {
-                        if((parsedDate==DateTime.Now && parsedTime.TimeOfDay > DateTime.Now.TimeOfDay)
+                        if((parsedDate.Date==DateTime.Now.Date && parsedTime.TimeOfDay > DateTime.Now.TimeOfDay)
                          || parsedDate.Date != DateTime.Now.Date)
                         {
                             podlinije.Add(new KartaPrikazVM.Row()
@@ -205,13 +212,27 @@ namespace WebApplication1.Controllers
                     SlobodnihMjesta=t.SlobodnihMjesta
                 };
                 Pkarte.Add(y);
+                stanica = "";
             }
             return Pkarte;
         }
+        [HttpPost]
         public IActionResult Kupovina(KartaPrikazVM x)
         {
+            bool provjera = false;
+            for (int i = 0; i < db.VrstaPopusta.Where(s=>s.IsAktivan==true).Count(); i++)
+            {
+                if (x.kolicina[i] > 0)
+                    provjera = true;
+            }
+            if (!provjera || (x.TipKarteID==2 && x.LinijaDolazisteID==0))
+                return Redirect(Request.Headers["Referer"].ToString());
+
             var cijena = db.Cijena.Where(c => (c.GradPolaskaGradID == x.PolazisteID && c.GradDolaskaGradID == x.DolazisteID)
               || (c.GradDolaskaGradID == x.PolazisteID && c.GradPolaskaGradID == x.DolazisteID)).SingleOrDefault();
+
+            if(cijena==null)
+                return Redirect(Request.Headers["Referer"].ToString());
 
             float iznos = 0;
             if (x.TipKarteID == 1)
@@ -220,15 +241,14 @@ namespace WebApplication1.Controllers
                 iznos = cijena.PovratnaKartaCijena;
 
             float ukupna=0;
-
-            if (x.Dijete != 0)
-                ukupna += iznos - iznos *x.Dijete* db.VrstaPopusta.Where(i => i.Naziv == "Dijete").Select(i => i.Iznos).SingleOrDefault(); 
-            if (x.Student != 0)
-                ukupna += iznos - iznos *x.Student* db.VrstaPopusta.Where(i => i.Naziv == "Student").Select(i => i.Iznos).SingleOrDefault();
-            if (x.Penzioner != 0)
-                ukupna += iznos - iznos *x.Penzioner* db.VrstaPopusta.Where(i => i.Naziv == "Penzioner").Select(i => i.Iznos).SingleOrDefault();
-            if(x.Odrasli!=0)
-                ukupna += x.Odrasli * iznos;
+            var br = 0;
+           
+            foreach (var iz in db.VrstaPopusta.Where(s=>s.IsAktivan))
+            {
+                if(x.kolicina[br]>0)
+                    ukupna += iznos - iznos * iz.Iznos * x.kolicina[br];
+                br++;
+            }
 
             var kartice = new List<KartaKupovinaVM.KarticaRedovi>();
             if (db.KreditnaKartica.Where(k => k.Kupac.Id == HttpContext.GetLogiranogUsera().Id).Count() > 0)
@@ -247,32 +267,32 @@ namespace WebApplication1.Controllers
                 Value = k.KreditnaKarticaID.ToString(),
                 Text = k.BrojKartice
             }).ToList();
-
+            var linijaOD = db.Linija.Where(l => l.LinijaID == x.LinijaDolazisteID).Select(l => l.OznakaLinije + " - " + l.VrijemePolaska).SingleOrDefault();
+            var linijaOP = db.Linija.Where(l => l.LinijaID == x.LinijaPolazisteID).Select(l => l.OznakaLinije + " - " + l.VrijemePolaska).SingleOrDefault();
             var m = new KartaKupovinaVM
             {
-                CijenaBezPopusta=iznos,
-                Cijena = (float)Math.Round(ukupna,2),
+                CijenaBezPopusta = iznos,
+                Cijena = (float)Math.Round(ukupna, 2),
                 PolazisteID = x.PolazisteID,
                 DolazisteID = x.DolazisteID,
                 DatumDolaska = x.DatumDolaska,
                 DatumPolaska = x.DatumPolaska,
                 TipKarteID = x.TipKarteID,
-                LinijaDolaziste = db.Linija.Where(l => l.LinijaID == x.LinijaDolazisteID).Select(l => l.OznakaLinije + " - " + l.VrijemePolaska).SingleOrDefault(),
-                LinijaPolaziste = db.Linija.Where(l => l.LinijaID == x.LinijaPolazisteID).Select(l => l.OznakaLinije+" - "+l.VrijemePolaska).SingleOrDefault(),
-                Dijete = x.Dijete,
-                Odrasli = x.Odrasli,
-                Penzioner = x.Penzioner,
-                Student = x.Student,
-                DolazisteNaziv=db.Grad.Where(g=>g.GradID==x.DolazisteID).Select(g=>g.Naziv).SingleOrDefault(),
-                PolazisteNaziv=db.Grad.Where(g=>g.GradID==x.PolazisteID).Select(g=>g.Naziv).SingleOrDefault(),
-                TipKarte=db.TipKarte.Where(t=>t.TipKarteID==x.TipKarteID).Select(t=>t.Naziv).SingleOrDefault(),
+                LinijaDolaziste = linijaOD,
+                LinijaPolaziste = linijaOP,
+                DolazisteNaziv = db.Grad.Where(g => g.GradID == x.DolazisteID).Select(g => g.Naziv).SingleOrDefault(),
+                PolazisteNaziv = db.Grad.Where(g => g.GradID == x.PolazisteID).Select(g => g.Naziv).SingleOrDefault(),
+                TipKarte = db.TipKarte.Where(t => t.TipKarteID == x.TipKarteID).Select(t => t.Naziv).SingleOrDefault(),
                 Kartice = listak,
                 KarticeKupca = kartice,
-                OznakaLinije=x.OznakaLinije
+                OznakaLinije = linijaOP+linijaOD,
+                popusti = ListaPopustaHelper(),
+                kolicina=x.kolicina
             };
           
             return View(m);
         }
+     
         public IActionResult Placanje(KartaKupovinaVM x)
         {
             KreditnaKartica kk=null;
@@ -287,63 +307,59 @@ namespace WebApplication1.Controllers
                 db.Entry<Kupac>(kk.Kupac).State= EntityState.Unchanged;
 
                 db.KreditnaKartica.Add(kk);
-                db.Entry<Kupac>(kk.Kupac).State= EntityState.Detached;
-
+                //db.Entry<Kupac>(kk.Kupac).State= EntityState.Detached;
                 db.SaveChanges();
             }
-            int ukupnoPonavljanja = x.Dijete + x.Student + x.Penzioner + x.Odrasli;
-            for(int i=0;i< ukupnoPonavljanja;i++)
+            int[] nizVrsta = new int[db.VrstaPopusta.Where(s=>s.IsAktivan).Count()];
+            int brojacNiza = 0;
+            foreach (var item in db.VrstaPopusta)
             {
-                VrstaPopusta p = new VrstaPopusta();
-                if(x.Dijete>=1)
+                if (item.IsAktivan)
                 {
-                    p = db.VrstaPopusta.Where(i => i.Naziv == "Dijete").SingleOrDefault();
-                    x.Dijete--;
-                }
-                else if (x.Student >= 1)
-                {
-                    p = db.VrstaPopusta.Where(i => i.Naziv == "Student").SingleOrDefault();
-                    x.Student--;
-                }
-                else if (x.Penzioner >= 1)
-                {
-                    p = db.VrstaPopusta.Where(i => i.Naziv == "Penzioner").SingleOrDefault();
-                    x.Penzioner--;
-                }
-                else
-                {
-                    p = db.VrstaPopusta.Where(i => i.Naziv == "Odrasli").SingleOrDefault();
-                    x.Odrasli--;
-                }
-                if (p != null)
-                {
-                    Karta k = new Karta()
-                    {
-                        DatumKupovine = DateTime.Now.Date.ToString("yyyy-MM-dd"),
-                        DatumPolaska = x.DatumPolaska,
-                        DatumDolaska = x.TipKarteID == 2 ? x.DatumDolaska : null,
-                        TipKarteID = x.TipKarteID,
-                        VrstaPopustaID = p.VrstaPopustaID,
-                        NazivLinije=x.OznakaLinije,
-                        IsAktivna=true,
-                        Cijena =(float)Math.Round(x.CijenaBezPopusta - x.CijenaBezPopusta * p.Iznos,2),
-                        Kupac = (Kupac)HttpContext.GetLogiranogUsera(),
-                    };
-                    if (kk != null)
-                        k.KKarticaID = kk.KreditnaKarticaID;
-                    else if (x.BrojKarticeNova == null)
-                        k.KKarticaID=x.KarticeID;
-                    else
-                        k.KKarticaID = null;
-                    
-                    k.PolazisteID = x.PolazisteID;
-                    k.DolazisteID = x.DolazisteID;
-                    db.Karta.Add(k);
-                    db.Entry<Kupac>(k.Kupac).State = EntityState.Unchanged;
-                    db.SaveChanges();
-                    p = null;
+                    nizVrsta[brojacNiza++] = item.VrstaPopustaID;
                 }
             }
+            //IQueryable<Object> objects = db.VrstaPopusta;
+            int ind = 0;
+            brojacNiza = 0;
+          
+            for (int i = 0; i < db.VrstaPopusta.Where(s => s.IsAktivan).Count(); i++)
+            {
+                if (x.kolicina[ind] > 0)
+                {
+                    for (int j = 0; j < x.kolicina[ind]; j++)
+                    {
+                        Karta k = new Karta()
+                        {
+                            DatumKupovine = DateTime.Now.Date.ToString("yyyy-MM-dd"),
+                            DatumPolaska = x.DatumPolaska,
+                            DatumDolaska = x.TipKarteID == 2 ? x.DatumDolaska : null,
+                            TipKarteID = x.TipKarteID,
+                            VrstaPopustaID = nizVrsta[brojacNiza],
+                            NazivLinije = x.LinijaPolaziste+Environment.NewLine+x.LinijaDolaziste,
+                            IsAktivna = true,
+                            Cijena = (float)Math.Round(x.CijenaBezPopusta - x.CijenaBezPopusta * db.VrstaPopusta.Find(nizVrsta[brojacNiza]).Iznos, 2),
+                            Kupac =null,
+                            Kupac_ID= HttpContext.GetLogiranogUsera().Id
+                        };
+                        if (kk != null)
+                            k.KKarticaID = kk.KreditnaKarticaID;
+                        else if (x.BrojKarticeNova == null)
+                            k.KKarticaID = x.KarticeID;
+                        else
+                            k.KKarticaID = null;
+
+                        k.PolazisteID = x.PolazisteID;
+                        k.DolazisteID = x.DolazisteID;
+
+                        db.Karta.Add(k);
+                        db.SaveChanges();
+                    }
+                }
+                brojacNiza++;
+                ind++;
+            }
+     
             polazni = null;
             dolazni = null;
             return RedirectToAction("KupljeneKarte");
@@ -369,8 +385,9 @@ namespace WebApplication1.Controllers
                 .Include(i => i.Dolaziste.Grad)
                 .Include(i => i.TipKarte)
                 .Include(i => i.VrstaPopusta)
-                .OrderByDescending(i=>i.DatumKupovine)
-                .Where(i => i.Kupac.Id == HttpContext.GetLogiranogUsera().Id).Select(i => new KupljeneKarteVM.Row
+                .AsEnumerable()
+                .OrderByDescending(i=>i.KartaID)
+                .Where(i => i.Kupac_ID == HttpContext.GetLogiranogUsera().Id).Select(i => new KupljeneKarteVM.Row
             {
                 Cijena = i.Cijena,
                 DatumPolaska = i.DatumPolaska,
@@ -397,6 +414,18 @@ namespace WebApplication1.Controllers
             db.Remove(karta);
             db.SaveChanges();
             return Redirect("KupljeneKarte");
+        }
+        public List<string> ListaPopustaHelper()
+        {
+            List<string> vrsta = new List<string>();
+            foreach (var item in db.VrstaPopusta)
+            {
+                if (item.IsAktivan)
+                {
+                    vrsta.Add(item.Naziv);
+                }
+            }
+            return vrsta;
         }
     }
 }

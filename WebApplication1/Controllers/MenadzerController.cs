@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -68,7 +70,7 @@ namespace WebApplication1.Controllers
                     DatumRodjenja = x.DatumRodjenja,
                     DatumZaposlenja = x.DatumZaposlenja,
                     Ime = x.Ime,
-                    Prezime = x.Prezime
+                    Prezime = x.Prezime,
                 }).Single();
             }
             return View(m);
@@ -99,6 +101,12 @@ namespace WebApplication1.Controllers
         public IActionResult VozacObrisi(int VozacID)
         {
             Vozac v = db.Vozac.Find(VozacID);
+            List<LinijaVozac> lista = db.LinijaVozac.Where(s => s.VozacID == VozacID).ToList();
+            foreach(var i in lista)
+            {
+                db.Remove(i);
+            }
+            //v.IsAktivan = false;
             db.Remove(v);
             db.SaveChanges();
             return Redirect("/Menadzer/VozacPrikaz");
@@ -174,7 +182,8 @@ namespace WebApplication1.Controllers
         #region Obavijest
         public IActionResult ObavijestPrikaz()
         {
-            List<ObavijestPrikazVM.Row> obavijesti = db.Obavijest.OrderByDescending(d => d.DatumObjave).Select(o => new ObavijestPrikazVM.Row
+            List<ObavijestPrikazVM.Row> obavijesti = db.Obavijest.OrderByDescending(s=>s.ObavijestID)
+                .Select(o => new ObavijestPrikazVM.Row
             {
                 ObavijestID = o.ObavijestID,
                 Naslov = o.Naslov,
@@ -192,7 +201,8 @@ namespace WebApplication1.Controllers
 
         public IActionResult ObavijestUredi(int ObavijestID)
         {
-            List<SelectListItem> ok = db.ObavijestKategorija.OrderBy(n => n.Naziv).Select(k => new SelectListItem
+            List<SelectListItem> ok = db.ObavijestKategorija.OrderBy(n => n.Naziv)
+                .Select(k => new SelectListItem
             {
                 Text = k.Naziv,
                 Value = k.ObavijestKategorijaID.ToString()
@@ -215,10 +225,10 @@ namespace WebApplication1.Controllers
                     Naslov = k.Naslov,
                     Podnaslov = k.Podnaslov,
                     Opis = k.Opis,
-                    DatumObjave = DateTime.Now.Date.ToString(),
+                    DatumObjave = DateTime.Now.ToString(),
                     KategorijaID = k.ObavijestKategorijaID,
                     Kategorije = ok,
-                    Slika = KonvertovanjeSlike.GetImageBase64(k.Slika)
+                    Slika = KonvertovanjeSlike.GetImageBase64(k.Slika),
                 }).Single();
             }
             return View(m);
@@ -235,7 +245,6 @@ namespace WebApplication1.Controllers
             else
             {
                 o = db.Obavijest.Find(x.ObavijestID);
-
             }
             o.Naslov = x.Naslov;
             o.Podnaslov = x.Podnaslov;
@@ -256,7 +265,7 @@ namespace WebApplication1.Controllers
         {
             Obavijest o = db.Obavijest.Find(ObavijestID);
             db.Remove(o);
-            db.SaveChanges();
+            db.SaveChanges();            
             return Redirect("/Menadzer/ObavijestPrikaz");
         }
         #endregion
@@ -313,6 +322,13 @@ namespace WebApplication1.Controllers
         public IActionResult ObavijestKategorijaObrisi(int ObavijestID)
         {
             var m = db.ObavijestKategorija.Find(ObavijestID);
+
+            List<Obavijest> listaObavijesti = db.Obavijest.Where(s => s.ObavijestKategorijaID == ObavijestID)
+                .ToList();
+            foreach(var l in listaObavijesti)
+            {
+                db.Remove(l);
+            }
             db.Remove(m);
             db.SaveChanges();
             return Redirect("/Menadzer/ObavijestKategorijaPrikaz");
@@ -321,7 +337,7 @@ namespace WebApplication1.Controllers
         #region TipKarte
         public IActionResult TipKartePrikaz()
         {
-            var m = db.TipKarte.Select(k => new TipKartePrikazVM()
+            var m = db.TipKarte.Where(s=>s.IsAktivan==true).Select(k => new TipKartePrikazVM()
             {
                 TipKarteID = k.TipKarteID,
                 Naziv = k.Naziv
@@ -331,7 +347,8 @@ namespace WebApplication1.Controllers
         public IActionResult TipKarteObrisi(int TipKarteID)
         {
             TipKarte k = db.TipKarte.Find(TipKarteID);
-            db.Remove(k);
+            //db.Remove(k);
+            k.IsAktivan = false;
             db.SaveChanges();
             return Redirect("/Menadzer/TipKartePrikaz/");
         }
@@ -346,6 +363,7 @@ namespace WebApplication1.Controllers
             {
                 m = db.TipKarte.Where(k => k.TipKarteID == TipKarteID).Select(i => new TipKarteUrediVM()
                 {
+                    IsAktivan=i.IsAktivan,
                     Naziv = i.Naziv,
                     TipKarteID = i.TipKarteID
                 }).SingleOrDefault();
@@ -359,10 +377,12 @@ namespace WebApplication1.Controllers
             {
                 karta = new TipKarte();
                 db.TipKarte.Add(karta);
+                karta.IsAktivan = true;
             }
             else
             {
                 karta = db.TipKarte.Find(m.TipKarteID);
+                karta.IsAktivan = m.IsAktivan;
             }
             karta.Naziv = m.Naziv;
             karta.TipKarteID = m.TipKarteID;
@@ -373,7 +393,7 @@ namespace WebApplication1.Controllers
         #region VrstaPopusta
         public IActionResult VrstaPopustaPrikaz()
         {
-            var m = db.VrstaPopusta.Select(k => new VrstaPopustaPrikazVM()
+            var m = db.VrstaPopusta.Where(s=>s.IsAktivan==true).Select(k => new VrstaPopustaPrikazVM()
             {
                 VrstaPopustaID = k.VrstaPopustaID,
                 Naziv = k.Naziv,
@@ -384,7 +404,8 @@ namespace WebApplication1.Controllers
         public IActionResult VrstaPopustaObrisi(int VrstaPopustaID)
         {
             VrstaPopusta k = db.VrstaPopusta.Find(VrstaPopustaID);
-            db.Remove(k);
+            //db.Remove(k);
+            k.IsAktivan = false;
             db.SaveChanges();
             return Redirect("/Menadzer/VrstaPopustaPrikaz/");
         }
@@ -394,6 +415,7 @@ namespace WebApplication1.Controllers
             if (VrstaPopustaID == 0)
             {
                 m = new VrstaPopustaUrediVM();
+                m.IsAktivan = true;
             }
             else
             {
@@ -401,7 +423,8 @@ namespace WebApplication1.Controllers
                 {
                     VrstaPopustaID = i.VrstaPopustaID,
                     Naziv = i.Naziv,
-                    Iznos = i.Iznos
+                    Iznos = i.Iznos,
+                    IsAktivan=i.IsAktivan
                 }).SingleOrDefault();
             }
             return View(m);
@@ -413,10 +436,12 @@ namespace WebApplication1.Controllers
             {
                 popust = new VrstaPopusta();
                 db.VrstaPopusta.Add(popust);
+                popust.IsAktivan = true;
             }
             else
             {
                 popust = db.VrstaPopusta.Find(m.VrstaPopustaID);
+                popust.IsAktivan = m.IsAktivan;
             }
             popust.VrstaPopustaID = m.VrstaPopustaID;
             popust.Naziv = m.Naziv;
@@ -426,11 +451,11 @@ namespace WebApplication1.Controllers
             return Redirect("/Menadzer/VrstaPopustaPrikaz");
         }
         #endregion
-
         #region LinijaVozac
         public IActionResult LinijaVozacPrikaz(int LinijaID)
         {
-            var redovi = db.LinijaVozac.Include(s => s.Vozac).Include(l => l.Linija).Where(i => i.LinijaID == LinijaID).Select(i => new LinijaVozacPrikazVM.Row
+            var redovi = db.LinijaVozac.Include(s => s.Vozac).Include(l => l.Linija)
+                .Where(i => i.LinijaID == LinijaID).Select(i => new LinijaVozacPrikazVM.Row
             {
                 VozacID = i.VozacID,
                 ImePrezime = i.Vozac.Ime + " " + i.Vozac.Prezime,
@@ -444,6 +469,18 @@ namespace WebApplication1.Controllers
 
             return View(m);
         }
+        public bool ProvjeriLinijaVozac(int vozacID)
+        {
+            int tempBrojac = 0;
+            foreach (var v in db.LinijaVozac)
+            {
+                if (v.VozacID == vozacID)
+                    tempBrojac++;
+            }
+            if (tempBrojac > 3)
+                return false;
+            return true;
+        }
         public IActionResult LinijaVozacUkloni(int LinijaID,int VozacID)
         {
             var x = db.LinijaVozac.Where(i => i.LinijaID == LinijaID && i.VozacID == VozacID).SingleOrDefault();
@@ -456,8 +493,9 @@ namespace WebApplication1.Controllers
             List<SelectListItem> vozaci=new List<SelectListItem>();
             foreach(var i in db.Vozac)
             {
-                var linija = db.LinijaVozac.Where(l => l.LinijaID == LinijaID && l.VozacID == i.VozacID).SingleOrDefault();
-                if (linija == null)
+                var linija = db.LinijaVozac.Where(l => l.LinijaID == LinijaID && l.VozacID == i.VozacID)
+                    .SingleOrDefault();
+                if (linija == null && ProvjeriLinijaVozac(i.VozacID))
                 {
                     SelectListItem item = new SelectListItem
                     {

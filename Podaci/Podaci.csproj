@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20210331135248_provjera.cs" />
+    <Compile Remove="Migrations\20210331135248_provjera.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.2" />

@@ -1,5 +1,5 @@
 ﻿@{
-
+    var brojac = 0;
 }
 @model WebApplication1.Models.Karta.KartaPrikazVM
 
@@ -60,14 +60,12 @@
                 </div>
                 <div class="card-body">
                     <div>
-                        <label asp-for="Dijete" class="control-label"></label>
-                        <input type="number" min="0" max="5" asp-for="Dijete" name="Dijete" />
-                        <label asp-for="Odrasli" class="control-label"></label>
-                        <input type="number" min="0" max="5" asp-for="Odrasli" name="Odrasli" />
-                        <label asp-for="Student" class="control-label"></label>
-                        <input type="number" min="0" max="5" asp-for="Student" name="Student" />
-                        <label asp-for="Penzioner" class="control-label"></label>
-                        <input type="number" min="0" max="5" asp-for="Penzioner" name="Penzioner" />
+                        @foreach (var p in Model.popusti)
+                        {
+                            <label>@p</label>
+                            <input class="inputValidacije" type="number" min="0" max="5" asp-for="kolicina[brojac]"  />
+                            brojac++;
+                        }
                     </div>
                     <div class="alert alert-warning alert-dismissible fade show" role="alert" style="display:none" id="poruka">
                         Niste unijeli sve potrebne vrijednosti!
@@ -81,7 +79,7 @@
     <h3>Polazni autobusi</h3>
     @foreach (var k in Model.polazni)
     {
-<div class="card" style="width:550px">
+<div class="card" style="width:47%">
     <p class="card-header text-center" style="background-color:rgba(251, 255, 125,0.3); ">Linija: @k.ImeLinije</p>
         <div class="card-body" style="background-color:white; ">
             <div>
@@ -113,7 +111,7 @@ else
     <h3>Povratni autobusi</h3>
     @foreach (var k in Model.dolazni)
     {
-        <div class="card" style="width:43%">
+        <div class="card" style="width:47%">
             <p class="card-header text-center" style="background-color:rgba(251, 255, 125,0.3); ">Linija: @k.ImeLinije</p>
             <div class="card-body" style="background-color:white; ">
                 <div>
@@ -174,11 +172,27 @@ else
         $('#dat').attr('min', today);
     });
     function validateForm() {
-        var d = document.forms["myForm"]["Dijete"].value;
-        var s = document.forms["myForm"]["Student"].value;
-        var o = document.forms["myForm"]["Odrasli"].value;
-        var p = document.forms["myForm"]["Penzioner"].value;
-        if ((d == null || d == 0) && (s == null || s == 0) && (o == null || o == 0) && (p == null || p == 0)) {
+        var e = 0;
+        var tip = document.forms["myFormSearch"]["TipKarteID"].value;
+        
+        $('.inputValidacije').each(function () {
+            if (parseInt($(this).val()) > 0) {
+                e++;
+            }
+        });
+      
+        if (e > 0) {
+            if (tip == 2) {
+                var d = document.forms["myFormSearch"]["DatumDolaska"].value;
+                if (d == "" || d == null) {
+                    document.getElementById("porukaTrazi").style.display = "block";
+                    return false;
+                }
+            }
+            document.getElementById("poruka").style.display = "none";
+            return true;
+        }
+        else {
             document.getElementById("poruka").style.display = "block";
             return false;
         }
@@ -206,18 +220,3 @@ else
     }
 
 </script>
-
-@*@section Scripts
-    {
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.css" />
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.js">
-        </script>
-        <script type="text/javascript">
-            $(document).ready(function () {
-                $("#datepicker").datepicker({
-                    format: 'dd/mm/yyyy'
-                })
-            });
-        </script>
-
-    }*@

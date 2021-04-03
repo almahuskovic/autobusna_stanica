@@ -9,5 +9,6 @@ namespace WebApplication1.Models.TipKarte
     {
         public int TipKarteID { get; set; }
         public string Naziv { get; set; }
+        public bool IsAktivan{ get; set; }
     }
 }

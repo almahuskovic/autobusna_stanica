@@ -81,7 +81,8 @@ namespace WebApplication1.Areas.Identity.Pages.Account.Manage
             user = HttpContext.GetLogiranogUsera();
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return new RedirectResult("/Identity/Account/Login");
+                //return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
             await LoadAsync(user);

@@ -74,7 +74,8 @@ namespace WebApplication1.Areas.Identity.Pages.Account.Manage
             user = HttpContext.GetLogiraniKorisnik();
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                //return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return new RedirectResult("/Identity/Account/Login");
             }
 
             await LoadAsync(user);
@@ -97,11 +98,11 @@ namespace WebApplication1.Areas.Identity.Pages.Account.Manage
             }
 
             var email = await _userManager.GetEmailAsync(user);
-            email = HttpContext.GetLogiraniKorisnik().Email;//dodala
+
             if (Input.NewEmail != email)
             {
                 var userId = await _userManager.GetUserIdAsync(user);
-                userId = user.Id;
+               
                 var code = await _userManager.GenerateChangeEmailTokenAsync(user, Input.NewEmail);
                 var callbackUrl = Url.Page(
                     "/Account/ConfirmEmailChange",

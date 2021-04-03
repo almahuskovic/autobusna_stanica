@@ -233,6 +233,9 @@ namespace Podaci.Migrations
                     b.Property<string>("KupacId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("Kupac_ID")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("NazivLinije")
                         .HasColumnType("nvarchar(max)");
 
@@ -520,6 +523,9 @@ namespace Podaci.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<bool>("IsAktivan")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Naziv")
                         .HasColumnType("nvarchar(max)");
 
@@ -585,6 +591,9 @@ namespace Podaci.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("IsAktivan")
+                        .HasColumnType("bit");
 
                     b.Property<float>("Iznos")
                         .HasColumnType("real");

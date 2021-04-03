@@ -9,6 +9,5 @@ namespace WebApplication1.Models.Menadzer
     {
         public int ObavijestID { get; set; }
         public string Naziv { get; set; }
-        public string Lokacija { get; set; }
     }
 }

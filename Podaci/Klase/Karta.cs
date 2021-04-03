@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Podaci.Klase
@@ -25,6 +26,8 @@ namespace Podaci.Klase
         public string NazivLinije{ get; set; }
         public int? KKarticaID { get; set; }
         public KreditnaKartica KKartica { get; set; }
-        public Kupac Kupac { get; set; }
+        [ForeignKey("Kupac_ID")]
+        public string Kupac_ID { get; set; }
+        public virtual Kupac Kupac { get; set; }
     }
 }

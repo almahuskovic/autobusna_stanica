@@ -8,5 +8,6 @@ namespace Podaci.Klase
     {
         public int TipKarteID { get; set; }
         public string Naziv { get; set; }
+        public bool IsAktivan{ get; set; }
     }
 }

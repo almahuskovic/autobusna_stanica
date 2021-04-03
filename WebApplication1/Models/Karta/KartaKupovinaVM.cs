@@ -15,11 +15,6 @@ namespace WebApplication1.Models.Karta
         public string LinijaPolaziste { get; set; }
         public string LinijaDolaziste { get; set; }
         public string OznakaLinije { get; set; }
-        public int Dijete { get; set; }
-        public int Odrasli { get; set; }
-        public int Student { get; set; }
-        public int Penzioner { get; set; }
-
         public string PolazisteNaziv { get; set; }
         public string DolazisteNaziv { get; set; }
         public string TipKarte { get; set; }
@@ -43,5 +38,8 @@ namespace WebApplication1.Models.Karta
         public int VerKodNova { get; set; }
         public string DatumIstekaNova { get; set; }
         public bool SpasiKarticu { get; set; }
+        //popust
+        public List<string> popusti { get; set; }
+        public int[] kolicina { get; set; }
     }
 }

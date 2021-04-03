@@ -42,9 +42,8 @@ namespace WebApplication1.Models.Karta
         public List<SelectListItem> LinijaDolaziste { get; set; }
         public string OznakaLinije { get; set; }
         //popust
-        public int Dijete { get; set; }
-        public int Odrasli { get; set; }
-        public int Student { get; set; }
-        public int Penzioner { get; set; }
+        public List<string> popusti { get; set; }
+        public int[] kolicina { get; set; }
+
     }
 }

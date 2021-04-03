@@ -66,7 +66,8 @@ namespace WebApplication1.Areas.Identity.Pages.Account.Manage
 
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return new RedirectResult("/Identity/Account/Login");
+                //return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
             await LoadSharedKeyAndQrCodeUriAsync(user);

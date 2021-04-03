@@ -6,10 +6,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApplication1.Data;
+using WebApplication1.Helper;
 using WebApplication1.Models.Cijena;
 
 namespace WebApplication1.Controllers
 {
+    [Autorizacija(menadzer:true,kupac:false)]
     public class CijenaController : Controller
     {
         private readonly ApplicationDbContext db;

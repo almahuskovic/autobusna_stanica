@@ -11,6 +11,7 @@ using Podaci.Klase;
 using WebApplication1.Data;
 using WebApplication1.Helper;
 using WebApplication1.Models;
+using WebApplication1.Models.Menadzer;
 
 namespace WebApplication1.Controllers
 {
@@ -33,7 +34,20 @@ namespace WebApplication1.Controllers
         {
             KartaController.polazni = null;
             KartaController.dolazni = null;
-           return View(); 
+            List<ObavijestPrikazVM.Row> obavijesti = db.Obavijest.OrderByDescending(s => s.ObavijestID)
+               .Select(o => new ObavijestPrikazVM.Row
+               {
+                   ObavijestID = o.ObavijestID,
+                   Naslov = o.Naslov,
+                   Podnaslov = o.Podnaslov,
+                   Opis = o.Opis.Substring(0, 100),
+                   DatumObjave = o.DatumObjave,
+                   ObavijestKategorija = o.ObavijestKategorija.Naziv,
+                   Slika = KonvertovanjeSlike.GetImageBase64(o.Slika)
+               }).ToList();
+            ObavijestPrikazVM m = new ObavijestPrikazVM();
+            m.obavijesti = obavijesti;
+            return View(m); 
         }
 
         public IActionResult Privacy()

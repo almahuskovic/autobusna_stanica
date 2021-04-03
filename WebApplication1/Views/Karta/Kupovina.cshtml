@@ -1,8 +1,16 @@
 ﻿@{
     ViewData["Title"] = "Prikaz";
+    var brojac = 0;
+    var brojacKolicine = 0;
+    var brojacKolicine1 = 0;
+    var br = 0;
 }
 @model WebApplication1.Models.Karta.KartaKupovinaVM
-
+<style>
+    .error{
+        color:red
+    }
+</style>
 <div class="card" style="width:28rem">
     <div class="card-header font-weight-bold">
         Detalji o karti
@@ -71,57 +79,22 @@
                 </div>
             </li>
         }
-        @if (Model.Dijete > 0)
+        @foreach (var item in Model.popusti)
         {
-            <li class="list-group-item">
-                <div class="row">
-                    <div class="col">
-                        Dijete:
+            if (Model.kolicina[brojac] != 0)
+            {
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col">
+                            @item
+                        </div>
+                        <div class="col">
+                            x @Model.kolicina[brojac]
+                        </div>
                     </div>
-                    <div class="col">
-                        x @Model.Dijete
-                    </div>
-                </div>
-            </li>
-        }
-        @if (Model.Odrasli > 0)
-        {
-            <li class="list-group-item">
-                <div class="row">
-                    <div class="col">
-                        Odrasli:
-                    </div>
-                    <div class="col">
-                        x @Model.Odrasli
-                    </div>
-                </div>
-            </li>
-        }
-        @if (Model.Student > 0)
-        {
-            <li class="list-group-item">
-                <div class="row">
-                    <div class="col">
-                        Student:
-                    </div>
-                    <div class="col">
-                        x @Model.Student
-                    </div>
-                </div>
-            </li>
-        }
-        @if (Model.Penzioner > 0)
-        {
-            <li class="list-group-item">
-                <div class="row">
-                    <div class="col">
-                        Penzioner:
-                    </div>
-                    <div class="col">
-                        x @Model.Penzioner
-                    </div>
-                </div>
-            </li>
+                </li>
+            }
+            brojac++;
         }
         <li class="list-group-item">
             <div class="row">
@@ -158,13 +131,17 @@
             <input hidden asp-for="TipKarteID" />
             <input hidden asp-for="DatumPolaska" />
             <input hidden asp-for="DatumDolaska" />
-            <input hidden asp-for="Penzioner" />
-            <input hidden asp-for="Student" />
-            <input hidden asp-for="Odrasli" />
-            <input hidden asp-for="Dijete" />
             <input hidden asp-for="Cijena" />
             <input hidden asp-for="CijenaBezPopusta" />
             <input hidden asp-for="OznakaLinije" />
+            <input hidden asp-for="LinijaDolaziste" />
+            <input hidden asp-for="LinijaPolaziste" />
+            @foreach (var p in Model.popusti)
+            {
+                br = brojacKolicine++;
+                <input type="number" asp-for="kolicina[br]" hidden />
+            }
+
             <div class="d-flex justify-content-center" style="margin-bottom:5px;">
                 <select asp-for="KarticeID" asp-items="@Model.Kartice" class="btn btn-secondary" style="height:35px;width:200px;margin:2px;"></select>
                 <input type="submit" class="btn btn-warning" value="Plati" style="margin-left:25px;height:40px;" />
@@ -190,13 +167,16 @@
             <input hidden asp-for="KarticeID" />
             <input hidden asp-for="DatumPolaska" />
             <input hidden asp-for="DatumDolaska" />
-            <input hidden asp-for="Penzioner" />
-            <input hidden asp-for="Student" />
-            <input hidden asp-for="Odrasli" />
-            <input hidden asp-for="Dijete" />
+            <input hidden asp-for="LinijaDolaziste" />
+            <input hidden asp-for="LinijaPolaziste" />
             <input hidden asp-for="Cijena" />
             <input hidden asp-for="CijenaBezPopusta" />
             <input hidden asp-for="OznakaLinije" />
+            @foreach (var p in Model.popusti)
+            {
+                br = brojacKolicine1++;
+                <input type="number" min="0" max="5" asp-for="kolicina[br]" hidden />
+            }
             <div>
                 <label>Unesite broj kartice:</label>
                 <input type="text" placeholder="1234 5678 1234 5678" asp-for="BrojKarticeNova" name="BrojKarticeNova" required />
