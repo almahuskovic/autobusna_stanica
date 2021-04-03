@@ -147,17 +147,7 @@
                 <input type="submit" class="btn btn-warning" value="Plati" style="margin-left:25px;height:40px;" />
             </div>
         </form>
-        <div id="tabelaKartica" style="display:none">
-            @foreach (var k in Model.KarticeKupca)
-            {
-                <div class="card">
-                    <p class="card-text">Broj kartice: @k.BrojKartice</p>
-                    <p class="card-text">Ime vlasnika: @k.ImeVlasnika</p>
-                    <p class="card-text">Verifikacijski kod: @k.VerKod</p>
-                    <p class="card-text">Datum isteka: @k.DatumIsteka</p>
-                </div>
-            }
-        </div>
+       
 
         <form asp-action="Placanje" asp-controller="Karta" id="formaNovaKartica"
               onsubmit="return validateFormPlacanje()" name="myFormPlacanje" method="post">
@@ -207,7 +197,6 @@
 
 <script>
     function otvoriFormuZaNovuKarticu() {
-        document.getElementById("tabelaKartica").style.display = "none";
         document.getElementById("formaNovaKartica").style.display = "block";
         document.getElementById("btnNovaKartica").style.display = "none";
         document.getElementById("listaKartica").style.display = "none";
@@ -215,9 +204,8 @@
         document.getElementById("poruka").style.display = "none";
     }
     function otvoriFormuSvihKartica() {
-        if (@Model.KarticeKupca.Count() > 0)
+        if (@Model.Kartice.Count() > 0)
         {
-            document.getElementById("tabelaKartica").style.display = "block";
             document.getElementById("listaKartica").style.display = "block";
         }
         else

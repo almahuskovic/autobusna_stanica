@@ -21,16 +21,6 @@ namespace WebApplication1.Models.Karta
         public int PolazisteID { get; set; }
         public int DolazisteID { get; set; }
         public int TipKarteID { get; set; }
-        //kartica
-        public class KarticaRedovi
-        {
-            public int KreditnaKarticaID { get; set; }
-            public string BrojKartice { get; set; }
-            public string ImeVlasnika { get; set; }
-            public int VerKod { get; set; }
-            public string DatumIsteka { get; set; }
-        }
-        public List<KarticaRedovi> KarticeKupca { get; set; }
         public List<SelectListItem> Kartice { get; set; }
         public int KarticeID { get; set; }
         public string BrojKarticeNova { get; set; }

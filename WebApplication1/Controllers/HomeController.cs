@@ -40,7 +40,7 @@ namespace WebApplication1.Controllers
                    ObavijestID = o.ObavijestID,
                    Naslov = o.Naslov,
                    Podnaslov = o.Podnaslov,
-                   Opis = o.Opis.Substring(0, 100),
+                   Opis = o.Opis.Substring(0, 100)+"...",
                    DatumObjave = o.DatumObjave,
                    ObavijestKategorija = o.ObavijestKategorija.Naziv,
                    Slika = KonvertovanjeSlike.GetImageBase64(o.Slika)
@@ -49,7 +49,21 @@ namespace WebApplication1.Controllers
             m.obavijesti = obavijesti;
             return View(m); 
         }
-
+        [Autorizacija(menadzer: true, kupac: true)]
+        public IActionResult ObavijestDetalji(int ObavijestID)
+        {
+            var obavijest = db.Obavijest.Where(i => i.ObavijestID == ObavijestID).Select(o=>new ObavijestPrikazVM.Row
+            {
+                Naslov = o.Naslov,
+                Podnaslov = o.Podnaslov,
+                Opis = o.Opis,
+                DatumObjave = o.DatumObjave,
+                ObavijestKategorija = o.ObavijestKategorija.Naziv,
+                Slika = KonvertovanjeSlike.GetImageBase64(o.Slika)
+            }).FirstOrDefault();
+           
+            return View(obavijest);
+        }
         public IActionResult Privacy()
         {
             return View();

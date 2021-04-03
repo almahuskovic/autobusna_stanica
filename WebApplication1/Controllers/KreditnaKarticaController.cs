@@ -42,7 +42,7 @@ namespace WebApplication1.Controllers
             kartice = await db.KreditnaKartica.Include(d=>d.Kupac).Where(k => k.Kupac.Id == AutentifikacijaMVC.currentUserId).Select(k => new KreditnaKarticaPrikazVM.KarticaRedovi
             {
                 kreditnaKarticaID = k.KreditnaKarticaID,
-                brojKartice = k.BrojKartice,
+                brojKartice =  k.BrojKartice,//.Substring(0,6)+"xx xxxx"+k.BrojKartice.Substring(14,5),
                 datumIsteka = k.DatumIsteka,
                 imeVlasnika = k.ImeVlasnikaKartice,
                 verKod = k.VerifikacijskiKod

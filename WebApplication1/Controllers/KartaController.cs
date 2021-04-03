@@ -250,22 +250,10 @@ namespace WebApplication1.Controllers
                 br++;
             }
 
-            var kartice = new List<KartaKupovinaVM.KarticaRedovi>();
-            if (db.KreditnaKartica.Where(k => k.Kupac.Id == HttpContext.GetLogiranogUsera().Id).Count() > 0)
-            {
-                kartice = db.KreditnaKartica.Where(k => k.Kupac.Id == HttpContext.GetLogiranogUsera().Id).Select(k => new KartaKupovinaVM.KarticaRedovi
-                {
-                    KreditnaKarticaID = k.KreditnaKarticaID,
-                    BrojKartice = k.BrojKartice,
-                    DatumIsteka = k.DatumIsteka,
-                    ImeVlasnika = k.ImeVlasnikaKartice,
-                    VerKod = k.VerifikacijskiKod
-                }).ToList();
-            }
             var listak = db.KreditnaKartica.Where(k => k.Kupac.Id == HttpContext.GetLogiranogUsera().Id).Select(k => new SelectListItem
             {
                 Value = k.KreditnaKarticaID.ToString(),
-                Text = k.BrojKartice
+                Text = k.BrojKartice.Substring(0, 6) + "xx xxxx" + k.BrojKartice.Substring(14, 5),
             }).ToList();
             var linijaOD = db.Linija.Where(l => l.LinijaID == x.LinijaDolazisteID).Select(l => l.OznakaLinije + " - " + l.VrijemePolaska).SingleOrDefault();
             var linijaOP = db.Linija.Where(l => l.LinijaID == x.LinijaPolazisteID).Select(l => l.OznakaLinije + " - " + l.VrijemePolaska).SingleOrDefault();
@@ -284,7 +272,6 @@ namespace WebApplication1.Controllers
                 PolazisteNaziv = db.Grad.Where(g => g.GradID == x.PolazisteID).Select(g => g.Naziv).SingleOrDefault(),
                 TipKarte = db.TipKarte.Where(t => t.TipKarteID == x.TipKarteID).Select(t => t.Naziv).SingleOrDefault(),
                 Kartice = listak,
-                KarticeKupca = kartice,
                 OznakaLinije = linijaOP+linijaOD,
                 popusti = ListaPopustaHelper(),
                 kolicina=x.kolicina

@@ -33,6 +33,10 @@
                         <h5 class="card-title font-italic" style="font-size:14px;">@o.ObavijestKategorija</h5>
                         <p class="card-text">@o.Opis</p>
                         <div class="d-flex justify-content-between">
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ajaxPrikaz"
+                                    onclick="OtvoriDetaljeObavijesti(@o.ObavijestID)">
+                                Detalji
+                            </button>
                         </div>
                         <p class="card-title font-italic text-center" style="font-size:14px;margin-top:10px;">@o.DatumObjave</p>
                     </div>
@@ -40,4 +44,13 @@
             }
         </div>
     </div>
+    <div class="modal fade" id="ajaxPrikaz" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalCenterTitle" aria-hidden="true"></div>
 }
+<script>
+    function OtvoriDetaljeObavijesti(ObavijestID) {
+        $.get("/Home/ObavijestDetalji?ObavijestID=" + ObavijestID, function (d) {
+            $("#ajaxPrikaz").html(d);
+        });
+    }
+</script>
