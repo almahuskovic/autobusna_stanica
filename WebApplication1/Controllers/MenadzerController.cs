@@ -35,7 +35,7 @@ namespace WebApplication1.Controllers
         #region Vozac
         public IActionResult VozacPrikaz(string Pretraga)
         {
-            var vozaci = db.Vozac.Where(x => Pretraga == null || x.Ime.StartsWith(Pretraga) || x.Prezime.StartsWith(Pretraga))
+            var vozaci = db.Vozac.Where(x => Pretraga == null || x.Ime.Contains(Pretraga) || x.Prezime.Contains(Pretraga))
                 .Select(v => new VozacPrikazVM.Row()
                 {
                     VozacID = v.VozacID,
@@ -87,6 +87,8 @@ namespace WebApplication1.Controllers
             else
             {
                 v = db.Vozac.Find(x.VozacID);
+                db.Attach(v);
+                db.Entry(v).State = EntityState.Modified;
             }
             v.VozacID = x.VozacID;
             v.BrojVozacke = x.BrojVozacke;
@@ -245,6 +247,8 @@ namespace WebApplication1.Controllers
             else
             {
                 o = db.Obavijest.Find(x.ObavijestID);
+                db.Attach(o);
+                db.Entry(o).State = EntityState.Modified;
             }
             o.Naslov = x.Naslov;
             o.Podnaslov = x.Podnaslov;
@@ -311,6 +315,8 @@ namespace WebApplication1.Controllers
             else
             {
                 m = db.ObavijestKategorija.Where(o => o.ObavijestKategorijaID == x.ObavijestID).SingleOrDefault();
+                db.Attach(m);
+                db.Entry(m).State = EntityState.Modified;
             }
             m.Naziv = x.Naziv;
             db.SaveChanges();
@@ -349,6 +355,8 @@ namespace WebApplication1.Controllers
             TipKarte k = db.TipKarte.Find(TipKarteID);
             //db.Remove(k);
             k.IsAktivan = false;
+            db.Attach(k);
+            db.Entry(k).State = EntityState.Modified;
             db.SaveChanges();
             return Redirect("/Menadzer/TipKartePrikaz/");
         }
@@ -383,6 +391,8 @@ namespace WebApplication1.Controllers
             {
                 karta = db.TipKarte.Find(m.TipKarteID);
                 karta.IsAktivan = m.IsAktivan;
+                db.Attach(karta);
+                db.Entry(karta).State = EntityState.Modified;
             }
             karta.Naziv = m.Naziv;
             karta.TipKarteID = m.TipKarteID;
@@ -406,6 +416,8 @@ namespace WebApplication1.Controllers
             VrstaPopusta k = db.VrstaPopusta.Find(VrstaPopustaID);
             //db.Remove(k);
             k.IsAktivan = false;
+            db.Attach(k);
+            db.Entry(k).State = EntityState.Modified;
             db.SaveChanges();
             return Redirect("/Menadzer/VrstaPopustaPrikaz/");
         }
@@ -442,6 +454,8 @@ namespace WebApplication1.Controllers
             {
                 popust = db.VrstaPopusta.Find(m.VrstaPopustaID);
                 popust.IsAktivan = m.IsAktivan;
+                db.Attach(popust);
+                db.Entry(popust).State = EntityState.Modified;
             }
             popust.VrstaPopustaID = m.VrstaPopustaID;
             popust.Naziv = m.Naziv;

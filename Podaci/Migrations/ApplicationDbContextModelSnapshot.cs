@@ -358,6 +358,9 @@ namespace Podaci.Migrations
                     b.Property<string>("ImeVlasnikaKartice")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsAktivna")
+                        .HasColumnType("bit");
+
                     b.Property<string>("KupacId")
                         .HasColumnType("nvarchar(450)");
 

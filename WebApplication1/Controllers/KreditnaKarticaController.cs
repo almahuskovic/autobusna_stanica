@@ -20,7 +20,8 @@ namespace WebApplication1.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    
+    [EnableCors]
+    [Autorizacija(menadzer: false, kupac: true)]
     public class KreditnaKarticaController : ControllerBase
     {
         private readonly ApplicationDbContext db;
@@ -34,12 +35,11 @@ namespace WebApplication1.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public async Task<KreditnaKarticaPrikazVM> KreditnaKarticaPrikaz()
         {
             var ss=HttpContext.User.Identity.Name;
             var kartice = new List<KreditnaKarticaPrikazVM.KarticaRedovi>();
-            kartice = await db.KreditnaKartica.Include(d=>d.Kupac).Where(k => k.Kupac.Id == AutentifikacijaMVC.currentUserId).Select(k => new KreditnaKarticaPrikazVM.KarticaRedovi
+            kartice = await db.KreditnaKartica.Include(d=>d.Kupac).Where(k => k.Kupac.Id == AutentifikacijaMVC.currentUserId && k.IsAktivna).Select(k => new KreditnaKarticaPrikazVM.KarticaRedovi
             {
                 kreditnaKarticaID = k.KreditnaKarticaID,
                 brojKartice =  k.BrojKartice,//.Substring(0,6)+"xx xxxx"+k.BrojKartice.Substring(14,5),
@@ -55,40 +55,43 @@ namespace WebApplication1.Controllers
             return m; 
         }
         [HttpDelete("{KarticaID}")]
-        [Authorize]
         public IActionResult KreditnaKarticaObrisi(int KarticaID)
         {
             KreditnaKartica v = db.KreditnaKartica.Find(KarticaID);
-            foreach (var k in db.Karta)
+            var listaK = db.Karta.Where(s => s.KKarticaID == KarticaID).ToList();
+
+            foreach (var k in listaK)
             {
-                if (k.KKarticaID == KarticaID)
-                {
-                    k.KKarticaID = null;
-                }
+                k.KKarticaID = null;
+                db.Attach(k);
+                db.Entry(k).State = EntityState.Modified;
             }
+            //db.RemoveRange(listaK);
             db.SaveChanges();
             db.Remove(v);
+            db.Attach(v);
+            db.Entry(v).State = EntityState.Deleted;
+            //v.IsAktivna = false;
             db.SaveChanges();
 
             return Ok();
         }
         
         [HttpPut]
-        [Authorize]
         public IActionResult KreditnaKarticaSnimi([FromBody] KreditnaKarticaPrikazVM.KarticaRedovi x)
         {
             KreditnaKartica kartica =db.KreditnaKartica.Find(x.kreditnaKarticaID);
-   
             kartica.ImeVlasnikaKartice = x.imeVlasnika;
             kartica.VerifikacijskiKod = x.verKod;
             kartica.DatumIsteka = x.datumIsteka;
             kartica.BrojKartice = x.brojKartice;
-           
+            kartica.IsAktivna = true;
+            db.Attach(kartica);
+            db.Entry(kartica).State = EntityState.Modified;
             db.SaveChanges();
             return Ok();
         }
         [HttpPost]
-        [Authorize]
         public IActionResult KreditnaKarticaDodaj([FromBody] KreditnaKarticaPrikazVM.KarticaRedovi x)
         {
             
@@ -98,9 +101,11 @@ namespace WebApplication1.Controllers
                 ImeVlasnikaKartice = x.imeVlasnika,
                 VerifikacijskiKod = x.verKod,
                 DatumIsteka = x.datumIsteka,
-                BrojKartice = x.brojKartice
+                BrojKartice = x.brojKartice,
+                IsAktivna=true
             };
-            
+            db.Attach(kartica);
+            db.Entry(kartica).State = EntityState.Added;
             db.KreditnaKartica.Add(kartica);
             db.SaveChanges();
 

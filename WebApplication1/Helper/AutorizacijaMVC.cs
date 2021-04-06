@@ -31,7 +31,7 @@ namespace WebApplication1.Helper
         private readonly bool _kupac;
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            Korisnik k = context.HttpContext.GetLogiraniKorisnik();
+            Korisnik k = context.HttpContext.GetLogiranogUsera();
             ApplicationDbContext db = context.HttpContext.RequestServices.GetService<ApplicationDbContext>();
             if (k == null )
             {   

@@ -167,6 +167,8 @@ namespace WebApplication1.Controllers
                         if((parsedDate.Date==DateTime.Now.Date && parsedTime.TimeOfDay > DateTime.Now.TimeOfDay)
                          || parsedDate.Date != DateTime.Now.Date)
                         {
+                            var nL = db.Linija.Where(d => d.LinijaID == linijaId).FirstOrDefault();
+                            var brojZM = db.Karta.Where(w => w.NazivLinije.Contains(nL.OznakaLinije) && w.DatumPolaska==x.DatumPolaska).Count();
                             podlinije.Add(new KartaPrikazVM.Row()
                             {
                                 LinijaId = linijaId,
@@ -176,8 +178,7 @@ namespace WebApplication1.Controllers
                                 VrijemeDolaska = vrijemeDolaska,
                                 PolazisteNaziv = gradP,
                                 DolazisteNaziv = gradD,
-                                SlobodnihMjesta = 50 - db.Karta.Where(s => s.PolazisteID == polazisteRedniBroj &&
-                                s.DolazisteID == dolazisteRedniBroj && s.DatumPolaska == x.DatumPolaska).Count()
+                                SlobodnihMjesta = 50 - brojZM
                             });
                         }
                     }
@@ -250,7 +251,7 @@ namespace WebApplication1.Controllers
                 br++;
             }
 
-            var listak = db.KreditnaKartica.Where(k => k.Kupac.Id == HttpContext.GetLogiranogUsera().Id).Select(k => new SelectListItem
+            var listak = db.KreditnaKartica.Where(k => k.Kupac.Id == HttpContext.GetLogiranogUsera().Id && k.IsAktivna).Select(k => new SelectListItem
             {
                 Value = k.KreditnaKarticaID.ToString(),
                 Text = k.BrojKartice.Substring(0, 6) + "xx xxxx" + k.BrojKartice.Substring(14, 5),
@@ -290,9 +291,12 @@ namespace WebApplication1.Controllers
                 kk.BrojKartice = x.BrojKarticeNova;
                 kk.ImeVlasnikaKartice = x.ImeVlasnikaNova;
                 kk.VerifikacijskiKod = x.VerKodNova;
+                kk.IsAktivna = true;
                 kk.Kupac =  (Kupac)HttpContext.GetLogiranogUsera();
                 db.Entry<Kupac>(kk.Kupac).State= EntityState.Unchanged;
 
+                db.Attach(kk);
+                db.Entry(kk).State = EntityState.Added;
                 db.KreditnaKartica.Add(kk);
                 //db.Entry<Kupac>(kk.Kupac).State= EntityState.Detached;
                 db.SaveChanges();
@@ -361,6 +365,8 @@ namespace WebApplication1.Controllers
                 {
                     if (i.TipKarteID == 2 && DateTime.Compare(DateTime.Parse(i.DatumDolaska), DateTime.Now) == -1)
                         i.IsAktivna = false;
+                    db.Attach(i);
+                    db.Entry(i).State = EntityState.Modified;
                     i.IsAktivna = false;
                 }
                 else
@@ -388,7 +394,7 @@ namespace WebApplication1.Controllers
                 VrstaPopusta = i.VrstaPopusta.Naziv,
                 DatumKupovineKarte=i.DatumKupovine
             }).ToList();
-
+         
             var m = new KupljeneKarteVM
             {
                 redovi = redovi
